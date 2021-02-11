@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+
+
+{% block body %}
+    <h1>Sign Up</h1>
+    <form action="/sign-up" id="sign-up-form" method="POST">
+
+        <label for="fname">First Name</label>
+        <input type="text" id="fname" name="fname" required><br><br>
+
+        <label for="lname">Last Name</label>
+        <input type="text" id="lname" name="lname" required><br><br>
+
+        <label for="fname">Email</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="confirm">Confirm Password</label>
+        <input type="password" id="confirm" name="confirm" required><br><br>
+
+        <label for="about">About Me</label>
+        <textarea id="about" name="about">A cool user!</textarea><br><br>
+
+        <label for="image_url">Upload a Profile Picture</label>
+        <input type="file" id="image_url" name="image_url"><br><br>
+
+        <input type="submit" value="Create Account">
+    </form>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/static/js/user.js"></script>
+
+{% endblock %}
