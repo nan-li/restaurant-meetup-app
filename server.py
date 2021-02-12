@@ -1,6 +1,6 @@
 """Server for Restaurant Meetup app."""
 
-from flask import Flask, render_template, redirect, flash, request, session
+from flask import Flask, render_template, redirect, flash, request, session, jsonify
 from model import connect_to_db
 import crud
 
@@ -40,6 +40,7 @@ def register_user():
     session['user_id'] = user.id
     session['fname'] = fname
     session['lname'] = lname
+
 
     flash('Account successfully created.')
 

@@ -21,8 +21,8 @@ def create_user(username, fname, lname, email, password,
     """Create and return a new user."""
 
     u = User(username=username, fname=fname, lname=lname, 
-                email=email, password=password, 
-                image_url=image_url, about=about)
+                email=email, image_url=image_url, about=about)
+    u.set_password(password)
     
     db.session.add(u)
     db.session.commit()
@@ -31,7 +31,9 @@ def create_user(username, fname, lname, email, password,
 
 def create_meetup(name, date, capacity, attendees_count,
                 description, restaurant, host):
-    """Create and return a new meetup."""
+    """Create and return a new meetup.
+        restaurant and host are Restaurant and User objects"""
+    
 
     m = Meetup(name=name, date=date, capacity=capacity, 
                 attendees_count=attendees_count,

@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -29,8 +30,8 @@ class User(db.Model):
     username = db.Column(db.String, unique=True)
     fname = db.Column(db.String)
     lname = db.Column(db.String)
-    email = db.Column(db.String)
-    password = db.Column(db.String)
+    email = db.Column(db.String, unique=True)
+    password_hash = db.Column(db.String)
     image_url = db.Column(db.String)
     about = db.Column(db.Text)
 
@@ -44,6 +45,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.fname} {self.lname}>'
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 class Restaurant(db.Model):
