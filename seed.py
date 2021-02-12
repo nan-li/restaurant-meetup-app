@@ -99,7 +99,7 @@ for i in range(10):
     db_user = create_fake_user()
     users_in_db.append(db_user)
 
-    meetup = meetups_in_db[i + 1]
+    meetup = meetups_in_db[i]
     db_user.meetups.append(meetup)
     db_user.favorites.append(meetup.restaurant)
     db.session.commit()
