@@ -46,6 +46,19 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.fname} {self.lname}>'
 
+    def to_dict(self, include_email=False):
+        data = {
+            'id': self.id,
+            'username': self.username,
+            'fname': self.fname,
+            'lname': self.lname,
+            'image_url': self.image_url,
+            'about': self.about
+        }
+        if include_email:
+            data['email'] = self.email
+        return data
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     
@@ -74,6 +87,17 @@ class Restaurant(db.Model):
     def __repr__(self):
         return f'<Restaurant {self.name}>'
 
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'cuisine': self.cuisine,
+            'address': self.address,
+            'long': self.longitude,
+            'lat': self.latitude,
+            'image_url': self.image_url
+        }
+        return data
 
 class Meetup(db.Model):
     """A meetup."""
@@ -102,6 +126,19 @@ class Meetup(db.Model):
     def __repr__(self):
         return f'<Meetup {self.name} at {self.restaurant.name}>'
 
+    def to_dict(self):
+        data = {
+           'id': self.id,
+            'name': self.name,
+            'date': self.date,
+            'capacity': self.capacity,
+            'attendees_count': self.attendees_count,
+            'description': self.description, 
+            # TODO: link to restaurant and host
+        }
+        return data
+        
+
 def connect_to_db(flask_app, db_uri='postgresql:///restaurants', echo=True):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     flask_app.config['SQLALCHEMY_ECHO'] = echo
@@ -115,7 +152,6 @@ def connect_to_db(flask_app, db_uri='postgresql:///restaurants', echo=True):
 
 if __name__ == '__main__':
     from server import app
-
     # Call connect_to_db(app, echo=False) if your program output gets
     # too annoying; this will tell SQLAlchemy not to print out every
     # query it executes.
