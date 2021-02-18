@@ -27,12 +27,12 @@ class User(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, 
                     primary_key=True)
-    username = db.Column(db.String, unique=True)
+    username = db.Column(db.String) #unique=True
     fname = db.Column(db.String)
     lname = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password_hash = db.Column(db.String)
-    image_url = db.Column(db.String)
+    image_url = db.Column(db.String, default='/static/img/avatar.jpg')
     about = db.Column(db.Text)
 
     # hosted_meetups = list of Meetup objects hosted by this user
@@ -54,6 +54,7 @@ class User(db.Model):
             'lname': self.lname,
             'image_url': self.image_url,
             'about': self.about
+            # TODO: link to favorites and meetups
         }
         if include_email:
             data['email'] = self.email
@@ -128,12 +129,14 @@ class Meetup(db.Model):
 
     def to_dict(self):
         data = {
-           'id': self.id,
+            'id': self.id,
             'name': self.name,
             'date': self.date,
             'capacity': self.capacity,
             'attendees_count': self.attendees_count,
-            'description': self.description, 
+            'description': self.description,
+            'restaurant_id': self.restaurant_id,
+            'host_id': self.host_id 
             # TODO: link to restaurant and host
         }
         return data

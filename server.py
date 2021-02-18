@@ -47,6 +47,33 @@ def register_user():
 API Routes.
 """
 
+@app.route('/api/users/login', methods=['POST'])
+def login_user():
+    username = request.json['username']
+    print(username)
+    password = request.json['password']
+
+    user = crud.get_user_by_username(username)
+    if not user:
+        return jsonify({
+            'status': 'error',
+            'message': 'User does not exist.'
+        })
+    else:
+        if user.check_password(password):
+            session['user_id'] = user.id
+            return jsonify({
+                'status': 'success',
+                'message': 'Successfully logged in.',
+                'user': user.to_dict()
+            })
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': 'Invalid password.'
+            })
+    
+
 @app.route('/api/users/<int:id>.json')
 def get_user(id):
     """Return user information."""

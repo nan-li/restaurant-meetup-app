@@ -1,8 +1,12 @@
 """Test queries"""
 
 from model import db, User, Meetup, Restaurant, favorites, user_meetups
+import crud
 
 def show_all():
+    """Show all users and their restaurant and meetup information."""
+    # TODO: make these queries more efficient
+    
     users = User.query.options(db.joinedload('favorites')).all()
 
     for user in users:

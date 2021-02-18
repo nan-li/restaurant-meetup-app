@@ -57,7 +57,7 @@ def create_fake_user():
     return db_user
 
 
-def create_fake_meetup():
+def create_fake_meetup(rest):
     fake = Faker()
 
     n = 'Fun Dinner'
@@ -65,7 +65,7 @@ def create_fake_meetup():
     c = 10
     a = 0
     d = fake.text()
-    r = choice(r_list)
+    r = rest
     h = db_user
 
     db_meetup = crud.create_meetup(n,dt,c,a,d,r,h)
@@ -73,7 +73,7 @@ def create_fake_meetup():
 
 # Create 10 users
 # Each will favorite 5 restaurants
-# Each will create a meetup at a favorited restaurant
+# Each will create 2 meetups at a favorited restaurant
 users_in_db = []
 meetups_in_db = []
 
@@ -88,7 +88,8 @@ for _ in range(10):
         db_user.favorites.append(r)
 
     # create a Meetup
-    db_meetup = create_fake_meetup()
+    db_meetup = create_fake_meetup(r_list[0])
+    db_meetup = create_fake_meetup(r_list[1])
     meetups_in_db.append(db_meetup)
 
 # Create 10 users
