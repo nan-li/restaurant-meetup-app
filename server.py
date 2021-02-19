@@ -1,9 +1,14 @@
 """Server for Restaurant Meetup app."""
 
 from flask import (Flask, render_template, redirect, 
-                    flash, request, session, jsonify)
+                    flash, request, session, jsonify, request)
 from model import connect_to_db, User, Restaurant, Meetup
+import os
+import requests
+import json
 import crud
+
+YELP_API_KEY = os.environ['YELP_API_KEY']
 
 app = Flask(__name__)
 app.secret_key = 'dev'
@@ -115,6 +120,32 @@ def get_user_meetups(user_id):
 def get_restaurant(id):
     """Return restaurant information."""
     return jsonify(crud.get_restaurant_by_id(id).to_dict())
+
+
+
+@app.route('/api/restaurants/search.json')
+def get_search_results():
+    """Return restaurants from a Yelp search."""
+    """Get args from request.args.get"""
+
+
+
+    url = 'https://api.yelp.com/v3/businesses/search'
+    
+    headers = {
+        'Authorization': f'Bearer {YELP_API_KEY}',
+        'Content-Type': 'application/json'
+    }
+    print(request.args.to_dict())
+    # request.args.to_dict()
+    req = requests.get(url, params=request.args.to_dict(), headers=headers)
+    print("*" * 100)
+    print('The status code from YELP is', req.status_code)
+    print(req.json())
+
+    return req.json()
+
+
 
 
 @app.route('/api/restaurants/<restaurant_id>/meetups.json')

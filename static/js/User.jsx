@@ -1,68 +1,12 @@
-function Playground(props) {
-  const [name, setName] = React.useState('');
- 
-  React.useEffect(() => {
-     document.title = `Hi, ${name}`;
-   }, [name]);
-  
-   return (
-     <div>
-       <p>Use {name} input field below to rename this page!</p>
-       <input 
-         onChange={({target}) => setName(target.value)} 
-         value={name} 
-         type='text' />
-     </div>
-   );
-}
-
-function PlaygroundYelp(props) {
-  const [restaurants, setRestaurants] = React.useState([]);
-  let API_KEY = "secret";
-
-  React.useEffect(() => {
-    fetch("https://api.yelp.com/v3/businesses/search?location=Milpitas", {
-      headers: {
-        'Authorization': `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setRestaurants(result);
-        }
-      )
-  }, []) 
-  
-  return (
-    <div className="container border rounded">
-
-      <h1>My Favorite Restaurants</h1>
-
-      <div className="list-group">
-        {restaurants.map(rest => (
-        <a href={`/api/restaurants/${rest.id}.json`} className="list-group-item" key={rest.id}>
-          <img className="img-thumbnail" src={rest.image_url} />
-          {rest.name}
-        </a>
-        ))}
-      </div>
-
-    </div>
-  );
-  
-}
-
 // Following this: 
 // https://linguinecode.com/post/how-to-get-form-data-on-submit-in-reactjs
-const initialFormData = Object.freeze({
+const initialLoginFormData = Object.freeze({
   username: "",
   password: ""
 });
 
 function LoginForm(props) {
-  const [formData, setFormData] = React.useState(initialFormData);
+  const [formData, setFormData] = React.useState(initialLoginFormData);
   const [error, setError] = React.useState(null);
 
   const handleChange = (evt) => {
@@ -119,6 +63,16 @@ function LoginForm(props) {
   );
 }
 
+const initialSignupFormData = Object.freeze({
+  fname: "",
+  lname: "",
+  email: "",
+  username: "",
+  password: "",
+  confirm: "",
+  about: "",
+  image_url: ""
+});
 
 function Signup(props) {
   function handleSubmit(evt) {
@@ -216,57 +170,77 @@ function UserProfile(props) {
     );
   }
 }
+const initialSearchTerms = Object.freeze({
+  term: "",
+  location: ""
+});
 
 function RestaurantSearchBox(props) {
+  const [searchTerms, setSearchTerms] = React.useState(initialSearchTerms);
   const [restaurants, setRestaurants] = React.useState([]);
   const [error, setError] = React.useState(null);
+  const [loadResults, setLoadResults] = React.useState(false);
+
+  const handleChange = (evt) => {
+    setSearchTerms({
+      ...searchTerms, [evt.target.name]: evt.target.value.trim()
+    });
+  };
 
   function handleSubmit(evt) {
-    fetch('ur')
-      .then(res => res.json())
+    evt.preventDefault();
+    let url = `/api/restaurants/search.json?term=${searchTerms.term}&location=${searchTerms.location}`;
+    console.log("URL: ", url);
+    fetch(url)
+      .then(res => res.json()) //don't reach here
       .then(
         (result) => {
           setRestaurants(result);
+          console.log("Returned from call");
+          setLoadResults(true);
         },
         (error) => {
           setError(error);
-        }
-      )
+        });
   }
+  if (!loadResults) {
+    return (
+      <div>
+        <h1>Search for New Restaurants to Love</h1>
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="term" placeholder="sushi, salad, korean..."
+            required onChange={handleChange}/>
+          <input type="text" name="location" placeholder="San Francisco" 
+            required onChange={handleChange}/>
+          <button type="submit">Search</button>
+        </form>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <h1>Search for New Restaurants to Love</h1>
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="term" placeholder="sushi, salad, korean..."
+            required onChange={handleChange}/>
+          <input type="text" name="location" placeholder="San Francisco" 
+            required onChange={handleChange}/>
+          <button type="submit">Search</button>
+        </form>
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input type="text" />
-        <button type="submit">Search</button>
-      </form>
-    </div>
-  );
+        <div className="list-group">
+          {restaurants.businesses.map(rest => (
+          <a href={`/api/restaurants/${rest.id}.json`} className="list-group-item" key={rest.id}>
+            <img className="img-thumbnail" src={rest.image_url} />
+            {rest.name}
+          </a>
+          ))}
+        </div>
+      </div>
+    ); 
+  }
 }
 
-// Trying something out from online below:
-function useLoginForm(callback) {
-  const [inputs, setInputs] = React.useState({});
-
-  function handleSubmit(evt) {
-    if (evt) {
-      evt.preventDefault();
-    }
-//     callback();
-  }
-
-  function handleInputChange(evt) {
-    evt.persist();
-    setInputs(inputs => ({...inputs, [evt.target.name]:
-      evt.target.value}));
-  }
-
-  return {
-    handleSubmit,
-    handleInputChange,
-    inputs
-  };
-}
 
 function MyFavoriteRestaurants(props) {
   const [restaurants, setRestaurants] = React.useState([]);
@@ -277,6 +251,7 @@ function MyFavoriteRestaurants(props) {
       .then(
         (result) => {
           setRestaurants(result);
+          console.log("<MyFaveRestaurants> component state: ", restaurants);
         }
       )
   }, [])

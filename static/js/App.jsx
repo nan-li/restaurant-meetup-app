@@ -12,6 +12,7 @@ function App(props) {
   if (!user) {
     return (
       <div>
+        <RestaurantSearchBox />
         <Signup />
         <LoginForm setUser={setUser} />
       </div>    
