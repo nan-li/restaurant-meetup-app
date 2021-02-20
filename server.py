@@ -26,6 +26,7 @@ def show_sign_up_page():
 
     return render_template('sign_up.html')
 
+# Old sign-up route.. use API instead
 @app.route('/sign-up', methods=['POST'])
 def create_user():
     """Create a new user account."""
@@ -90,13 +91,32 @@ def register_user():
     image_url = request.json.get('image_url')
     about = request.json.get('about')
 
-    # TODO: validation of user inputs, prefererably AJAX
+    # Check if user with that email already exists
+    user = crud.get_user_by_email(email)
+    if user:
+        return jsonify({
+                'status': 'error',
+                'message': 'Account with that email already exists.'
+        })
     
+    # Check if user with that username already exists
+    user = crud.get_user_by_username(username)
+    if user:
+        return jsonify({
+                'status': 'error',
+                'message': 'Username already exists. Please pick a different one.'
+        })
+
     user = crud.create_user(username, fname, lname, email, password, 
                 image_url, about)
+
     session['user_id'] = user.id
     
-    
+    return jsonify({
+                'status': 'success',
+                'message': 'Welcome! Account successfully created.',
+                'user': user.to_dict()
+    })
 
 @app.route('/api/users/<int:id>.json')
 def get_user(id):

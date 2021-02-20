@@ -91,27 +91,32 @@ function SignupForm(props) {
     evt.preventDefault();
     console.log("formData from <Signup>:", formData);
 
-    
-
-    // Submit to API
-    fetch ('/api/users/signup', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => res.json())
-    .then(
-      (data) => {
-        if (data.status != 'error') {
-          props.setUser(data.user);
+    // validate passwords match
+    if (formData.password != formData.confirm) {
+      alert("Passwords don't match.");
+    } else if (formData.password.length < 8 || formData.password.length > 20) {
+      alert("Password must be 8-20 characters long.");
+    } else {
+      // Submit to API
+      fetch ('/api/users/signup', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json'
         }
-        alert(data.message);
-      },
-      (error) => {
-        setError(error)
-      });
+      })
+      .then(res => res.json())
+      .then(
+        (data) => {
+          if (data.status != 'error') {
+            props.setUser(data.user);
+          }
+          alert(data.message);
+        },
+        (error) => {
+          setError(error)
+        });
+      }
   }
 
   return (
@@ -120,40 +125,40 @@ function SignupForm(props) {
       <form onSubmit={handleSubmit}>
         <Row>
           <Col>
-            <input type="text" className="form-control" name="fname" placeholder="First Name" required />
+            <input type="text" className="form-control" name="fname" placeholder="First Name" required onChange={handleChange} />
           </Col>
 
           <Col>
-            <input type="text" className="form-control" name="lname" placeholder="Last Name" required />
+            <input type="text" className="form-control" name="lname" placeholder="Last Name" required onChange={handleChange} />
           </Col>
         </Row>
 
         <div className="form-group p-2">
-          <input type="email" className="form-control" name="email" placeholder="Email" required />
+          <input type="email" className="form-control" name="email" placeholder="Email" required onChange={handleChange} />
         </div>
 
         <div className="form-group p-2">
-        <input type="text" className="form-control" name="username" placeholder="Username" required />
+        <input type="text" className="form-control" name="username" placeholder="Username" required onChange={handleChange} />
         </div>
 
         <div className="form-group p-2">
-        <input type="password" className="form-control" name="password" placeholder="Password" required />
+        <input type="password" className="form-control" name="password" placeholder="Password" required onChange={handleChange} />
         <small id="passwordHelpInline" className="text-muted">
           Must be 8-20 characters long.
         </small>
         </div>
 
         <div className="form-group p-2">
-        <input type="password" className="form-control" name="confirm" placeholder="Confirm Password" required />
+        <input type="password" className="form-control" name="confirm" placeholder="Confirm Password" required onChange={handleChange} />
         </div>
 
         <div className="form-group p-2">
-        <textarea className="form-control"  name="about" placeholder="About Me"></textarea>
+        <textarea className="form-control"  name="about" placeholder="About Me" onChange={handleChange}></textarea>
         </div>
 
         <div className="form-group p-2">
           <label>Upload a Profile Picture </label>
-          <input type="file" className="form-control-file" name="image_url" />
+          <input type="file" className="form-control-file" name="image_url" onChange={handleChange}/>
         </div>
 
         <button type="submit" className="btn btn-primary">Create Account</button>

@@ -58,6 +58,10 @@ def get_user_by_username(username):
     """Return a user by username."""
     return User.query.filter_by(username=username).first()
 
+def get_user_by_email(email):
+    """Return a user by email."""
+    return User.query.filter_by(email=email).first()
+
 def get_favorites_by_user_id(user_id):
     """Return all favorite restaurants of user."""
     user = get_user_by_id(user_id)

@@ -5,7 +5,20 @@
 #header-img {
     margin-top: 100px;
 }
-.img-thumbnail {
-    height:100px;
-    width:auto;
+
+.media {
+    display: flex;
 }
+.media-body {
+    margin-left: 20px;
+    flex: 1;
+}
+.img-thumbnail {
+    width: 200px;
+    height: auto;
+}
+
+hr {
+    width: 50%;
+}
+
