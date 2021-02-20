@@ -55,7 +55,7 @@ API Routes.
 
 @app.route('/api/users/login', methods=['POST'])
 def login_user():
-    username = request.json['username']
+    username = request.json['username'].lower()
     print(username)
     password = request.json['password']
 
@@ -83,7 +83,7 @@ def login_user():
 def register_user():
     """Create a new user account."""
 
-    username = request.json.get('username')
+    username = request.json.get('username').lower()
     fname = request.json.get('fname')
     lname = request.json.get('lname')
     email = request.json.get('email')
