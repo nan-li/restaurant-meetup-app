@@ -1,3 +1,5 @@
+const {Media, Row, Col} = ReactBootstrap;
+
 // Following this: 
 // https://linguinecode.com/post/how-to-get-form-data-on-submit-in-reactjs
 const initialLoginFormData = Object.freeze({
@@ -74,26 +76,57 @@ const initialSignupFormData = Object.freeze({
   image_url: ""
 });
 
-function Signup(props) {
+function SignupForm(props) {
+  const [formData, setFormData] = React.useState(initialSignupFormData);
+  const [error, setError] = React.useState(null);
+
+  const handleChange = (evt) => {
+    setFormData({
+      ...formData, [evt.target.name]: evt.target.value.trim()
+    });
+  };
+
   function handleSubmit(evt) {
     //handle the Signup form submission
     evt.preventDefault();
-    alert("You're signed up but actually not really!");
+    console.log("formData from <Signup>:", formData);
+
+    
+
+    // Submit to API
+    fetch ('/api/users/signup', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(
+      (data) => {
+        if (data.status != 'error') {
+          props.setUser(data.user);
+        }
+        alert(data.message);
+      },
+      (error) => {
+        setError(error)
+      });
   }
 
   return (
     <div className="container border rounded col-md-6 p-5" id="signup-form">
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="form-group p-2">
+        <Row>
+          <Col>
             <input type="text" className="form-control" name="fname" placeholder="First Name" required />
-          </div>
+          </Col>
 
-          <div className="form-group p-2">
+          <Col>
             <input type="text" className="form-control" name="lname" placeholder="Last Name" required />
-          </div>
-        </div>
+          </Col>
+        </Row>
 
         <div className="form-group p-2">
           <input type="email" className="form-control" name="email" placeholder="Email" required />
@@ -175,10 +208,13 @@ const initialSearchTerms = Object.freeze({
   location: ""
 });
 
-function RestaurantSearchBox(props) {
+function RestaurantSearch(props) {
   const [searchTerms, setSearchTerms] = React.useState(initialSearchTerms);
   const [restaurants, setRestaurants] = React.useState([]);
   const [error, setError] = React.useState(null);
+  // search results are being fetched
+  const [isLoading, setIsLoading] = React.useState(false);
+  // search results returned and loaded restaurants state
   const [loadResults, setLoadResults] = React.useState(false);
 
   const handleChange = (evt) => {
@@ -189,6 +225,8 @@ function RestaurantSearchBox(props) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    setIsLoading(true);
+
     let url = `/api/restaurants/search.json?term=${searchTerms.term}&location=${searchTerms.location}`;
     console.log("URL: ", url);
     fetch(url)
@@ -203,7 +241,7 @@ function RestaurantSearchBox(props) {
           setError(error);
         });
   }
-  if (!loadResults) {
+  if (!isLoading) {
     return (
       <div>
         <h1>Search for New Restaurants to Love</h1>
@@ -216,6 +254,23 @@ function RestaurantSearchBox(props) {
         </form>
       </div>
     );
+  } else if (!loadResults) {
+    return (
+      <div>
+        <h1>Search for New Restaurants to Love</h1>
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="term" placeholder="sushi, salad, korean..."
+            required onChange={handleChange}/>
+          <input type="text" name="location" placeholder="San Francisco" 
+            required onChange={handleChange}/>
+          <button type="submit">Search</button>
+        </form>
+
+        <h1>Search Results</h1>
+        <p>Loading...</p>
+          
+    </div>
+    ); 
   } else {
     return (
       <div>
@@ -228,16 +283,23 @@ function RestaurantSearchBox(props) {
           <button type="submit">Search</button>
         </form>
 
+        <h1>Search Results</h1>
         <div className="list-group">
           {restaurants.businesses.map(rest => (
-          <a href={`/api/restaurants/${rest.id}.json`} className="list-group-item" key={rest.id}>
+          <Media className="list-group-item" key={rest.id}>
             <img className="img-thumbnail" src={rest.image_url} />
-            {rest.name}
-          </a>
+            <Media.Body>
+              <h5>{rest.name}</h5>
+              <hr />
+              <p>{rest.location.display_address}</p>
+              <p>{rest.categories[0].title}</p>
+            </Media.Body>
+
+          </Media>
           ))}
         </div>
-      </div>
-    ); 
+    </div>
+    )
   }
 }
 

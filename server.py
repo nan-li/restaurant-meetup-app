@@ -27,7 +27,7 @@ def show_sign_up_page():
     return render_template('sign_up.html')
 
 @app.route('/sign-up', methods=['POST'])
-def register_user():
+def create_user():
     """Create a new user account."""
 
     username = request.form.get('username')
@@ -77,6 +77,25 @@ def login_user():
                 'status': 'error',
                 'message': 'Invalid password.'
             })
+
+@app.route('/api/users/signup', methods=['POST'])
+def register_user():
+    """Create a new user account."""
+
+    username = request.json.get('username')
+    fname = request.json.get('fname')
+    lname = request.json.get('lname')
+    email = request.json.get('email')
+    password = request.json.get('password')
+    image_url = request.json.get('image_url')
+    about = request.json.get('about')
+
+    # TODO: validation of user inputs, prefererably AJAX
+    
+    user = crud.create_user(username, fname, lname, email, password, 
+                image_url, about)
+    session['user_id'] = user.id
+    
     
 
 @app.route('/api/users/<int:id>.json')
@@ -126,7 +145,6 @@ def get_restaurant(id):
 @app.route('/api/restaurants/search.json')
 def get_search_results():
     """Return restaurants from a Yelp search."""
-    """Get args from request.args.get"""
 
 
 
@@ -136,9 +154,13 @@ def get_search_results():
         'Authorization': f'Bearer {YELP_API_KEY}',
         'Content-Type': 'application/json'
     }
+
+    params = request.args.to_dict()
+    params['limit'] = 50
+    print(params)
     print(request.args.to_dict())
     # request.args.to_dict()
-    req = requests.get(url, params=request.args.to_dict(), headers=headers)
+    req = requests.get(url, params=params, headers=headers)
     print("*" * 100)
     print('The status code from YELP is', req.status_code)
     print(req.json())

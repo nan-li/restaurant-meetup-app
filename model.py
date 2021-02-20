@@ -56,6 +56,7 @@ class User(db.Model):
             'about': self.about
             # TODO: link to favorites and meetups
         }
+        # default: don't send user email back unless toldß
         if include_email:
             data['email'] = self.email
         return data

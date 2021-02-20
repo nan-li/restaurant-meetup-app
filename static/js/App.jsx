@@ -2,7 +2,7 @@ const Router = ReactRouterDOM.BrowserRouter;
 const Link = ReactRouterDOM.Link;
 const Switch = ReactRouterDOM.Switch;
 const Route = ReactRouterDOM.Route;
-
+const Container = ReactBootstrap.Container;
 
 function App(props) {
   const [user, setUser] = React.useState(null);
@@ -12,8 +12,8 @@ function App(props) {
   if (!user) {
     return (
       <div>
-        <RestaurantSearchBox />
-        <Signup />
+        <RestaurantSearch />
+        <SignupForm setUser={setUser}/>
         <LoginForm setUser={setUser} />
       </div>    
     )
@@ -29,7 +29,7 @@ function App(props) {
               <h1>Homepage</h1>
             </Route>
             <Route path="/restaurants">
-              <RestaurantSearchBox />
+              <RestaurantSearch />
               <MyFavoriteRestaurants user_id="5"/>
   
             </Route>
@@ -53,7 +53,7 @@ function App(props) {
 
 function Navbar(props) {
   return (
-    <div className="container border rounded">
+    <Container>
       <nav className="navbar navbar-light bg-light">
         <Link className="navbar-brand" to="/">Home</Link>
         <Link className="navbar-brand" to="/restaurants">Restaurants</Link>
@@ -65,7 +65,7 @@ function Navbar(props) {
       <img id="header-img" src="/static/img/people-in-restaurant.jpg" 
         className="container col-md-6" 
         alt="Busy restaurant with diners." />
-    </div>
+    </Container>
   );
 }
 
