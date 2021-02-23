@@ -17,7 +17,7 @@ function LoginForm(props) {
     });
   };
 
-  function handleSubmit(evt) {
+  const handleSubmit = (evt) => {
     // handle the Login form submission
     evt.preventDefault();
     // console.log("formData from <Login>", formData);
@@ -88,7 +88,7 @@ function SignupForm(props) {
     });
   };
 
-  function handleSubmit(evt) {
+  const handleSubmit = (evt) => {
     //handle the Signup form submission
     evt.preventDefault();
     console.log("formData from <Signup>:", formData);
@@ -206,46 +206,6 @@ function UserProfile(props) {
       </div>
     );
   }
-}
-
-
-
-
-
-
-/*
-  Shows favorite restaurants for a logged in user using user state
-*/
-function MyFavoriteRestaurants(props) {
-  const [restaurants, setRestaurants] = React.useState([]);
-
-  React.useEffect(() => {
-    fetch(`/api/users/${props.user.id}/restaurants.json`)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setRestaurants(result);
-          console.log("<MyFaveRestaurants> component state: ", restaurants);
-        }
-      )
-  }, [])
-
-  return (
-    <div className="container border rounded">
-
-      <h1>My Favorite Restaurants</h1>
-
-      <div className="list-group">
-        {restaurants.map(rest => (
-        <a href={`/api/restaurants/${rest.id}.json`} className="list-group-item" key={rest.id}>
-          <img className="img-thumbnail" src={rest.image_url} />
-          {rest.name}
-        </a>
-        ))}
-      </div>
-
-    </div>
-  );
 }
 
 

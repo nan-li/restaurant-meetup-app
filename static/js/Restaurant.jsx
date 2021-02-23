@@ -7,14 +7,18 @@ const {useParams} = ReactRouterDOM;
 function Restaurants(props) {
   const [displaySearchResults, setDisplaySearchResults] = React.useState(false);
   const [searchResults, setSearchResults] = React.useState([]);
-  console.log("searchResults is: ", searchResults);
+  const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);
+  // console.log("searchResults is: ", searchResults);
   return (
     <Router>
       <Container>
 
         <Switch>
           <Route exact path='/restaurant/:restaurantID'>
-            <RestaurantDetails user={props.user} restaurants={searchResults}/>
+            <RestaurantDetails user={props.user} 
+              displaySearchResults={displaySearchResults}
+              restaurants={searchResults} 
+              favoriteRestaurants={favoriteRestaurants} />
           </Route>
           <Route exact path='/restaurants'>
             <RestaurantSearch 
@@ -22,7 +26,12 @@ function Restaurants(props) {
               setSearchResults={setSearchResults} />
               {displaySearchResults ? 
                 <RestaurantSearchResults user={props.user} restaurants={searchResults} /> : null}
-            <MyFavoriteRestaurants user={props.user}/>
+            
+              {displaySearchResults ? 
+                null : 
+                <MyFavoriteRestaurants user={props.user} 
+                  favoriteRestaurants={favoriteRestaurants}
+                  setFavoriteRestaurants={setFavoriteRestaurants} />}
           </Route>
         </Switch>
 
@@ -85,7 +94,9 @@ function RestaurantSearch(props) {
 
 
 function RestaurantSearchResults(props) {
- 
+  if (props.restaurants.length === 0) {
+    return <h3>Loading...</h3>
+  }
   return (
     
       <Container>
@@ -105,15 +116,10 @@ function RestaurantSearchResults(props) {
 }
 
 
-function AddRestaurantToFavorites(props) {
-  return (
-    <button onClick={props.setFavorited}>Add to Favorites</button>
-  )
-}
 
 
 function RestaurantTile(props) {
- 
+
   return (
     
       <Container>
@@ -124,8 +130,8 @@ function RestaurantTile(props) {
               <h5>{props.restaurant.name}</h5>
             </Link>
             <hr />
-            <p>{props.restaurant.location.display_address}</p>
-            <p>{props.restaurant.categories[0].title}</p>
+            <p>{props.isFavorite ? props.restaurant.address : props.restaurant.location.display_address}</p>
+            <p>{props.isFavorite ? props.restaurant.cuisine : props.restaurant.categories[0].title}</p>
           </Media.Body>
         </Media>
         
@@ -142,6 +148,29 @@ function RestaurantTile(props) {
 }
 
 
+function AddRestaurantToFavorites(props) {
+  const createUserRestaurantRelationship = () => {
+    props.setFavorited(true);
+    // POST to server
+    fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}.json`, {
+      method: 'POST',
+      body: JSON.stringify(props.restaurant),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(
+      (data) => {
+        console.log(data);
+      }
+    );
+  }
+  
+  return (
+    <button onClick={createUserRestaurantRelationship}>Add to Favorites</button>
+  )
+}
 
 
 /* 
@@ -151,16 +180,20 @@ function RestaurantDetails(props) {
   const [restaurant, setRestaurant] = React.useState([]);
   let {restaurantID} = useParams();
   console.log("restaurnt is", restaurant);
-
-  // check if this restaurant is in user's favorited restaurants
-  // I got to this component from a link where I know the restaurant is
   
     
   React.useEffect(() => {
-    if (props.isFavorite) {
+    // check if this restaurant is in user's favorited restaurants
+    // I got to this component from clicking a restaurant in MyFavoriteRestaurants
+    if (!props.displaySearchResults) {
       setFavorited(true);
-      setRestaurant(props.restaurant)
+      for (const res of props.favoriteRestaurants) {
+        if (res.id === restaurantID) {
+          setRestaurant(res);
+        }
+      }
     } else {
+    // this component was rendered from Yelp search results
 
     for (const res of props.restaurants) {
       if (res.id === restaurantID) {
@@ -168,13 +201,13 @@ function RestaurantDetails(props) {
       }
     }
 
+    // check if this restaurant is a favorited
     fetch(`/api/users/${props.user.id}/restaurants/${restaurantID}.json`)
       .then(res => res.json())
       .then(
         (data) => {
           if (data.status != 'error') {
             setFavorited(true);
-            setRestaurant(data.data);
           }
         }
       )
@@ -191,10 +224,55 @@ function RestaurantDetails(props) {
       <h1>{restaurant.name}</h1>
       <img height={200} src={restaurant.image_url} />
       <hr />
-      <p>{restaurant.location.display_address}</p>
-      <p>{restaurant.categories[0].title}</p>
-      {favorited ? null : <AddRestaurantToFavorites setFavorited={setFavorited} />}
+      <p>{props.displaySearchResults ? restaurant.location.display_address : restaurant.address}</p>
+      <p>{props.displaySearchResults ? restaurant.categories[0].title : restaurant.cuisine}</p>
+      {favorited ? null : 
+        <AddRestaurantToFavorites setFavorited={setFavorited} 
+          restaurant={restaurant}
+          restaurantID={restaurantID} user={props.user} />}
+
+      
     </Container>
     
   );
 }
+
+
+
+/*
+  Shows favorite restaurants for a logged in user using user state
+*/
+function MyFavoriteRestaurants(props) {
+
+  React.useEffect(() => {
+    fetch(`/api/users/${props.user.id}/restaurants.json`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          props.setFavoriteRestaurants(result);
+        }
+      )
+  }, [])
+
+  return (
+
+    <Container>
+      <h1>My Favorite Restaurants</h1>
+      <div className="list-group">
+        {props.favoriteRestaurants.map(rest => (
+          
+          <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
+        // <a href={`/api/restaurants/${rest.id}.json`} className="list-group-item" key={rest.id}>
+        //   <img className="img-thumbnail" src={rest.image_url} />
+        //   {rest.name}
+        // </a>
+
+        ))}
+      </div>
+
+    </Container>
+
+      
+  );
+}
+

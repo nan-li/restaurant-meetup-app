@@ -76,6 +76,11 @@ def get_restaurant_by_user_restaurant_id(user_id, restaurant_id):
     else:
         return None
 
+def create_user_restaurant_relationship(user, restaurant):
+    """Make restaurant object a favorite of user object."""
+    user.favorites.append(restaurant)
+    db.session.commit()
+
 
 def get_hosted_meetups_by_user_id(user_id):
     """Return all meetups hosted by user."""

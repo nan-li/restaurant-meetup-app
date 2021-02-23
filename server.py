@@ -140,9 +140,10 @@ def get_a_restaurant_for_user(user_id, restaurant_id):
         Return error if not in favorites.
         Return restaurant if it is."""
     
-    res = crud.get_restaurant_by_user_restaurant_id(user_id, restaurant_id)
-    if res:
-        result['data'] = res.to_dict()
+    restaurant = crud.get_restaurant_by_user_restaurant_id(user_id, restaurant_id)
+    if restaurant:
+        result = {}
+        result['data'] = restaurant.to_dict()
         result['status'] = 'success'
         return jsonify(result)
 
@@ -151,6 +152,37 @@ def get_a_restaurant_for_user(user_id, restaurant_id):
             'status': 'error',
             'message': 'Restaurant not favorited by the user.'
         })
+
+@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json', methods=['POST'])
+def update_user_restaurant_relationship(user_id, restaurant_id):
+    """Make restaurant a favorite of the user."""
+    #TODO: Make user able to un-favorite a restaurant
+
+    restaurant = crud.get_restaurant_by_id(restaurant_id)
+    user = crud.get_user_by_id(user_id)
+
+    # Check if restaurant is in database
+    if not restaurant:
+        id = request.json['id']
+        name = request.json['name']
+        cuisine = request.json['categories'][0]['title']
+        address = request.json['location']['display_address']
+        longitude = request.json['coordinates']['longitude']
+        latitude = request.json['coordinates']['latitude']
+        image_url = request.json['image_url']
+
+        restaurant = crud.create_restaurant(id, name, cuisine, address, 
+                        longitude, latitude, image_url)
+
+    crud.create_user_restaurant_relationship(user, restaurant)
+
+    return jsonify({
+        'status': 'success',
+        'message': "Restaurant added to user's favorites."
+    })
+    
+
+
 
 @app.route('/api/users/<int:user_id>/hosting.json')
 def get_user_hosted_meetups(user_id):
