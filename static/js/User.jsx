@@ -20,7 +20,7 @@ function LoginForm(props) {
   function handleSubmit(evt) {
     // handle the Login form submission
     evt.preventDefault();
-    console.log("formData from <Login>", formData);
+    // console.log("formData from <Login>", formData);
     
     // Submit to API
     fetch('/api/users/login', {
@@ -33,15 +33,17 @@ function LoginForm(props) {
     .then(res => res.json())
     .then(
       (data) => {
-      console.log('Success:', data)
+      // console.log('Success:', data)
       if (data.status != 'error') {
         props.setUser(data.user);
+
       }
       alert(data.message);
     },
     (error) => {
       setError(error)
     });
+    
   }
 
   return (
@@ -171,26 +173,23 @@ function SignupForm(props) {
 function UserProfile(props) {
   const [error, setError] = React.useState(null);
   const [user, setUser] = React.useState([]);
-  const [isLoaded, setIsLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    fetch(`/api/users/${props.user_id}.json`)
+    fetch(`/api/users/${props.user.id}.json`)
       .then(res => res.json())
       .then(
         (result) => {
           setUser(result);
-          setIsLoaded(true);
         },
         (error) => {
           setError(error);
-          setIsLoaded(true);
         }
       )
   }, [])
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
+  } else if (user.length === 0) {
     return <div>Loading...</div>;
   } else {
     return (
@@ -201,119 +200,27 @@ function UserProfile(props) {
         <p>First Name: {user.fname}</p>
         <p>About {user.username}:</p>
         <p>{user.about}</p>        
-        <MyFavoriteRestaurants user_id={user.id} />
-        <MyHostedMeetups user_id={user.id} />
-        <MyAttendingMeetups user_id={user.id} />
+        <MyFavoriteRestaurants user={user} />
+        <MyHostedMeetups user={user} />
+        <MyAttendingMeetups user={user} />
       </div>
     );
   }
 }
-const initialSearchTerms = Object.freeze({
-  term: "",
-  location: ""
-});
-
-function RestaurantSearch(props) {
-  const [searchTerms, setSearchTerms] = React.useState(initialSearchTerms);
-  const [restaurants, setRestaurants] = React.useState([]);
-  const [error, setError] = React.useState(null);
-  // search results are being fetched
-  const [isLoading, setIsLoading] = React.useState(false);
-  // search results returned and loaded restaurants state
-  const [loadResults, setLoadResults] = React.useState(false);
-
-  const handleChange = (evt) => {
-    setSearchTerms({
-      ...searchTerms, [evt.target.name]: evt.target.value.trim()
-    });
-  };
-
-  function handleSubmit(evt) {
-    evt.preventDefault();
-    setIsLoading(true);
-
-    let url = `/api/restaurants/search.json?term=${searchTerms.term}&location=${searchTerms.location}`;
-    console.log("URL: ", url);
-    fetch(url)
-      .then(res => res.json()) //don't reach here
-      .then(
-        (result) => {
-          setRestaurants(result);
-          console.log("Returned from call");
-          setLoadResults(true);
-        },
-        (error) => {
-          setError(error);
-        });
-  }
-  if (!isLoading) {
-    return (
-      <div>
-        <h1>Search for New Restaurants to Love</h1>
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="term" placeholder="sushi, salad, korean..."
-            required onChange={handleChange}/>
-          <input type="text" name="location" placeholder="San Francisco" 
-            required onChange={handleChange}/>
-          <button type="submit">Search</button>
-        </form>
-      </div>
-    );
-  } else if (!loadResults) {
-    return (
-      <div>
-        <h1>Search for New Restaurants to Love</h1>
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="term" placeholder="sushi, salad, korean..."
-            required onChange={handleChange}/>
-          <input type="text" name="location" placeholder="San Francisco" 
-            required onChange={handleChange}/>
-          <button type="submit">Search</button>
-        </form>
-
-        <h1>Search Results</h1>
-        <p>Loading...</p>
-          
-    </div>
-    ); 
-  } else {
-    return (
-      <div>
-        <h1>Search for New Restaurants to Love</h1>
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="term" placeholder="sushi, salad, korean..."
-            required onChange={handleChange}/>
-          <input type="text" name="location" placeholder="San Francisco" 
-            required onChange={handleChange}/>
-          <button type="submit">Search</button>
-        </form>
-
-        <h1>Search Results</h1>
-        <div className="list-group">
-          {restaurants.businesses.map(rest => (
-          <Media className="list-group-item" key={rest.id}>
-            <img className="img-thumbnail" src={rest.image_url} />
-            <Media.Body>
-              <h5>{rest.name}</h5>
-              <hr />
-              <p>{rest.location.display_address}</p>
-              <p>{rest.categories[0].title}</p>
-            </Media.Body>
-
-          </Media>
-          ))}
-        </div>
-    </div>
-    )
-  }
-}
 
 
+
+
+
+
+/*
+  Shows favorite restaurants for a logged in user using user state
+*/
 function MyFavoriteRestaurants(props) {
   const [restaurants, setRestaurants] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`/api/users/${props.user_id}/restaurants.json`)
+    fetch(`/api/users/${props.user.id}/restaurants.json`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -341,11 +248,12 @@ function MyFavoriteRestaurants(props) {
   );
 }
 
+
+
 function MeetupDetail(props) {
   // TODO: fetch host and restaurant too
   const [error, setError] = React.useState(null);
   const [meetup, setMeetup] = React.useState([]);
-  const [isLoaded, setIsLoaded] = React.useState(false);
 
   React.useEffect(() => {
     fetch(`/api/meetups/${props.meetup_id}.json`)
@@ -353,18 +261,16 @@ function MeetupDetail(props) {
       .then(
         (result) => {
           setMeetup(result);
-          setIsLoaded(true);
         },
         (error) => {
           setError(error);
-          setIsLoaded(true);
         }
       )
   }, [])
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
+  } else if (meetup.length === 0) {
     return <div>Loading...</div>;
   } else {
     return (
@@ -382,7 +288,7 @@ function MyHostedMeetups(props) {
   const [hostedMeetups, setHostedMeetups] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`/api/users/${props.user_id}/hosting.json`)
+    fetch(`/api/users/${props.user.id}/hosting.json`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -412,7 +318,7 @@ function MyAttendingMeetups(props) {
   const [meetups, setMeetups] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`/api/users/${props.user_id}/meetups.json`)
+    fetch(`/api/users/${props.user.id}/meetups.json`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -441,7 +347,6 @@ function MyAttendingMeetups(props) {
 function MeetupAttendees(props) {
   const [attendees, setAttendees] = React.useState([]);
   const [error, setError] = React.useState(null);
-  const [isLoaded, setIsLoaded] = React.useState(false);
 
   React.useEffect(() => {
     fetch(`/api/meetups/${props.meetup_id}/attendees.json`)
@@ -449,18 +354,16 @@ function MeetupAttendees(props) {
       .then(
         (result) => {
           setAttendees(result);
-          setIsLoaded(true);
         },
         (error) => {
           setError(error);
-          setIsLoaded(true);
         }
       )
   }, [])
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
+  } else if (attendees.length === 0) {
     return <div>Loading...</div>;
   } else {
     return (

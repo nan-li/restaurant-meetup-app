@@ -67,6 +67,16 @@ def get_favorites_by_user_id(user_id):
     user = get_user_by_id(user_id)
     return user.favorites
 
+def get_restaurant_by_user_restaurant_id(user_id, restaurant_id):
+    """Return a restaurant if favorited by that user. Return None if not favorited."""
+    user = get_user_by_id(user_id)
+    res = get_restaurant_by_id(restaurant_id)
+    if res in user.favorites:
+        return res
+    else:
+        return None
+
+
 def get_hosted_meetups_by_user_id(user_id):
     """Return all meetups hosted by user."""
     user = get_user_by_id(user_id)

@@ -1,6 +1,15 @@
+/* body {
+    background-color: #fdfdf4;
+} */
+
+/* 
 .navbar {
     position: fixed;
     z-index: 99;
+} */
+
+a {
+    color: #91091e;
 }
 #header-img {
     margin-top: 100px;
@@ -13,6 +22,7 @@
     margin-left: 20px;
     flex: 1;
 }
+
 .img-thumbnail {
     width: 200px;
     height: auto;
@@ -22,3 +32,19 @@ hr {
     width: 50%;
 }
 
+#banner {
+    position: relative;
+}
+#join-button {
+    position: absolute;
+    bottom: 4em;  
+    left: 10em;
+}
+
+.btn-primary {
+    background-color: #bb0e28;
+    border-color: #8f091d;
+}
+.btn-primary:hover {
+    background-color: #720616;
+}

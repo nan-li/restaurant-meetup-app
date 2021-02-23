@@ -44,8 +44,8 @@ for r in restaurant_data:
 def create_fake_user():
     fake = Faker()
 
-    u = fake.first_name()
-    f = u
+    f = fake.first_name()
+    u = f.lower()
     l = fake.last_name()
     e = fake.email()
     p = "test"

@@ -134,6 +134,23 @@ def get_user_favorites(user_id):
 
     return jsonify(restaurants_info)
 
+@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json')
+def get_a_restaurant_for_user(user_id, restaurant_id):
+    """Get restaurant for a user.
+        Return error if not in favorites.
+        Return restaurant if it is."""
+    
+    res = crud.get_restaurant_by_user_restaurant_id(user_id, restaurant_id)
+    if res:
+        result['data'] = res.to_dict()
+        result['status'] = 'success'
+        return jsonify(result)
+
+    else:
+        return jsonify({
+            'status': 'error',
+            'message': 'Restaurant not favorited by the user.'
+        })
 
 @app.route('/api/users/<int:user_id>/hosting.json')
 def get_user_hosted_meetups(user_id):
@@ -166,8 +183,6 @@ def get_restaurant(id):
 def get_search_results():
     """Return restaurants from a Yelp search."""
 
-
-
     url = 'https://api.yelp.com/v3/businesses/search'
     
     headers = {
@@ -176,6 +191,8 @@ def get_search_results():
     }
 
     params = request.args.to_dict()
+    # {'location': 'San Francisco', 'term': 'sushi'}
+
     params['limit'] = 50
     print(params)
     print(request.args.to_dict())
