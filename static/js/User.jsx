@@ -117,7 +117,7 @@ function SignupForm(props) {
           alert(data.message);
         },
         (error) => {
-          setError(error)
+          setError(error);
         });
       }
   }
@@ -226,7 +226,8 @@ function MyProfile(props) {
   const [show, setShow] = React.useState(false);
   const [formData, setFormData] = React.useState(initialFormData);
   const [error, setError] = React.useState(null);
-
+  console.log(formData);
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -247,6 +248,8 @@ function MyProfile(props) {
       alert("Please enter your old password to change password.")
     } else if (formData.old_password && (formData.new_password.length < 8 || formData.new_password.length > 20)) {
       alert("Password must be 8-20 characters long.");
+    } else if (formData == initialFormData) {
+      alert("Nothing to update.");
     } else {
       // Submit to API
       fetch (`/api/users/${props.user.id}`, {
@@ -290,6 +293,7 @@ function MyProfile(props) {
         </Modal.Header>
 
         <Modal.Body>
+          <p>Fill in the fields that you would like to update.</p>
           <form onSubmit={handleSubmit}>
             <div className="form-group p-2">
               <label>First Name</label>
@@ -382,8 +386,12 @@ function MeetupDetails(props) {
     return (
       <Container>
         <h1>Meetup Details</h1>
+        <img src={meetup.restaurant.image_url} />
         <p>Event Name: {meetup.name}</p>
         <p>Event Description: {meetup.description}</p>
+
+        <p>Hosted by:</p>
+        <UserTile user={meetup.host} />
         <MeetupAttendees meetup_id={meetup.id} />
       </Container>
     );
@@ -465,7 +473,7 @@ function MeetupAttendees(props) {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (attendees.length === 0) {
-    return <div>Loading Meetup Attendees...</div>;
+    return <div>No Attendees Yet</div>;
   } else {
     return (
     <div className="container border rounded">

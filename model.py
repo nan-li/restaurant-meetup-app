@@ -137,7 +137,9 @@ class Meetup(db.Model):
             'attendees_count': self.attendees_count,
             'description': self.description,
             'restaurant_id': self.restaurant_id,
-            'host_id': self.host_id 
+            'host_id': self.host_id, 
+            'host': self.host.to_dict(),
+            'restaurant': self.restaurant.to_dict()
             # TODO: link to restaurant and host
         }
         return data

@@ -8,27 +8,27 @@ function App(props) {
   // console.log("User info:", user);
 
   // for now, hardcode a user in
-  // React.useEffect(()=>{
-  //   fetch('/api/users/login', {
-  //     method: 'POST',
-  //     body: JSON.stringify({username: 'margaret', password: 'test'}),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //   .then(res => res.json())
-  //   .then(
-  //     (data) => {
-  //     // console.log('Success:', data)
-  //     if (data.status != 'error') {
-  //       setUser(data.user);
+  React.useEffect(()=>{
+    fetch('/api/users/login', {
+      method: 'POST',
+      body: JSON.stringify({username: 'margaret', password: 'testtest'}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(
+      (data) => {
+      // console.log('Success:', data)
+      if (data.status != 'error') {
+        setUser(data.user);
 
-  //     }
-  //   },
-  //   (error) => {
-  //     setError(error)
-  //   });
-  // }, [])
+      }
+    },
+    (error) => {
+      setError(error)
+    });
+  }, [])
   // end for now hardcode user in
 
 
@@ -50,7 +50,6 @@ function App(props) {
             </Route>
 
             <Route exact path="/meetup/:meetupID">
-              <h1>Meetup details go here!</h1>
               <MeetupDetails />
             </Route>
 

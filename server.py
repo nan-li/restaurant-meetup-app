@@ -2,6 +2,7 @@
 
 from flask import (Flask, render_template, redirect, 
                     flash, request, session, jsonify, request)
+from datetime import datetime
 from model import connect_to_db, User, Restaurant, Meetup
 import os
 import requests
@@ -297,6 +298,28 @@ def get_restaurant_fans(restaurant_id):
     fans_info = [f.to_dict() for f in fans]
     return jsonify(fans_info)
 
+@app.route('/api/meetups/create', methods=['POST'])
+def create_meetup():
+    """Create a new meetup."""
+    name = request.json.get('name')
+    date = datetime.strptime(request.json.get('date'), '%Y-%m-%dT%H:%M')
+    capacity = request.json.get('capacity')
+    attendees_count = 0
+    description = request.json.get('description')
+    restaurant_id = request.json.get('restaurant_id')
+    host_id = request.json.get('host_id')
+
+    restaurant = crud.get_restaurant_by_id(restaurant_id)
+    host = crud.get_user_by_id(host_id)
+
+    meetup = crud.create_meetup(name, date, capacity, attendees_count, 
+                description, restaurant, host)
+
+    return jsonify({
+        'status': 'success',
+        'message': 'Meetup created successfully.',
+        'meetup': meetup.to_dict()
+    })
 
 @app.route('/api/meetups/<int:id>.json')
 def get_meetup(id):

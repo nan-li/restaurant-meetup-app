@@ -167,12 +167,61 @@ function AddRestaurantToFavorites(props) {
 
 /* 
 Show details of a restaurant given restaurant object */
+const initialMeetupData = Object.freeze({
+  name: "",
+  date: "",
+  capacity: "",
+  attendees_count: 0,
+  description: "",
+  restaurant_id: "",
+  host_id: ""
+});
+
 function RestaurantDetails(props) {
   const [favorited, setFavorited] = React.useState(false);
   const [restaurant, setRestaurant] = React.useState([]);
-  
+  const [show, setShow] = React.useState(false);
+  const [formData, setFormData] = React.useState(initialMeetupData);
+  const [error, setError] = React.useState(null);
+  console.log(formData);
+
   let {restaurantID} = useParams();
   console.log("restaurnt is", restaurant);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleChange = (evt) => {
+    setFormData({
+      ...formData, [evt.target.name]: evt.target.value.trim()
+    });
+  };
+  
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    fetch ('/api/meetups/create', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(
+      (data) => {
+        if (data.status != 'error') {
+          alert(data.message);
+          setShow(false);
+
+        } else {
+          alert(data.message);
+        }
+      },
+      (error) => {
+        setError(error);
+      }
+    )
+  }
   
     
   React.useEffect(() => {
@@ -191,6 +240,12 @@ function RestaurantDetails(props) {
           (data) => {
             if (data.status != 'error') {
               setRestaurant(data.restaurant);
+              setFormData({
+                ...formData, 
+                ['restaurant_id']: restaurantID, 
+                ['host_id']: props.user.id
+              });
+              
             }
             if (data.favorited) {
               setFavorited(true);
@@ -206,6 +261,50 @@ function RestaurantDetails(props) {
   
   return (
     <Container>
+      <Button onClick={handleShow}>Create a Meetup</Button>
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create a New Meetup</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group p-2">
+              <label>Event Name</label>
+              <input type="text" className="form-control" name="name" 
+                placeholder="Chill Dinner" onChange={handleChange} required />
+            </div>
+
+            <div className="form-group p-2">
+              <label>Date</label>
+              <input type="datetime-local" className="form-control" name="date" 
+                placeholder="2021-06-12T19:30" onChange={handleChange} required />
+            </div>
+
+            <div className="form-group p-2">
+              <label>Maximum Capacity</label>
+              <input type="number" className="form-control" name="capacity" 
+                onChange={handleChange} required />
+            </div>
+
+            <div className="form-group p-2">
+              <label>Event Description</label>    
+              <textarea className="form-control"  name="description" 
+                placeholder="Let's get together and enjoy a meal together with new friends." 
+                onChange={handleChange} >
+              </textarea>
+            </div>
+
+            <Button variant="primary" type="submit">Create Meetup</Button>
+          </form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <h1>{restaurant.name}</h1>
       <img height={200} src={restaurant.image_url} />
       <hr />
@@ -297,21 +396,17 @@ function RestaurantMeetups (props) {
 
 function MeetupTile(props) {
 
-  // let history = useHistory();
-  // function handleClick() {
-  //   history.push(`/meetup/${props.meetup.id}`);
-  // }
   return (
     <Container>
       <Media className="list-group-item">
-     
+        <img className="img-thumbnail" src={props.meetup.restaurant.image_url} />
+
         <Media.Body>
           <Link to={`/meetup/${props.meetup.id}`}>
             <h5>{props.meetup.name}</h5>
-            {/* <Button onClick={handleClick}>Visit!</Button> */}
           </Link>
           <hr />
-          <p>Hosted by: {props.meetup.host}</p>
+          <p>Hosted by: {props.meetup.host.username}</p>
         </Media.Body>
       </Media>
     </Container>
