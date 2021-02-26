@@ -104,9 +104,11 @@ def get_fans_by_restaurant_id(restaurant_id):
     return restaurant.fans
 
 def get_meetups_by_restaurant_id(restaurant_id):
-    """Return all meetups at a restaurant."""
+    """Return all meetups at a restaurant.
+        Return None if restaurant_id not found."""
     restaurant = get_restaurant_by_id(restaurant_id)
-    return restaurant.meetups
+    return restaurant.meetups if restaurant else None
+   
 
 
 

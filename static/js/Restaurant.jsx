@@ -1,4 +1,4 @@
-const {useParams} = ReactRouterDOM;
+const {useParams, useHistory} = ReactRouterDOM;
 /* 
   This component will render RestaurantSearch
   and MyFavoriteRestaurants  
@@ -10,36 +10,30 @@ function Restaurants(props) {
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);
   // console.log("searchResults is: ", searchResults);
   return (
-    <Router>
+    // <Router>
       <Container>
-
         <Switch>
-          <Route exact path='/restaurant/:restaurantID'>
+          <Route exact path='/restaurants'>
+            <RestaurantSearch 
+              setDisplaySearchResults={setDisplaySearchResults} 
+              setSearchResults={setSearchResults} />
+            {displaySearchResults && 
+              <RestaurantSearchResults user={props.user} restaurants={searchResults} />}
+            
+            {!displaySearchResults &&
+              <MyFavoriteRestaurants user={props.user} 
+                favoriteRestaurants={favoriteRestaurants}
+                setFavoriteRestaurants={setFavoriteRestaurants} />}
+          </Route>
+          <Route path='/restaurant/:restaurantID'>
             <RestaurantDetails user={props.user} 
               displaySearchResults={displaySearchResults}
               restaurants={searchResults} 
               favoriteRestaurants={favoriteRestaurants} />
           </Route>
-          <Route exact path='/restaurants'>
-            <RestaurantSearch 
-              setDisplaySearchResults={setDisplaySearchResults} 
-              setSearchResults={setSearchResults} />
-              {displaySearchResults ? 
-                <RestaurantSearchResults user={props.user} restaurants={searchResults} /> : null}
-            
-              {displaySearchResults ? 
-                null : 
-                <MyFavoriteRestaurants user={props.user} 
-                  favoriteRestaurants={favoriteRestaurants}
-                  setFavoriteRestaurants={setFavoriteRestaurants} />}
-          </Route>
         </Switch>
-
-        
-        
-
       </Container>   
-    </Router>
+    // </Router>
 
      
   );
@@ -94,9 +88,7 @@ function RestaurantSearch(props) {
 
 
 function RestaurantSearchResults(props) {
-  if (props.restaurants.length === 0) {
-    return <h3>Loading...</h3>
-  }
+
   return (
     
       <Container>
@@ -178,6 +170,8 @@ Show details of a restaurant given restaurant object */
 function RestaurantDetails(props) {
   const [favorited, setFavorited] = React.useState(false);
   const [restaurant, setRestaurant] = React.useState([]);
+  let address;
+
   let {restaurantID} = useParams();
   console.log("restaurnt is", restaurant);
   
@@ -190,6 +184,7 @@ function RestaurantDetails(props) {
       for (const res of props.favoriteRestaurants) {
         if (res.id === restaurantID) {
           setRestaurant(res);
+          address = res.address
         }
       }
     } else {
@@ -198,6 +193,8 @@ function RestaurantDetails(props) {
     for (const res of props.restaurants) {
       if (res.id === restaurantID) {
         setRestaurant(res);
+        address = res.location.display_address;
+        console.log("address", address);
       }
     }
 
@@ -224,14 +221,14 @@ function RestaurantDetails(props) {
       <h1>{restaurant.name}</h1>
       <img height={200} src={restaurant.image_url} />
       <hr />
-      <p>{props.displaySearchResults ? restaurant.location.display_address : restaurant.address}</p>
+      <p>{address}</p>
       <p>{props.displaySearchResults ? restaurant.categories[0].title : restaurant.cuisine}</p>
-      {favorited ? null : 
+      {!favorited &&
         <AddRestaurantToFavorites setFavorited={setFavorited} 
           restaurant={restaurant}
           restaurantID={restaurantID} user={props.user} />}
 
-      
+      {favorited && <RestaurantMeetups restaurantID={restaurantID} />}
     </Container>
     
   );
@@ -243,13 +240,26 @@ function RestaurantDetails(props) {
   Shows favorite restaurants for a logged in user using user state
 */
 function MyFavoriteRestaurants(props) {
-
+  // this component wasn't rendered from Restaurant component
+  
+  const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);  
+  
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/restaurants.json`)
       .then(res => res.json())
       .then(
         (result) => {
-          props.setFavoriteRestaurants(result);
+          if (props.setFavoriteRestaurants) {
+            props.setFavoriteRestaurants(result);
+          }
+
+          if (!props.setFavoriteRestaurants) {
+            setFavoriteRestaurants(result);
+          } else {
+            
+          }
+
+
         }
       )
   }, [])
@@ -276,3 +286,54 @@ function MyFavoriteRestaurants(props) {
   );
 }
 
+function RestaurantMeetups (props) {
+  const [meetups, setMeetups] = React.useState([]);
+  
+  React.useEffect(() => {
+    fetch(`/api/restaurants/${props.restaurantID}/meetups.json`)
+      .then(res => res.json())
+      .then((result) => {
+        if (result.status != 'error') {
+          setMeetups(result);
+        }
+      })
+  }, [])
+
+  if (meetups.length === 0) return null;
+
+  console.log("Meetups is ", meetups);
+  return (
+    <Container>
+      <h1>Meetups at this Restaurant</h1>
+      <div className="list-group">
+        {meetups.map(meetup => (
+          <MeetupTile meetup={meetup} key={meetup.id} />
+        ))}
+      </div>
+    </Container>
+  )
+}
+
+function MeetupTile(props) {
+
+  // let history = useHistory();
+  // function handleClick() {
+  //   history.push(`/meetup/${props.meetup.id}`);
+  // }
+  return (
+    <Container>
+      <Media className="list-group-item">
+     
+        <Media.Body>
+          <Link to={`/meetup/${props.meetup.id}`}>
+            <h5>{props.meetup.name}</h5>
+            {/* <Button onClick={handleClick}>Visit!</Button> */}
+          </Link>
+          <hr />
+          <p>Hosted by: {props.meetup.host}</p>
+        </Media.Body>
+      </Media>
+    </Container>
+
+  )
+}

@@ -134,6 +134,8 @@ def get_user_favorites(user_id):
 
     return jsonify(restaurants_info)
 
+
+
 @app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json')
 def get_a_restaurant_for_user(user_id, restaurant_id):
     """Get restaurant for a user.
@@ -166,7 +168,7 @@ def update_user_restaurant_relationship(user_id, restaurant_id):
         id = request.json['id']
         name = request.json['name']
         cuisine = request.json['categories'][0]['title']
-        address = request.json['location']['display_address']
+        address = "\n".join(request.json['location']['display_address'])
         longitude = request.json['coordinates']['longitude']
         latitude = request.json['coordinates']['latitude']
         image_url = request.json['image_url']
@@ -243,6 +245,12 @@ def get_search_results():
 def get_restaurant_meetups(restaurant_id):
     """Return a list of meetups at this restaurant."""
     meetups = crud.get_meetups_by_restaurant_id(restaurant_id)
+    if not meetups:
+        return jsonify({
+            'status': 'error',
+            'message': 'No meetups at this restaurant.'
+        })
+
     meetups_info = [m.to_dict() for m in meetups]
     return jsonify(meetups_info)
 

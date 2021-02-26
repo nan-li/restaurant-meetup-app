@@ -1,4 +1,5 @@
 const {Media, Row, Col} = ReactBootstrap;
+const {useParams} = ReactRouterDOM;
 
 // Following this: 
 // https://linguinecode.com/post/how-to-get-form-data-on-submit-in-reactjs
@@ -208,15 +209,31 @@ function UserProfile(props) {
   }
 }
 
+function MyProfile(props) {
+  return (
+    <Container>
+      {/* const [showEditForm] */}
+      <Button onClick={handleShowEditForm}>Edit Profile</Button>
 
+      <h1>My Profile</h1>
+      <img src={props.user.image_url} />
+      <p>Username: {props.user.username}</p>
+      <p>First Name: {props.user.fname}</p>
+      <p>About Me:</p>
+      <p>{props.user.about}</p> 
+    </Container>
+  );
+}
 
-function MeetupDetail(props) {
+function MeetupDetails(props) {
+  let {meetupID} = useParams();
   // TODO: fetch host and restaurant too
   const [error, setError] = React.useState(null);
   const [meetup, setMeetup] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`/api/meetups/${props.meetup_id}.json`)
+    console.log('we get here');
+    fetch(`/api/meetups/${meeupID}.json`)
       .then(res => res.json())
       .then(
         (result) => {

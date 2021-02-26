@@ -7,8 +7,31 @@ function App(props) {
   const [user, setUser] = React.useState(null);
   // console.log("User info:", user);
 
-  
+  // for now, hardcode a user in
+  React.useEffect(()=>{
+    fetch('/api/users/login', {
+      method: 'POST',
+      body: JSON.stringify({username: 'margaret', password: 'test'}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(
+      (data) => {
+      // console.log('Success:', data)
+      if (data.status != 'error') {
+        setUser(data.user);
 
+      }
+    },
+    (error) => {
+      setError(error)
+    });
+  }, [])
+  // end for now hardcode user in
+
+  
   // no one is logged in
   if (!user) {
     return (
@@ -19,29 +42,31 @@ function App(props) {
   // user is logged in
   } else {
     return (
-      <Router>
         <div>
           <SiteNavbar />
-  
-          <Switch>
+        
+            <Route path={["/restaurant", "/restaurants"]}>
+              <Restaurants user={user}/>
+            </Route>
+
+            <Route exact path="/meetup/:meetupID">
+              <h1>Meetup details go here!</h1>
+              {/* <MeetupDetails /> */}
+            </Route>
+
             <Route exact path="/">
               <h1>Homepage</h1>
             </Route>
-            <Route path="/restaurants">
-              <Restaurants user={user}/>
-            </Route>
-            <Route path="/meetups">
+
+            <Route exact path="/meetups">
               <MyHostedMeetups user={user} />
               <MyAttendingMeetups user={user} />
-              <MeetupDetail meetup_id="3" />
   
             </Route>
-            <Route path="/myprofile">
-              <UserProfile user={user} />
+            <Route exact path="/myprofile">
+              <MyProfile user={user} />
             </Route>        
-          </Switch>
         </div>
-      </Router>
     );
   }
 
@@ -86,7 +111,7 @@ function SiteNavbar(props) {
 */
 function Homepage(props) {
   return (
-    <Router>
+    // <Router>
       <Container>
         <Navbar static="top">
           <Navbar.Brand>
@@ -103,7 +128,7 @@ function Homepage(props) {
             </span>
           </Nav>
         </Navbar>       
-        <Switch>
+        {/* <Switch> */}
           <Route exact path="/">
             <Container fluid id="banner">
               <Image fluid className="mx-auto d-block" src="/static/img/banner.png" />
@@ -112,16 +137,16 @@ function Homepage(props) {
               </Link>
             </Container>             
           </Route>
-          <Route path="/login">
+          <Route exact path="/login">
             <LoginForm setUser={props.setUser} />
           </Route>
-          <Route path="/signup">
+          <Route exact path="/signup">
             <SignupForm setUser={props.setUser} />
           </Route>
-        </Switch>
+        {/* </Switch> */}
       </Container>
-    </Router>
-
+   
+    // </Router>
 
       
    
@@ -131,7 +156,13 @@ function Homepage(props) {
 
 ReactDOM.render(
   (
-    <App />
+    <Router>
+      <App />
+    </Router>
+      
+
+      
+    
   ),
   document.getElementById('root')
 );
