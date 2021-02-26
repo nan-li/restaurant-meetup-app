@@ -71,13 +71,42 @@ def login_user():
             return jsonify({
                 'status': 'success',
                 'message': 'Successfully logged in.',
-                'user': user.to_dict()
+                'user': user.to_dict('include_email')
             })
         else:
             return jsonify({
                 'status': 'error',
                 'message': 'Invalid password.'
             })
+
+@app.route('/api/users/<int:user_id>', methods=['PATCH'])
+def update_user(user_id):
+    """Update user information."""
+    old_password = request.json.get('old_password')
+    new_password = request.json.get('new_password')
+
+    user = crud.get_user_by_id(user_id)
+    if old_password and not user.check_password(old_password):
+        return jsonify({
+            'status': 'error',
+            'message': 'Incorrect password.'
+        })
+    
+    password = new_password
+
+    fname = request.json.get('fname')
+    lname = request.json.get('lname')
+    email = request.json.get('email')
+    image_url = request.json.get('image_url')
+    about = request.json.get('about')
+
+    user = crud.update_user_by_id(user, fname, lname, email, password, image_url, about)
+    return jsonify({
+                    'status': 'success',
+                    'message': 'Successfully update information.',
+                    'user': user.to_dict('include_email')
+                })
+
 
 @app.route('/api/users/signup', methods=['POST'])
 def register_user():
@@ -115,7 +144,7 @@ def register_user():
     return jsonify({
                 'status': 'success',
                 'message': 'Welcome! Account successfully created.',
-                'user': user.to_dict()
+                'user': user.to_dict('include_email')
     })
 
 @app.route('/api/users/<int:id>.json')
@@ -156,7 +185,7 @@ def get_a_restaurant_for_user(user_id, restaurant_id):
 
     if restaurant in user.favorites:
         result['favorited'] = 'true'
-        
+
     return jsonify(result)
 
    

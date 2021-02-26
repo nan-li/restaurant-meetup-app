@@ -1,4 +1,4 @@
-const {Media, Row, Col} = ReactBootstrap;
+const {Media, Row, Col, Modal,} = ReactBootstrap;
 const {useParams} = ReactRouterDOM;
 
 // Following this: 
@@ -211,16 +211,144 @@ function UserProfile(props) {
   }
 }
 
+const initialFormData = Object.freeze({
+  fname: "",
+  lname: "",
+  email: "",
+  old_password: "",
+  new_password: "",
+  confirm: "",
+  about: "",
+  image_url: ""
+});
+
 function MyProfile(props) {
+  const [show, setShow] = React.useState(false);
+  const [formData, setFormData] = React.useState(initialFormData);
+  const [error, setError] = React.useState(null);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleChange = (evt) => {
+    setFormData({
+      ...formData, [evt.target.name]: evt.target.value.trim()
+    });
+  };
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
+    // validate passwords match
+   
+    if (formData.old_password && formData.new_password != formData.confirm) {
+      alert("Passwords don't match.");
+    } else if (!formData.old_password && (formData.new_password || formData.confirm)) {
+      alert("Please enter your old password to change password.")
+    } else if (formData.old_password && (formData.new_password.length < 8 || formData.new_password.length > 20)) {
+      alert("Password must be 8-20 characters long.");
+    } else {
+      // Submit to API
+      fetch (`/api/users/${props.user.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(
+        (data) => {
+          if (data.status != 'error') {
+            props.setUser(data.user);
+            alert(data.message);
+            setShow(false);
+          } else {
+            alert(data.message);
+          }
+          
+          
+        },
+        (error) => {
+          setError(error)
+      });
+  
+    }
+    
+    
+      
+
+  }
+
   return (
     <Container>
-      {/* const [showEditForm] */}
-      <Button onClick={handleShowEditForm}>Edit Profile</Button>
+      <Button onClick={handleShow}>Edit Profile</Button>
+
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Profile Details</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group p-2">
+              <label>First Name</label>
+              <input type="text" className="form-control" name="fname" placeholder={props.user.fname} onChange={handleChange} />
+            </div>
+
+            <div className="form-group p-2">
+              <label>Last Name</label>
+              <input type="text" className="form-control" name="lname" placeholder={props.user.lname} onChange={handleChange} />
+            </div>
+
+            <div className="form-group p-2">
+              <label>Email</label>
+              <input type="email" className="form-control" name="email" placeholder={props.user.email} onChange={handleChange} />
+            </div>
+
+            <div className="form-group p-2">
+              <label>Old Password</label>    
+              <input type="password" className="form-control" name="old_password" placeholder="Old Password" onChange={handleChange} />
+            </div>
+
+            <div className="form-group p-2"> 
+              <label>New Password</label>
+              <input type="password" className="form-control" name="new_password" placeholder="New Password" onChange={handleChange} />
+              <small id="passwordHelpInline" className="text-muted">
+                Must be 8-20 characters long.
+              </small>
+            </div>
+
+            <div className="form-group p-2">
+              <label>Confirm New Password</label>
+              <input type="password" className="form-control" name="confirm" placeholder="Confirm Password" onChange={handleChange} />
+            </div>  
+              
+            <div className="form-group p-2">
+              <label>About Me</label>
+              <textarea className="form-control"  name="about" placeholder={props.user.about} onChange={handleChange} ></textarea>
+            </div>
+
+            <div className="form-group p-2">
+              <label>Upload a Profile Picture</label>
+              <input type="file" className="form-control-file" name="image_url" onChange={handleChange} />
+            </div>
+
+            <Button variant="primary" type="submit">Save Changes</Button>
+          </form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <h1>My Profile</h1>
       <img src={props.user.image_url} />
       <p>Username: {props.user.username}</p>
-      <p>First Name: {props.user.fname}</p>
+      <p>Name: {props.user.fname} {props.user.lname}</p>
       <p>About Me:</p>
       <p>{props.user.about}</p> 
     </Container>
@@ -276,18 +404,15 @@ function MyHostedMeetups(props) {
   }, [])
 
   return (
-    <div className="container border rounded">
+    <Container>
       <h1>My Hosted Meetups</h1>
       <div className="list-group">
         {hostedMeetups.map(meetup => (
-        <a className="list-group-item" key={meetup.id} href={`/api/meetups/${meetup.id}.json`}>
-          {meetup.name}
-          {meetup.date}
-        </a>
+          <MeetupTile meetup={meetup} key={meetup.id} />
         
       ))} 
       </div>
-    </div>
+    </Container>
   );
 }
 
@@ -306,18 +431,15 @@ function MyAttendingMeetups(props) {
   }, [])
 
   return (
-    <div className="container border rounded">
+    <Container>
       <h1>Meetups Attending</h1>
       <div className="list-group">
         {meetups.map(meetup => (
-        <a className="list-group-item" key={meetup.id} href={`/api/meetups/${meetup.id}.json`}>
-          {meetup.name}
-          {meetup.date}
-        </a>
+          <MeetupTile meetup={meetup} key={meetup.id} />
         
       ))} 
       </div>
-    </div>
+    </Container>
   );
 }
 

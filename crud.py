@@ -62,6 +62,25 @@ def get_user_by_email(email):
     """Return a user by email."""
     return User.query.filter_by(email=email).first()
 
+def update_user_by_id(user, fname, lname, email, password, image_url, about):
+    
+    if fname:
+        user.fname = fname
+    if lname:
+        user.lname = lname
+    if email:
+        user.email = email
+    if password:
+        user.set_password(password)
+    if image_url:
+        user.image_url = image_url
+    if about:
+        user.about = about
+
+    db.session.commit()
+
+    return get_user_by_id(user.id)
+
 def get_favorites_by_user_id(user_id):
     """Return all favorite restaurants of user."""
     user = get_user_by_id(user_id)
