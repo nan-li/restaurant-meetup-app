@@ -1,4 +1,4 @@
-const {Media, Row, Col, Modal,} = ReactBootstrap;
+const {Media, Row, Col, Modal, Alert} = ReactBootstrap;
 const {useParams} = ReactRouterDOM;
 
 // Following this: 
@@ -359,23 +359,54 @@ function MyProfile(props) {
   );
 }
 
+function JoinMeetupButton(props) {
+  const createUserMeetupRelationship = () => {
+    props.setAttending(true);
+    // POST to server
+    fetch(`/api/users/${props.user.id}/meetups/${props.meetup.id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(
+        (data) => {
+          console.log(data);
+          
+        }
+      );
+  }
+  return (
+    <Button onClick={createUserMeetupRelationship}>Join Meetup</Button>
+  )
+}
 function MeetupDetails(props) {
-  let {meetupID} = useParams();
-  // TODO: fetch host and restaurant too
   const [error, setError] = React.useState(null);
   const [meetup, setMeetup] = React.useState([]);
+  const [attending, setAttending] = React.useState(false);
+  const [hosting, setHosting] = React.useState(false);
+  console.log("You're attending:", attending);
+  console.log("You're hosting:", hosting);
+
+
+  let {meetupID} = useParams();
 
   React.useEffect(() => {
+    
     fetch(`/api/meetups/${meetupID}.json`)
       .then(res => res.json())
       .then(
         (result) => {
           setMeetup(result);
+          setHosting(result.host.id === props.user.id);
         },
         (error) => {
           setError(error);
         }
       )
+
+      
   }, [])
 
   if (error) {
@@ -385,14 +416,24 @@ function MeetupDetails(props) {
   } else {
     return (
       <Container>
+        {(meetup.attendees_count === meetup.capacity) && 
+          <Alert variant='warning'>This event is full.</Alert>}
+        {!attending && !hosting && (meetup.attendees_count < meetup.capacity) && <JoinMeetupButton setAttending={setAttending}
+          setMeetup={setMeetup}
+          meetup={meetup} user={props.user} />}
         <h1>Meetup Details</h1>
-        <img src={meetup.restaurant.image_url} />
+        <img src={meetup.restaurant.image_url} width={400}/>
         <p>Event Name: {meetup.name}</p>
+        <p>Event Date: {meetup.date}</p>
+        <p>Event Capacity: {meetup.capacity}</p>
         <p>Event Description: {meetup.description}</p>
 
         <p>Hosted by:</p>
-        <UserTile user={meetup.host} />
-        <MeetupAttendees meetup_id={meetup.id} />
+        {meetup.host.id === props.user.id ? "You!" : 
+          <UserTile user={meetup.host} />}
+        
+        <MeetupAttendees meetup_id={meetupID} 
+          setAttending={setAttending} user={props.user}/>
       </Container>
     );
   }
@@ -416,7 +457,7 @@ function MyHostedMeetups(props) {
       <h1>My Hosted Meetups</h1>
       <div className="list-group">
         {hostedMeetups.map(meetup => (
-          <MeetupTile meetup={meetup} key={meetup.id} />
+          <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
         
       ))} 
       </div>
@@ -443,7 +484,7 @@ function MyAttendingMeetups(props) {
       <h1>Meetups Attending</h1>
       <div className="list-group">
         {meetups.map(meetup => (
-          <MeetupTile meetup={meetup} key={meetup.id} />
+          <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
         
       ))} 
       </div>
@@ -455,7 +496,7 @@ function MyAttendingMeetups(props) {
 function MeetupAttendees(props) {
   const [attendees, setAttendees] = React.useState([]);
   const [error, setError] = React.useState(null);
-
+  //console.log("MeetupAttendees attendees: ", attendees);
   // get the users attending the Meetup
   React.useEffect(() => {
     fetch(`/api/meetups/${props.meetup_id}/attendees.json`)
@@ -463,6 +504,7 @@ function MeetupAttendees(props) {
       .then(
         (result) => {
           setAttendees(result);
+          props.setAttending(result.some(el => el.id === props.user.id));
         },
         (error) => {
           setError(error);

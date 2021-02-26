@@ -165,8 +165,7 @@ function AddRestaurantToFavorites(props) {
 }
 
 
-/* 
-Show details of a restaurant given restaurant object */
+
 const initialMeetupData = Object.freeze({
   name: "",
   date: "",
@@ -261,7 +260,8 @@ function RestaurantDetails(props) {
   
   return (
     <Container>
-      <Button onClick={handleShow}>Create a Meetup</Button>
+      {favorited && 
+        <Button onClick={handleShow}>Create a Meetup</Button>}
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Create a New Meetup</Modal.Title>
@@ -315,7 +315,7 @@ function RestaurantDetails(props) {
           restaurant={restaurant}
           restaurantID={restaurantID} user={props.user} />}
 
-      {favorited && <RestaurantMeetups restaurantID={restaurantID} />}
+      {favorited && <RestaurantMeetups user={props.user} restaurantID={restaurantID} />}
     </Container>
     
   );
@@ -387,7 +387,7 @@ function RestaurantMeetups (props) {
       <h1>Meetups at this Restaurant</h1>
       <div className="list-group">
         {meetups.map(meetup => (
-          <MeetupTile meetup={meetup} key={meetup.id} />
+          <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
         ))}
       </div>
     </Container>
@@ -406,7 +406,8 @@ function MeetupTile(props) {
             <h5>{props.meetup.name}</h5>
           </Link>
           <hr />
-          <p>Hosted by: {props.meetup.host.username}</p>
+          <p>Date: {props.meetup.date}</p>
+          <p>Hosted by: {props.meetup.host.id === props.user.id ? "You!" : props.meetup.host.username}</p>
         </Media.Body>
       </Media>
     </Container>

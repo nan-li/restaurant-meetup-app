@@ -241,6 +241,18 @@ def get_user_meetups(user_id):
         
     return jsonify(meetups_info)
 
+@app.route('/api/users/<int:user_id>/meetups/<int:meetup_id>', methods=['POST'])
+def add_user_to_meetup(user_id, meetup_id):
+    """Add user to meetup attendees."""
+
+    meetup = crud.add_user_to_meetup(user_id, meetup_id)
+
+    return jsonify({
+        'status': 'success',
+        'message': "You're added to this Meetup.",
+        'meetup': meetup.to_dict()
+    })
+
 
 @app.route('/api/restaurants/<id>.json')
 def get_restaurant(id):
