@@ -139,21 +139,27 @@ def get_user_favorites(user_id):
 @app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json')
 def get_a_restaurant_for_user(user_id, restaurant_id):
     """Get restaurant for a user.
-        Return error if not in favorites.
-        Return restaurant if it is."""
+        Give status if restaurant is favorited by user.
+        Return error is restaurant is not found."""
     
-    restaurant = crud.get_restaurant_by_user_restaurant_id(user_id, restaurant_id)
-    if restaurant:
-        result = {}
-        result['data'] = restaurant.to_dict()
-        result['status'] = 'success'
-        return jsonify(result)
+    user = crud.get_user_by_id(user_id)
+    restaurant = crud.get_restaurant_by_id(restaurant_id)
 
-    else:
+    if not restaurant:
         return jsonify({
             'status': 'error',
-            'message': 'Restaurant not favorited by the user.'
+            'message': 'Restaurant not found.'
         })
+
+    result = {}
+    result['restaurant'] = restaurant.to_dict()
+
+    if restaurant in user.favorites:
+        result['favorited'] = 'true'
+        
+    return jsonify(result)
+
+   
 
 @app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json', methods=['POST'])
 def update_user_restaurant_relationship(user_id, restaurant_id):

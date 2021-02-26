@@ -170,48 +170,36 @@ Show details of a restaurant given restaurant object */
 function RestaurantDetails(props) {
   const [favorited, setFavorited] = React.useState(false);
   const [restaurant, setRestaurant] = React.useState([]);
-  let address;
-
+  
   let {restaurantID} = useParams();
   console.log("restaurnt is", restaurant);
   
     
   React.useEffect(() => {
-    // check if this restaurant is in user's favorited restaurants
-    // I got to this component from clicking a restaurant in MyFavoriteRestaurants
-    if (!props.displaySearchResults) {
-      setFavorited(true);
-      for (const res of props.favoriteRestaurants) {
+    // this was rendered from Yelp search results
+    if (props.displaySearchResults) {
+      for (const res of props.restaurants) {
         if (res.id === restaurantID) {
           setRestaurant(res);
-          address = res.address
         }
       }
     } else {
-    // this component was rendered from Yelp search results
-
-    for (const res of props.restaurants) {
-      if (res.id === restaurantID) {
-        setRestaurant(res);
-        address = res.location.display_address;
-        console.log("address", address);
-      }
-    }
-
-    // check if this restaurant is a favorited
-    fetch(`/api/users/${props.user.id}/restaurants/${restaurantID}.json`)
-      .then(res => res.json())
-      .then(
-        (data) => {
-          if (data.status != 'error') {
-            setFavorited(true);
+      // get the restaurant data from own database with restaurantID
+      fetch(`/api/users/${props.user.id}/restaurants/${restaurantID}.json`)
+        .then(res => res.json())
+        .then(
+          (data) => {
+            if (data.status != 'error') {
+              setRestaurant(data.restaurant);
+            }
+            if (data.favorited) {
+              setFavorited(true);
+            }
           }
-        }
-      )
+        )
     }
   }, [])
 
-  
 
  
   if (restaurant.length === 0) return <div>Loading...</div>
@@ -221,7 +209,7 @@ function RestaurantDetails(props) {
       <h1>{restaurant.name}</h1>
       <img height={200} src={restaurant.image_url} />
       <hr />
-      <p>{address}</p>
+      <p>{props.displaySearchResults ? restaurant.location.display_address : restaurant.address}</p>
       <p>{props.displaySearchResults ? restaurant.categories[0].title : restaurant.cuisine}</p>
       {!favorited &&
         <AddRestaurantToFavorites setFavorited={setFavorited} 
@@ -252,24 +240,17 @@ function MyFavoriteRestaurants(props) {
           if (props.setFavoriteRestaurants) {
             props.setFavoriteRestaurants(result);
           }
-
-          if (!props.setFavoriteRestaurants) {
-            setFavoriteRestaurants(result);
-          } else {
-            
-          }
-
-
+          setFavoriteRestaurants(result);
         }
       )
   }, [])
-
+  
   return (
 
     <Container>
       <h1>My Favorite Restaurants</h1>
       <div className="list-group">
-        {props.favoriteRestaurants.map(rest => (
+        {favoriteRestaurants.map(rest => (
           
           <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
         // <a href={`/api/restaurants/${rest.id}.json`} className="list-group-item" key={rest.id}>

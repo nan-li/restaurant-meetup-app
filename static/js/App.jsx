@@ -31,7 +31,7 @@ function App(props) {
   }, [])
   // end for now hardcode user in
 
-  
+
   // no one is logged in
   if (!user) {
     return (
@@ -51,7 +51,11 @@ function App(props) {
 
             <Route exact path="/meetup/:meetupID">
               <h1>Meetup details go here!</h1>
-              {/* <MeetupDetails /> */}
+              <MeetupDetails />
+            </Route>
+
+            <Route exact path="/user/:userID">
+              <UserProfile />
             </Route>
 
             <Route exact path="/">

@@ -175,8 +175,10 @@ function UserProfile(props) {
   const [error, setError] = React.useState(null);
   const [user, setUser] = React.useState([]);
 
+  let {userID} = useParams();
+
   React.useEffect(() => {
-    fetch(`/api/users/${props.user.id}.json`)
+    fetch(`/api/users/${userID}.json`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -232,8 +234,7 @@ function MeetupDetails(props) {
   const [meetup, setMeetup] = React.useState([]);
 
   React.useEffect(() => {
-    console.log('we get here');
-    fetch(`/api/meetups/${meeupID}.json`)
+    fetch(`/api/meetups/${meetupID}.json`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -251,12 +252,12 @@ function MeetupDetails(props) {
     return <div>Loading...</div>;
   } else {
     return (
-      <div className="container border rounded">
+      <Container>
         <h1>Meetup Details</h1>
         <p>Event Name: {meetup.name}</p>
         <p>Event Description: {meetup.description}</p>
         <MeetupAttendees meetup_id={meetup.id} />
-      </div>
+      </Container>
     );
   }
 }
@@ -325,6 +326,7 @@ function MeetupAttendees(props) {
   const [attendees, setAttendees] = React.useState([]);
   const [error, setError] = React.useState(null);
 
+  // get the users attending the Meetup
   React.useEffect(() => {
     fetch(`/api/meetups/${props.meetup_id}/attendees.json`)
       .then(res => res.json())
@@ -341,23 +343,37 @@ function MeetupAttendees(props) {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (attendees.length === 0) {
-    return <div>Loading...</div>;
+    return <div>Loading Meetup Attendees...</div>;
   } else {
     return (
     <div className="container border rounded">
 
       <h1>Attendees</h1>
-
       <div className="list-group">
         {attendees.map(user => (
-        <a href={`/api/users/${user.id}.json`} className="list-group-item" key={user.id}>
-          <img className="img-thumbnail" src={user.image_url} />
-          {user.username}
-        </a>
+          <UserTile user={user} key={user.id} />
         ))}
       </div>
 
     </div>
     );
   }
+}
+
+function UserTile(props) {
+  return (
+    <Container>
+      <Media className="list-group-item" >
+          <img className="img-thumbnail" src={props.user.image_url} />
+          <Media.Body>
+            <Link to={`/user/${props.user.id}`}>
+              <h5>{props.user.username}</h5>
+            </Link>
+            <hr />
+            <p>{props.user.fname} {props.user.lname}</p>
+          </Media.Body>
+        </Media>
+    </Container>
+  )
+
 }
