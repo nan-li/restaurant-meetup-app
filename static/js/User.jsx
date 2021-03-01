@@ -176,6 +176,9 @@ function UserProfile(props) {
   const [user, setUser] = React.useState([]);
 
   let {userID} = useParams();
+  if (userID == props.user.id) {
+    return <MyProfile user={props.user} setUser={props.seUser} />;
+  }
 
   React.useEffect(() => {
     fetch(`/api/users/${userID}.json`)
@@ -196,17 +199,25 @@ function UserProfile(props) {
     return <div>Loading...</div>;
   } else {
     return (
-      <div className="container border rounded">
-        <h1>User Details</h1>
-        <img src={user.image_url} />
-        <p>Username: {user.username}</p>
-        <p>First Name: {user.fname}</p>
-        <p>About {user.username}:</p>
-        <p>{user.about}</p>        
-        <MyFavoriteRestaurants user={user} />
-        <MyHostedMeetups user={user} />
-        <MyAttendingMeetups user={user} />
-      </div>
+      <Container>
+        <Row>
+          <Col>
+            <h1>User Details</h1>
+            <img src={user.image_url} />
+          </Col>
+          <Col>
+            <p>Username: {user.username}</p>
+            <p>First Name: {user.fname}</p>
+            <p>About {user.username}:</p>
+            <p>{user.about}</p>  
+            <MyFavoriteRestaurants user={user} />    
+          </Col>
+        </Row>
+        <Row>
+          <Col><MyHostedMeetups user={user} /></Col>
+          <Col><MyAttendingMeetups user={user} /></Col>
+        </Row>
+      </Container>
     );
   }
 }
@@ -285,7 +296,6 @@ function MyProfile(props) {
 
   return (
     <Container>
-      <Button onClick={handleShow}>Edit Profile</Button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
@@ -349,12 +359,21 @@ function MyProfile(props) {
         </Modal.Footer>
       </Modal>
 
-      <h1>My Profile</h1>
-      <img src={props.user.image_url} />
-      <p>Username: {props.user.username}</p>
-      <p>Name: {props.user.fname} {props.user.lname}</p>
-      <p>About Me:</p>
-      <p>{props.user.about}</p> 
+      <Row>
+        <Col>
+          <h1>My Profile</h1>
+          <img src={props.user.image_url} />
+        </Col>
+        <Col>
+          <Button onClick={handleShow}>Edit Profile</Button>
+          <p>Username: {props.user.username}</p>
+          <p>Name: {props.user.fname} {props.user.lname}</p>
+          <p>About Me:</p>
+          <p>{props.user.about}</p> 
+        </Col>
+      </Row>
+      
+      
     </Container>
   );
 }
@@ -373,13 +392,36 @@ function JoinMeetupButton(props) {
       .then(
         (data) => {
           console.log(data);
-          
-        }
-      );
+      }
+    );
   }
+
+  const deleteUserMeetupRelationship = () => {
+    props.setAttending(false);
+    // POST to server
+    fetch(`/api/users/${props.user.id}/meetups/${props.meetup.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(
+        (data) => {
+          console.log(data);
+      }
+    );
+  }
+
   return (
-    <Button onClick={createUserMeetupRelationship}>Join Meetup</Button>
-  )
+    <React.Fragment>
+      
+      {props.attending &&
+        <Button onClick={deleteUserMeetupRelationship}>Leave Meetup</Button> }
+      {!props.attending && (props.meetup.attendees_count < props.meetup.capacity) &&  
+        <Button onClick={createUserMeetupRelationship}>Join Meetup</Button>}
+    </React.Fragment>
+  );
 }
 function MeetupDetails(props) {
   const [error, setError] = React.useState(null);
@@ -418,7 +460,8 @@ function MeetupDetails(props) {
       <Container>
         {(meetup.attendees_count === meetup.capacity) && 
           <Alert variant='warning'>This event is full.</Alert>}
-        {!attending && !hosting && (meetup.attendees_count < meetup.capacity) && <JoinMeetupButton setAttending={setAttending}
+        {!hosting && 
+          <JoinMeetupButton setAttending={setAttending} attending={attending}
           setMeetup={setMeetup}
           meetup={meetup} user={props.user} />}
         <h1>Meetup Details</h1>

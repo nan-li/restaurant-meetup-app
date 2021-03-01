@@ -253,6 +253,17 @@ def add_user_to_meetup(user_id, meetup_id):
         'meetup': meetup.to_dict()
     })
 
+@app.route('/api/users/<int:user_id>/meetups/<int:meetup_id>', methods=['DELETE'])
+def delete_user_from_meetup(user_id, meetup_id):
+    """Remove user from meetup attendees."""
+
+    meetup = crud.delete_user_from_meetup(user_id, meetup_id)
+
+    return jsonify({
+        'status': 'success',
+        'message': "You're not attending this Meetup anymore.",
+        'meetup': meetup.to_dict()
+    })
 
 @app.route('/api/restaurants/<id>.json')
 def get_restaurant(id):

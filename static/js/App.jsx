@@ -54,7 +54,7 @@ function App(props) {
             </Route>
 
             <Route exact path="/user/:userID">
-              <UserProfile />
+              <UserProfile setUser={setUser} user={user}/>
             </Route>
 
             <Route exact path="/">
@@ -63,8 +63,11 @@ function App(props) {
             </Route>
 
             <Route exact path="/meetups">
-              <MyHostedMeetups user={user} />
-              <MyAttendingMeetups user={user} />
+              <Row>
+                <Col><MyHostedMeetups user={user} /></Col>
+                <Col><MyAttendingMeetups user={user} /></Col>
+              </Row>
+              
   
             </Route>
             <Route exact path="/myprofile">

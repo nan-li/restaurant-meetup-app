@@ -109,6 +109,15 @@ def add_user_to_meetup(user_id, meetup_id):
     db.session.commit()
     return meetup
 
+def delete_user_from_meetup(user_id, meetup_id):
+    """Remove a user from meetup attendees."""
+    user = get_user_by_id(user_id)
+    meetup = get_meetup_by_id(meetup_id)
+    meetup.attendees.remove(user)
+    meetup.attendees_count -= 1
+    db.session.commit()
+    return meetup
+
 
 def get_hosted_meetups_by_user_id(user_id):
     """Return all meetups hosted by user."""

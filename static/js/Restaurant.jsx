@@ -14,16 +14,25 @@ function Restaurants(props) {
       <Container>
         <Switch>
           <Route exact path='/restaurants'>
-            <RestaurantSearch 
-              setDisplaySearchResults={setDisplaySearchResults} 
-              setSearchResults={setSearchResults} />
-            {displaySearchResults && 
-              <RestaurantSearchResults user={props.user} restaurants={searchResults} />}
+            <Row>
+              <Col>
+                  <MyFavoriteRestaurants user={props.user} 
+                    favoriteRestaurants={favoriteRestaurants}
+                    setFavoriteRestaurants={setFavoriteRestaurants} />
+              </Col>
+              <Col>
+                <RestaurantSearch 
+                  setDisplaySearchResults={setDisplaySearchResults} 
+                  setSearchResults={setSearchResults} />
+             
+                {displaySearchResults && 
+                  <RestaurantSearchResults user={props.user} restaurants={searchResults} />}
+              </Col>
+            </Row>
+
             
-            {!displaySearchResults &&
-              <MyFavoriteRestaurants user={props.user} 
-                favoriteRestaurants={favoriteRestaurants}
-                setFavoriteRestaurants={setFavoriteRestaurants} />}
+            
+ 
           </Route>
           <Route path='/restaurant/:restaurantID'>
             <RestaurantDetails user={props.user} 
