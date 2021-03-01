@@ -475,7 +475,7 @@ function MeetupDetails(props) {
         {meetup.host.id === props.user.id ? "You!" : 
           <UserTile user={meetup.host} />}
         
-        <MeetupAttendees meetup_id={meetupID} 
+        <MeetupAttendees meetup_id={meetupID} attending={attending}
           setAttending={setAttending} user={props.user}/>
       </Container>
     );
@@ -553,7 +553,7 @@ function MeetupAttendees(props) {
           setError(error);
         }
       )
-  }, [])
+  }, [props.attending])
 
   if (error) {
     return <div>Error: {error.message}</div>;

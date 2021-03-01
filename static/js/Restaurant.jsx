@@ -324,7 +324,8 @@ function RestaurantDetails(props) {
           restaurant={restaurant}
           restaurantID={restaurantID} user={props.user} />}
 
-      {favorited && <RestaurantMeetups user={props.user} restaurantID={restaurantID} />}
+      {favorited && <RestaurantMeetups user={props.user} restaurantID={restaurantID} 
+        show={show} />}
     </Container>
     
   );
@@ -386,11 +387,10 @@ function RestaurantMeetups (props) {
           setMeetups(result);
         }
       })
-  }, [])
+  }, [props.show])
 
   if (meetups.length === 0) return null;
 
-  console.log("Meetups is ", meetups);
   return (
     <Container>
       <h1>Meetups at this Restaurant</h1>
