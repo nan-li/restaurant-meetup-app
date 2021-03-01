@@ -189,7 +189,7 @@ def get_a_restaurant_for_user(user_id, restaurant_id):
 
     return jsonify(result)
 
-   
+
 
 @app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json', methods=['POST'])
 def update_user_restaurant_relationship(user_id, restaurant_id):
@@ -219,7 +219,17 @@ def update_user_restaurant_relationship(user_id, restaurant_id):
         'message': "Restaurant added to user's favorites."
     })
     
+@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json',
+    methods=['DELETE'])
+def delete_restaurant_for_user(user_id, restaurant_id):
+    user = crud.get_user_by_id(user_id)
+    restaurant = crud.get_restaurant_by_id(restaurant_id)
+    crud.delete_user_restaurant_relationship(user, restaurant)
 
+    return jsonify({
+        'status': 'success',
+        'message': 'Restaurant is unfavorited.'
+    })
 
 
 @app.route('/api/users/<int:user_id>/hosting.json')
@@ -310,8 +320,20 @@ def get_restaurant_meetups(restaurant_id):
             'message': 'No meetups at this restaurant.'
         })
 
-    meetups_info = [m.to_dict() for m in meetups]
-    return jsonify(meetups_info)
+    attending = crud.get_meetups_by_user_id(session['user_id'])
+
+    result = {
+        'meetups_info': [m.to_dict() for m in meetups]
+    }
+
+    for meetup in meetups:
+        if session['user_id'] == meetup.host_id:
+            result['isHosting'] = 'true'
+            break
+        if meetup in attending:
+            result['isAttending'] = 'true'
+    
+    return jsonify(result)
 
 
 @app.route('/api/restaurants/<restaurant_id>/fans.json')

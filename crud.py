@@ -101,6 +101,10 @@ def create_user_restaurant_relationship(user, restaurant):
     user.favorites.append(restaurant)
     db.session.commit()
 
+def delete_user_restaurant_relationship(user, restaurant):
+    user.favorites.remove(restaurant)
+    db.session.commit()
+
 def add_user_to_meetup(user_id, meetup_id):
     """Add a user to meetup attendees."""
     user = get_user_by_id(user_id)

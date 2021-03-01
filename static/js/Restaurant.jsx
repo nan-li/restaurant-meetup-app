@@ -149,7 +149,10 @@ function RestaurantTile(props) {
 }
 
 
-function AddRestaurantToFavorites(props) {
+function FavoriteUnfavoriteRestaurantButton(props) {
+
+  let history = useHistory();
+
   const createUserRestaurantRelationship = () => {
     props.setFavorited(true);
     // POST to server
@@ -168,9 +171,47 @@ function AddRestaurantToFavorites(props) {
     );
   }
   
+  const deleteUserRestaurantRelationship = () => {
+    console.log("isHosting?", props.isHostingMeetupHere);
+    console.log("isAttending?", props.isAttendingMeetupHere);
+
+    // check if user is attending or hosting meetups here
+    if (props.isHostingMeetupHere) {
+      alert('You are hosting a meetup here. Cannot unfavorite this restaurant');
+    }
+    else if (props.isAttendingMeetupHere) {
+      alert('You are attending a meetup here. Cannot unfavorite this restaurant');
+    } else {
+      // Make request to backend
+      fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}.json`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+        history.push('/restaurants');
+      })
+    }
+  }
+
   return (
-    <Button onClick={createUserRestaurantRelationship}>Add to Favorites</Button>
-  )
+    <React.Fragment>
+      {console.log("HERE")}
+      {!props.favorited && 
+        <Button onClick={createUserRestaurantRelationship}>
+          Add to Favorites
+        </Button>}
+      {props.favorited && 
+        <Button onClick={deleteUserRestaurantRelationship}>
+          Remove From Favorites
+        </Button>}
+      
+    </React.Fragment>
+    
+  );
 }
 
 
@@ -187,10 +228,16 @@ const initialMeetupData = Object.freeze({
 
 function RestaurantDetails(props) {
   const [favorited, setFavorited] = React.useState(false);
+  console.log("favorited?", favorited);
+
   const [restaurant, setRestaurant] = React.useState([]);
   const [show, setShow] = React.useState(false);
   const [formData, setFormData] = React.useState(initialMeetupData);
   const [error, setError] = React.useState(null);
+
+  const [isHostingMeetupHere, setIsHostingMeetupHere] = React.useState(false);
+  const [isAttendingMeetupHere, setIsAttendingMeetupHere] = React.useState(false);
+
   console.log(formData);
 
   let {restaurantID} = useParams();
@@ -319,13 +366,17 @@ function RestaurantDetails(props) {
       <hr />
       <p>{props.displaySearchResults ? restaurant.location.display_address : restaurant.address}</p>
       <p>{props.displaySearchResults ? restaurant.categories[0].title : restaurant.cuisine}</p>
-      {!favorited &&
-        <AddRestaurantToFavorites setFavorited={setFavorited} 
-          restaurant={restaurant}
-          restaurantID={restaurantID} user={props.user} />}
+     
+      <FavoriteUnfavoriteRestaurantButton 
+        favorited={favorited} setFavorited={setFavorited}
+        restaurantID={restaurantID} user={props.user} 
+        isHostingMeetupHere={isHostingMeetupHere} 
+        isAttendingMeetupHere={isAttendingMeetupHere} />
 
       {favorited && <RestaurantMeetups user={props.user} restaurantID={restaurantID} 
-        show={show} />}
+        show={show} setIsAttendingMeetupHere={setIsAttendingMeetupHere}
+        setIsHostingMeetupHere={setIsHostingMeetupHere}
+        />}
     </Container>
     
   );
@@ -384,7 +435,14 @@ function RestaurantMeetups (props) {
       .then(res => res.json())
       .then((result) => {
         if (result.status != 'error') {
-          setMeetups(result);
+          setMeetups(result.meetups_info);
+          // check meetups to see if user is hosting or attending any
+          if (result.isHosting) {
+            props.setIsHostingMeetupHere(true);
+          }
+          if (result.isAttending) {
+            props.setIsAttendingMeetupHere(true);
+          }
         }
       })
   }, [props.show])
