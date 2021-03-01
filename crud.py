@@ -168,6 +168,17 @@ def update_meetup_by_id(meetup_id, name, date, capacity, description):
     
     db.session.commit()
 
+def delete_meetup_by_id(meetup_id):
+    """Cancel the meetup with this id."""
+    
+    meetup = get_meetup_by_id(meetup_id)
+    db.session.delete(meetup)
+    db.session.commit()
+    return meetup
+
+    
+
+
 def get_host_by_meetup_id(meetup_id):
     """Return the host of a meetup."""
     meetup = get_meetup_by_id(meetup_id)

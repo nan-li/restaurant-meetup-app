@@ -367,6 +367,11 @@ def update_meetup(meetup_id):
 @app.route('/api/meetups/<int:meetup_id>', methods=['DELETE'])
 def delete_meetup(meetup_id):
     """Delete this meetup."""
+    meetup = crud.delete_meetup_by_id(meetup_id)
+    return jsonify({
+        'status': 'success',
+        'message': 'Successfully deleted meetup.'
+    })
 
 @app.route('/api/meetups/<int:meetup_id>/host.json')
 def get_host(meetup_id):

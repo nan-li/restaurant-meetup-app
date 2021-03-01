@@ -75,7 +75,7 @@ const initialMeetupData = Object.freeze({
 });
 
 function EditMeetupButton(props) {
-  //let history = useHistory();
+  let history = useHistory();
 
   const [show, setShow] = React.useState(false);
   const [formData, setFormData] = React.useState(initialMeetupData);
@@ -115,7 +115,7 @@ function EditMeetupButton(props) {
 
   const deleteMeetup = (evt) => {
     evt.preventDefault();
-    fetch (`/api/meetups/${meetupID}`, {
+    fetch (`/api/meetups/${props.meetupID}`, {
       method: 'DELETE',
       body: JSON.stringify(formData),
       headers: {
@@ -124,7 +124,9 @@ function EditMeetupButton(props) {
     })
     .then(res => res.json())
     .then((data) => {
+      setShow(false);
       history.push('/meetups');
+      alert(data.message);
     });
   }  
   return (

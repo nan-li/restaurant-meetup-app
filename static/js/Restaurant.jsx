@@ -169,7 +169,7 @@ function AddRestaurantToFavorites(props) {
   }
   
   return (
-    <button onClick={createUserRestaurantRelationship}>Add to Favorites</button>
+    <Button onClick={createUserRestaurantRelationship}>Add to Favorites</Button>
   )
 }
 
