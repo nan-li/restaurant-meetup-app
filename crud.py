@@ -1,6 +1,7 @@
 """CRUD operations."""
 
 from model import db, User, Restaurant, Meetup, connect_to_db
+from datetime import datetime
 
 def create_restaurant(id, name, cuisine, address, 
                 longitude, latitude, image_url):
@@ -62,7 +63,7 @@ def get_user_by_email(email):
     """Return a user by email."""
     return User.query.filter_by(email=email).first()
 
-def update_user_by_id(user, fname, lname, email, password, image_url, about):
+def update_user(user, fname, lname, email, password, image_url, about):
     
     if fname:
         user.fname = fname
@@ -152,6 +153,20 @@ def get_meetups_by_restaurant_id(restaurant_id):
 def get_meetup_by_id(meetup_id):
     """Return a meetup by primary key."""
     return Meetup.query.get(meetup_id)
+
+def update_meetup_by_id(meetup_id, name, date, capacity, description):
+    """Update the details of a meetup."""
+    meetup = get_meetup_by_id(meetup_id)
+    if name:
+        meetup.name = name
+    if date:
+        meetup.date = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+    if capacity:    
+        meetup.capacity = capacity
+    if description:
+        meetup.description = description
+    
+    db.session.commit()
 
 def get_host_by_meetup_id(meetup_id):
     """Return the host of a meetup."""

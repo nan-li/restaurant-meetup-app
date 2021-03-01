@@ -8,27 +8,27 @@ function App(props) {
   // console.log("User info:", user);
 
   // for now, hardcode a user in
-  // React.useEffect(()=>{
-  //   fetch('/api/users/login', {
-  //     method: 'POST',
-  //     body: JSON.stringify({username: 'john', password: 'test'}),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //   .then(res => res.json())
-  //   .then(
-  //     (data) => {
-  //     // console.log('Success:', data)
-  //     if (data.status != 'error') {
-  //       setUser(data.user);
+  React.useEffect(()=>{
+    fetch('/api/users/login', {
+      method: 'POST',
+      body: JSON.stringify({username: 'john', password: 'test'}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(
+      (data) => {
+      // console.log('Success:', data)
+      if (data.status != 'error') {
+        setUser(data.user);
 
-  //     }
-  //   },
-  //   (error) => {
-  //     setError(error)
-  //   });
-  // }, [])
+      }
+    },
+    (error) => {
+      setError(error)
+    });
+  }, [])
   // end for now hardcode user in
 
 

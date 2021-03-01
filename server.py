@@ -101,7 +101,7 @@ def update_user(user_id):
     image_url = request.json.get('image_url')
     about = request.json.get('about')
 
-    user = crud.update_user_by_id(user, fname, lname, email, password, image_url, about)
+    user = crud.update_user(user, fname, lname, email, password, image_url, about)
     return jsonify({
                     'status': 'success',
                     'message': 'Successfully update information.',
@@ -344,11 +344,29 @@ def create_meetup():
         'meetup': meetup.to_dict()
     })
 
-@app.route('/api/meetups/<int:id>.json')
-def get_meetup(id):
+@app.route('/api/meetups/<int:meetup_id>.json')
+def get_meetup(meetup_id):
     """Return meetup information."""
-    return jsonify(crud.get_meetup_by_id(id).to_dict())
+    return jsonify(crud.get_meetup_by_id(meetup_id).to_dict())
 
+@app.route('/api/meetups/<int:meetup_id>', methods=['PATCH'])
+def update_meetup(meetup_id):
+    """Update meetup details."""
+    name = request.json.get('name')
+    date = request.json.get('date')
+    capacity = request.json.get('capacity')
+    description = request.json.get('description')
+
+    crud.update_meetup_by_id(meetup_id, name, date, capacity, description)
+
+    return jsonify({
+        'status': 'success',
+        'message': 'Successfully updated meetup.'
+    })
+
+@app.route('/api/meetups/<int:meetup_id>', methods=['DELETE'])
+def delete_meetup(meetup_id):
+    """Delete this meetup."""
 
 @app.route('/api/meetups/<int:meetup_id>/host.json')
 def get_host(meetup_id):

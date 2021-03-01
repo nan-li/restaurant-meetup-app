@@ -403,23 +403,3 @@ function RestaurantMeetups (props) {
   )
 }
 
-function MeetupTile(props) {
-
-  return (
-    <Container>
-      <Media className="list-group-item">
-        <img className="img-thumbnail" src={props.meetup.restaurant.image_url} />
-
-        <Media.Body>
-          <Link to={`/meetup/${props.meetup.id}`}>
-            <h5>{props.meetup.name}</h5>
-          </Link>
-          <hr />
-          <p>Date: {props.meetup.date}</p>
-          <p>Hosted by: {props.meetup.host.id === props.user.id ? "You!" : props.meetup.host.username}</p>
-        </Media.Body>
-      </Media>
-    </Container>
-
-  )
-}
