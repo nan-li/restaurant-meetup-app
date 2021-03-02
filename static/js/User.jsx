@@ -381,6 +381,9 @@ function MyProfile(props) {
 
 
 function UserTile(props) {
+  // if (props.user.id === props.currentUser.id) {
+  //   return null;
+  // }
   return (
     <Container>
       <Media className="list-group-item" >
@@ -389,6 +392,7 @@ function UserTile(props) {
             <Link to={`/user/${props.user.id}`}>
               <h5>{props.user.username}</h5>
             </Link>
+            {props.user.id === props.currentUser.id && <p>That's YOU!</p>}
             <hr />
             <p>{props.user.fname} {props.user.lname}</p>
           </Media.Body>

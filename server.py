@@ -219,8 +219,7 @@ def update_user_restaurant_relationship(user_id, restaurant_id):
         'message': "Restaurant added to user's favorites."
     })
     
-@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json',
-    methods=['DELETE'])
+@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json', methods=['DELETE'])
 def delete_restaurant_for_user(user_id, restaurant_id):
     user = crud.get_user_by_id(user_id)
     restaurant = crud.get_restaurant_by_id(restaurant_id)
@@ -340,8 +339,15 @@ def get_restaurant_meetups(restaurant_id):
 def get_restaurant_fans(restaurant_id):
     """Return a list of users favoriting the restaurant."""
     fans = crud.get_fans_by_restaurant_id(restaurant_id)
+    if not fans:
+        return jsonify({
+            'status': 'error',
+            'message': 'This restaurant has no fans.'
+        })
+
     fans_info = [f.to_dict() for f in fans]
     return jsonify(fans_info)
+
 
 @app.route('/api/meetups/create', methods=['POST'])
 def create_meetup():

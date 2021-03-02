@@ -369,14 +369,26 @@ function RestaurantDetails(props) {
      
       <FavoriteUnfavoriteRestaurantButton 
         favorited={favorited} setFavorited={setFavorited}
+        restaurant={restaurant}
         restaurantID={restaurantID} user={props.user} 
         isHostingMeetupHere={isHostingMeetupHere} 
         isAttendingMeetupHere={isAttendingMeetupHere} />
 
-      {favorited && <RestaurantMeetups user={props.user} restaurantID={restaurantID} 
-        show={show} setIsAttendingMeetupHere={setIsAttendingMeetupHere}
-        setIsHostingMeetupHere={setIsHostingMeetupHere}
-        />}
+      <Row>
+        <Col>
+          {favorited && 
+            <RestaurantFans restaurantID={restaurantID}
+              user={props.user} />}
+        </Col>
+        <Col>
+          {favorited && 
+            <RestaurantMeetups user={props.user} restaurantID={restaurantID} 
+              show={show} setIsAttendingMeetupHere={setIsAttendingMeetupHere}
+              setIsHostingMeetupHere={setIsHostingMeetupHere} />}
+        </Col>
+      </Row>
+      
+      
     </Container>
     
   );
@@ -461,3 +473,29 @@ function RestaurantMeetups (props) {
   )
 }
 
+function RestaurantFans (props) {
+  const [fans, setFans] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch(`/api/restaurants/${props.restaurantID}/fans.json`)
+      .then(res => res.json())
+      .then((result) => {
+        if (result.status != 'error') {
+          setFans(result);         
+        }
+      })
+  }, [])
+
+  if (fans.length === 0) return null;
+
+  return (
+    <Container>
+      <h1>Fans of this Restaurant</h1>
+      <div className="list-group">
+        {fans.map(user => (
+          <UserTile currentUser={props.user} user={user} key={user.id} />
+        ))}
+      </div>
+    </Container>
+  );
+}

@@ -242,7 +242,7 @@ function MeetupDetails(props) {
 
         <p>Hosted by:</p>
         {meetup.host.id === props.user.id ? "You!" : 
-          <UserTile user={meetup.host} />}
+          <UserTile user={meetup.host} currentUser={props.user} />}
         
         <MeetupAttendees meetup_id={meetupID} attending={attending}
           setAttending={setAttending} user={props.user}/>
@@ -335,7 +335,7 @@ function MeetupAttendees(props) {
       <h1>Attendees</h1>
       <div className="list-group">
         {attendees.map(user => (
-          <UserTile user={user} key={user.id} />
+          <UserTile currentUser={props.user} user={user} key={user.id} />
         ))}
       </div>
 
