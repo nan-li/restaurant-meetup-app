@@ -170,12 +170,57 @@ function SignupForm(props) {
   );
 }
 
+const initialMessageData = Object.freeze({
+  body: ""
+});
 
 function UserProfile(props) {
+  console.log("IN USER PROFILE")
   const [error, setError] = React.useState(null);
   const [user, setUser] = React.useState([]);
-
+  const [messages, setMessages] = React.useState([]);
+  const [reload, setReload] = React.useState(false);
   let {userID} = useParams();
+  
+  const [show, setShow] = React.useState(false);
+  const [formData, setFormData] = React.useState(initialMessageData);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleChange = (evt) => {
+    setFormData({
+      ...formData, [evt.target.name]: evt.target.value.trim()
+    });
+  };
+
+  // fetch all Messages exchanged with this user
+  React.useEffect(() => {
+    fetch(`/api/users/${props.user.id}/messages/${userID}`)
+      .then(res => res.json())
+      .then((result) => {
+        if (result.status != 'error') {
+          setMessages(result);
+        }
+      })
+  }, [reload])
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    fetch(`/api/users/${props.user.id}/message/${userID}`, {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      setReload(!reload);
+      document.querySelector('[name="body"]').value = '';
+      
+    })
+  }
+  
   if (userID == props.user.id) {
     return <MyProfile user={props.user} setUser={props.seUser} />;
   }
@@ -200,12 +245,48 @@ function UserProfile(props) {
   } else {
     return (
       <Container>
+        <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Compose Your Message</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            {messages && messages.map(message => (
+              <Container key={message.id}>
+                <p>From: {message.sender_id} </p>
+                <p>To: {message.recipient_id}</p>
+                <p>{message.body}</p>
+                <hr />
+              </Container>
+              
+            ))}
+            <form onSubmit={handleSubmit}>
+
+              <div className="form-group p-2">
+                <label>Message</label>
+                <textarea className="form-control"  name="body" 
+                  placeholder={`Hi ${user.username}`} onChange={handleChange} required>
+                </textarea>
+              </div>
+
+              <Button variant="primary" type="submit">Send Message</Button>
+            </form>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+
+        </Modal>
         <Row>
           <Col>
             <h1>User Details</h1>
             <img src={user.image_url} />
           </Col>
           <Col>
+            <Button onClick={handleShow}>Send a Message to {user.username}</Button>
             <p>Username: {user.username}</p>
             <p>First Name: {user.fname}</p>
             <p>About {user.username}:</p>
@@ -401,3 +482,5 @@ function UserTile(props) {
   )
 
 }
+
+

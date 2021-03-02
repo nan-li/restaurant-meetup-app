@@ -42,6 +42,12 @@ class User(db.Model):
 
     meetups = db.relationship('Meetup', secondary=user_meetups,
                 backref='attendees')
+    
+    messages_sent = db.relationship('Message', foreign_keys='Message.sender_id',
+                        backref='sender')
+
+    messages_received = db.relationship('Message', foreign_keys='Message.recipient_id',
+                            backref='recipient')
 
     def __repr__(self):
         return f'<User {self.fname} {self.lname}>'
@@ -66,6 +72,33 @@ class User(db.Model):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class Message(db.Model):
+    """A message."""
+    __tablename__ = 'messages'
+
+    id = db.Column(db.Integer, autoincrement=True, 
+                    primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # sender = user who wrote the message
+    # recipient = user who received the message
+
+    def __repr__(self):
+            return f'<Message from {self.sender_id} to {self.recipient_id}>'
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'sender_id': self.sender_id,
+            'recipient_id': self.recipient_id,
+            'body': self.body,
+            'timestamp': self.timestamp
+        }
+        return data
 
 
 class Restaurant(db.Model):

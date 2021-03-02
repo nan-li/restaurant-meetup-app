@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, User, Restaurant, Meetup, connect_to_db
+from model import db, User, Restaurant, Meetup, Message, connect_to_db
 from datetime import datetime
 
 def create_restaurant(id, name, cuisine, address, 
@@ -49,6 +49,24 @@ def create_meetup(name, date, capacity, attendees_count,
 
     return m
 
+def create_message(sender, recipient, body):
+    """Create and return a message from sender to recipient."""
+    m = Message(sender=sender, recipient=recipient, body=body)
+
+    db.session.add(m)
+    db.session.commit()
+
+    return m
+
+def get_messages_between_users(user1_id, user2_id):
+    """Get the messages exchanged between current and other user sorted by timestamp."""
+
+    messages = Message.query.filter(
+            ((Message.recipient_id == user1_id) & (Message.sender_id == user2_id)) |
+            ((Message.recipient_id == user2_id) & (Message.sender_id == user1_id))
+        ).order_by('timestamp').all()
+    
+    return messages
 
 
 def get_user_by_id(user_id):

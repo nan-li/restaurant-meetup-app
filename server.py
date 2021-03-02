@@ -21,34 +21,6 @@ def show_homepage():
 
     return render_template('index.html')
 
-@app.route('/sign-up')
-def show_sign_up_page():
-    """Show the sign up page."""
-
-    return render_template('sign_up.html')
-
-# Old sign-up route.. use API instead
-@app.route('/sign-up', methods=['POST'])
-def create_user():
-    """Create a new user account."""
-
-    username = request.form.get('username')
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    image_url = request.form.get('image_url')
-    about = request.form.get('about')
-
-    # TODO: validation of user inputs, prefererably AJAX
-    
-    user = crud.create_user(username, fname, lname, email, password, 
-                image_url, about)
-    session['user_id'] = user.id
-    
-    flash('Account successfully created.')
-
-    return redirect('/')
 
 """
 API Routes.
@@ -273,6 +245,33 @@ def delete_user_from_meetup(user_id, meetup_id):
         'message': "You're not attending this Meetup anymore.",
         'meetup': meetup.to_dict()
     })
+
+@app.route('/api/users/<int:recipient_id>/message/<int:sender_id>', methods=['POST'])
+def create_message(recipient_id, sender_id):
+    """Create a message from sender to recipient."""
+    body = request.json['body']
+
+    sender = crud.get_user_by_id(sender_id)
+    recipient = crud.get_user_by_id(recipient_id)
+    message = crud.create_message(sender, recipient, body)
+
+    return jsonify({
+        'status': 'success',
+        'message': 'Message successfully sent.'
+    })
+
+@app.route('/api/users/<int:current_user_id>/messages/<int:other_user_id>')
+def get_messages_between_users(current_user_id, other_user_id):
+    """Get the messages exchanged between current and other user."""
+    messages = crud.get_messages_between_users(current_user_id, other_user_id)
+    
+    if not messages:
+        return jsonify({
+            'status': 'error',
+            'message': 'No messages exist between you and this user.'
+        })
+    
+    return jsonify([m.to_dict() for m in messages])
 
 @app.route('/api/restaurants/<id>.json')
 def get_restaurant(id):
