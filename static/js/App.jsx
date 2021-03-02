@@ -67,9 +67,12 @@ function App(props) {
                 <Col><MyHostedMeetups user={user} /></Col>
                 <Col><MyAttendingMeetups user={user} /></Col>
               </Row>
-              
-  
             </Route>
+
+            <Route exact path="/messages">
+              {/* <Messages /> */}
+            </Route>
+
             <Route exact path="/myprofile">
               <MyProfile setUser={setUser} user={user} />
             </Route>        
