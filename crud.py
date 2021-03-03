@@ -68,6 +68,31 @@ def get_messages_between_users(user1_id, user2_id):
     
     return messages
 
+def get_user_messages(user_id):
+    """Get the messages a user sent or received.
+        Return results sorted by user being interacted with."""
+
+    messages = (Message.query.filter((Message.recipient_id == user_id) | (Message.sender_id == user_id))
+            .order_by('timestamp').all())
+
+    result = {} # {user_id: {messages as dict()}}
+    users = {} # {user_id: user.to_dict()}
+
+    for message in messages:
+        other_user_id = (message.recipient_id if message.sender_id == user_id 
+                                                else message.sender_id)
+        other_user = (message.recipient if message.sender_id == user_id 
+                                                else message.sender)
+        if other_user_id in result:
+            result[other_user_id].append(message.to_dict())
+        else:
+            result[other_user_id] = [message.to_dict()]
+        
+        if other_user_id not in users:
+            users[other_user_id] = other_user.to_dict()
+
+
+    return [users, result]
 
 def get_user_by_id(user_id):
     """Return a user by primary key."""

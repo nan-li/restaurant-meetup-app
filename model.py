@@ -96,7 +96,9 @@ class Message(db.Model):
             'sender_id': self.sender_id,
             'recipient_id': self.recipient_id,
             'body': self.body,
-            'timestamp': self.timestamp
+            'timestamp': self.timestamp,
+            'sender': self.sender.to_dict(),
+            'recipient': self.recipient.to_dict()
         }
         return data
 

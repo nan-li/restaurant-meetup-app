@@ -207,7 +207,7 @@ function UserProfile(props) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    fetch(`/api/users/${props.user.id}/message/${userID}`, {
+    fetch(`/api/users/${userID}/message/${props.user.id}`, {
       method: 'POST',
       body: JSON.stringify(formData),
       headers: {
@@ -253,8 +253,8 @@ function UserProfile(props) {
           <Modal.Body>
             {messages && messages.map(message => (
               <Container key={message.id}>
-                <p>From: {message.sender_id} </p>
-                <p>To: {message.recipient_id}</p>
+                <p>From: {message.sender.fname} To: {message.recipient.fname} </p>
+                <p>Sent on: {message.timestamp}</p>
                 <p>{message.body}</p>
                 <hr />
               </Container>
@@ -473,14 +473,114 @@ function UserTile(props) {
             <Link to={`/user/${props.user.id}`}>
               <h5>{props.user.username}</h5>
             </Link>
-            {props.user.id === props.currentUser.id && <p>That's YOU!</p>}
+            {props.currentUser && props.user.id === props.currentUser.id && <p>That's YOU!</p>}
             <hr />
             <p>{props.user.fname} {props.user.lname}</p>
+            <hr />
+            {props.setSelectedUser && 
+              <Button onClick={() => {
+                props.setSelectedUser(props.user);
+                window.scrollTo({top: 0, behavior: 'auto'});
+                }}>Messages</Button>}
           </Media.Body>
         </Media>
     </Container>
   )
-
 }
 
 
+function Messages (props) {
+  const [messages, setMessages] = React.useState([]);
+  // user id's of all other users being messaged
+  const [users, setUsers] = React.useState([]);
+  const [selectedUser, setSelectedUser] = React.useState(null);
+  const [reload, setReload] = React.useState(false);
+
+  console.log("users are", users);
+
+  React.useEffect(() => {
+    console.log("in use effect");
+    fetch(`/api/user/${props.user.id}/messages`)
+    .then(res => res.json())
+    .then((result) => {
+      if (result.status != 'error') {
+        console.log("Users and Messages", result);
+        setMessages(result.messages);
+        setUsers(Object.values(result.users));
+      }
+    })
+    console.log("")
+  }, [reload])
+
+    return (
+    <Container>
+      <h1>Messages</h1>
+      <Row>
+        <Col>
+          {users.map(user => (
+            <UserTile user={user} key={user.id} setSelectedUser={setSelectedUser} />              
+          ))}
+        </Col>
+        <Col>
+          {selectedUser ? 
+            <MessageContainer user={selectedUser}
+                currentUser={props.user}
+                messages={messages[selectedUser.id]}
+                reload={reload} setReload={setReload} /> :
+            <p>Select a user on the left to read messages.</p>}
+        </Col>
+      </Row>
+    </Container>
+  );
+}
+
+function MessageContainer(props) {
+  const [formData, setFormData] = React.useState(initialMessageData);
+  const [reload, setReload] = React.useState(false);
+
+  const handleChange = (evt) => {
+    setFormData({
+      ...formData, [evt.target.name]: evt.target.value.trim()
+    });
+  };
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    fetch(`/api/users/${props.user.id}/message/${props.currentUser.id}`, {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      props.setReload(!props.reload);
+      document.querySelector('[name="body"]').value = '';
+      
+    })
+  }
+
+  return (
+    <Container>
+      {props.messages.map(message => (
+        <Container key={message.id}>
+          <p>From: {message.sender.fname} To: {message.recipient.fname} </p>
+          <p>Sent on: {message.timestamp}</p>
+          <p>{message.body}</p>
+          <hr />
+        </Container>
+      ))}
+      <form onSubmit={handleSubmit}>
+
+        <div className="form-group p-2">
+          <label>Message</label>
+          <textarea className="form-control"  name="body" 
+            placeholder={`Hi ${props.user.username}`} onChange={handleChange} required>
+          </textarea>
+        </div>
+
+        <Button variant="primary" type="submit">Send Message</Button>
+      </form>
+    </Container>
+  )
+}

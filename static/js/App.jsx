@@ -11,7 +11,7 @@ function App(props) {
   React.useEffect(()=>{
     fetch('/api/users/login', {
       method: 'POST',
-      body: JSON.stringify({username: 'margaret', password: 'testtest'}),
+      body: JSON.stringify({username: 'carlos', password: 'test'}),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -22,7 +22,6 @@ function App(props) {
       // console.log('Success:', data)
       if (data.status != 'error') {
         setUser(data.user);
-
       }
     },
     (error) => {
@@ -70,7 +69,7 @@ function App(props) {
             </Route>
 
             <Route exact path="/messages">
-              {/* <Messages /> */}
+              <Messages user={user} />
             </Route>
 
             <Route exact path="/myprofile">

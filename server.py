@@ -246,6 +246,7 @@ def delete_user_from_meetup(user_id, meetup_id):
         'meetup': meetup.to_dict()
     })
 
+
 @app.route('/api/users/<int:recipient_id>/message/<int:sender_id>', methods=['POST'])
 def create_message(recipient_id, sender_id):
     """Create a message from sender to recipient."""
@@ -272,6 +273,26 @@ def get_messages_between_users(current_user_id, other_user_id):
         })
     
     return jsonify([m.to_dict() for m in messages])
+
+
+@app.route('/api/user/<int:user_id>/messages')
+def get_user_messages(user_id):
+    """Get all the messages a user sent or received.
+        Return results sorted by user interacting with."""
+
+    users, messages = crud.get_user_messages(user_id)
+
+    if not messages:
+        return jsonify({
+            'status': 'error',
+            'message': 'No messages exchanged with this user.'
+        })
+    
+    return jsonify({
+        'users': users,
+        'messages': messages
+    })
+    
 
 @app.route('/api/restaurants/<id>.json')
 def get_restaurant(id):
