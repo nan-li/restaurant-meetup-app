@@ -1,4 +1,4 @@
-const {Media, Row, Col, Modal, Alert} = ReactBootstrap;
+const {Media, Row, Col, Modal, Alert, Toast} = ReactBootstrap;
 const {useParams} = ReactRouterDOM;
 
 // Following this: 
@@ -490,7 +490,7 @@ function UserTile(props) {
 
 
 function Messages (props) {
-  const [messages, setMessages] = React.useState([]);
+  const [messages, setMessages] = React.useState(null);
   // user id's of all other users being messaged
   const [users, setUsers] = React.useState([]);
   const [selectedUser, setSelectedUser] = React.useState(null);
@@ -512,6 +512,7 @@ function Messages (props) {
     console.log("")
   }, [reload])
 
+  console.log("messages is", messages);
     return (
     <Container>
       <h1>Messages</h1>
@@ -522,12 +523,16 @@ function Messages (props) {
           ))}
         </Col>
         <Col>
-          {selectedUser ? 
+
+          {selectedUser &&  
             <MessageContainer user={selectedUser}
                 currentUser={props.user}
                 messages={messages[selectedUser.id]}
-                reload={reload} setReload={setReload} /> :
-            <p>Select a user on the left to read messages.</p>}
+                reload={reload} setReload={setReload} /> }
+          {!selectedUser && messages &&
+            <p>Select a user on the left to read messages.</p> }
+          {!selectedUser && !messages &&
+            <p>You have no messages.</p>}
         </Col>
       </Row>
     </Container>
@@ -584,3 +589,51 @@ function MessageContainer(props) {
     </Container>
   )
 }
+
+function Notifications (props) {
+  const [notifications, setNotifications] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch(`/api/user/${props.user.id}/notifications`)
+    .then(res => res.json())
+    .then((result) => {
+      if (result.status != 'error') {
+        setNotifications(result);
+      }
+    })
+  }, [])
+  console.log(notifications);
+  if (notifications.length === 0) return <p>There are no notifications</p>
+  return (
+    <Container>
+      {notifications.map(notification => (
+        <NotificationTile key={notification.id} 
+          notification={notification} />
+      ))}
+    </Container>
+  )
+}
+
+function NotificationTile (props) {
+  // change background color based on status
+  const markNotificationAsRead = () => {
+    console.log(props.message);
+  }
+  return (
+    <Toast>
+      <Toast.Header>
+        <img src='/static/img/favicon.ico' className="rounded mr-2" alt="" />
+        <strong className="mr-auto">{props.notification.data.message}</strong>
+      </Toast.Header>
+      <Toast.Body>
+        <p>This notification is {props.notification.status}</p>
+        <Link to={props.notification.data.url} onClick={markNotificationAsRead}>
+          {props.notification.data.link}
+        </Link>
+      </Toast.Body>
+      
+     
+    </Toast>
+  )
+}
+

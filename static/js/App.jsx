@@ -11,7 +11,7 @@ function App(props) {
   React.useEffect(()=>{
     fetch('/api/users/login', {
       method: 'POST',
-      body: JSON.stringify({username: 'carlos', password: 'test'}),
+      body: JSON.stringify({username: 'angela', password: 'test'}),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -72,6 +72,10 @@ function App(props) {
               <Messages user={user} />
             </Route>
 
+            <Route exact path="/notifications">
+              <Notifications user={user} />
+            </Route>
+
             <Route exact path="/myprofile">
               <MyProfile setUser={setUser} user={user} />
             </Route>        
@@ -101,6 +105,7 @@ function SiteNavbar(props) {
           <Link className="navbar-brand" to="/meetups">Meetups</Link>
           <Link className="navbar-brand" to="/myprofile">My Profile</Link>
           <Link className="navbar-brand" to="/messages">Messages</Link>
+          <Link className="navbar-brand" to="/notifications">Notifications</Link>
         </Nav>
       </Navbar>
       

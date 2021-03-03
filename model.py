@@ -3,6 +3,7 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+import json
 
 db = SQLAlchemy()
 
@@ -48,6 +49,8 @@ class User(db.Model):
 
     messages_received = db.relationship('Message', foreign_keys='Message.recipient_id',
                             backref='recipient')
+
+    notifications = db.relationship('Notification', backref='user')
 
     def __repr__(self):
         return f'<User {self.fname} {self.lname}>'
@@ -99,6 +102,35 @@ class Message(db.Model):
             'timestamp': self.timestamp,
             'sender': self.sender.to_dict(),
             'recipient': self.recipient.to_dict()
+        }
+        return data
+
+class Notification(db.Model):
+    """A notification."""
+    __tablename__ = 'notifications'
+
+    id = db.Column(db.Integer, autoincrement=True, 
+                    primary_key=True)
+    name = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    payload_json = db.Column(db.Text)
+    # 'READ', 'UNREAD', 'DELETED'
+    status = db.Column(db.String(10), default='UNREAD')
+
+    # user = user this notification is for
+    def __repr__(self):
+            return f'<Notification {self.name} for User {self.user_id}>'
+
+    def get_data(self):
+        return json.loads(str(self.payload_json))
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'status': self.status,
+            'data': self.get_data()
         }
         return data
 

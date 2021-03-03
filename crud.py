@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, User, Restaurant, Meetup, Message, connect_to_db
+from model import db, User, Restaurant, Meetup, Message, Notification, connect_to_db
 from datetime import datetime
 
 def create_restaurant(id, name, cuisine, address, 
@@ -58,6 +58,22 @@ def create_message(sender, recipient, body):
 
     return m
 
+
+def create_notification(name, user_id, payload_json):
+    """Create and return a notification."""
+    n = Notification(name=name, user_id=user_id, payload_json=payload_json)
+
+    db.session.add(n)
+    db.session.commit()
+
+    return n
+
+def get_user_notifications(user_id):
+    """Get the notifications for a user."""
+    notifications = Notification.query.filter_by(user_id=user_id).order_by('timestamp').all()
+
+    return notifications
+
 def get_messages_between_users(user1_id, user2_id):
     """Get the messages exchanged between current and other user sorted by timestamp."""
 
@@ -67,6 +83,7 @@ def get_messages_between_users(user1_id, user2_id):
         ).order_by('timestamp').all()
     
     return messages
+
 
 def get_user_messages(user_id):
     """Get the messages a user sent or received.

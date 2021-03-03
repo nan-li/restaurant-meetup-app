@@ -52,6 +52,7 @@ def login_user():
                 'message': 'Invalid password.'
             })
 
+
 @app.route('/api/users/<int:user_id>', methods=['PATCH'])
 def update_user(user_id):
     """Update user information."""
@@ -120,11 +121,24 @@ def register_user():
                 'user': user.to_dict('include_email')
     })
 
+
 @app.route('/api/users/<int:id>.json')
 def get_user(id):
     """Return user information."""
     return jsonify(crud.get_user_by_id(id).to_dict())
 
+@app.route('/api/user/<int:user_id>/notifications')
+def get_user_notifications(user_id):
+    """Get the notifications for a user."""
+    notifications = crud.get_user_notifications(user_id)
+
+    if not notifications:
+        return jsonify({
+            'status': 'error',
+            'message': 'There are no notifications.'
+        })
+    
+    return jsonify([notification.to_dict() for notification in notifications])
 
 @app.route('/api/users/<int:user_id>/restaurants.json')
 def get_user_favorites(user_id):
@@ -256,6 +270,13 @@ def create_message(recipient_id, sender_id):
     recipient = crud.get_user_by_id(recipient_id)
     message = crud.create_message(sender, recipient, body)
 
+    message = message.to_dict()
+   
+    data = {'message': f'You have a new message from {message["sender"]["username"]}.',
+            'link': 'Go to messages.',
+            'url': '/messages'}
+    notification = crud.create_notification('new_message', recipient_id, json.dumps(data))
+
     return jsonify({
         'status': 'success',
         'message': 'Message successfully sent.'
@@ -293,7 +314,6 @@ def get_user_messages(user_id):
         'messages': messages
     })
     
-
 @app.route('/api/restaurants/<id>.json')
 def get_restaurant(id):
     """Return restaurant information."""
