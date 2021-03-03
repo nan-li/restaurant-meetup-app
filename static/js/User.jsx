@@ -615,12 +615,19 @@ function Notifications (props) {
 }
 
 function NotificationTile (props) {
+  const [show, setShow] = React.useState(true);
+  console.log(show);
   // change background color based on status
   const markNotificationAsRead = () => {
-    console.log(props.message);
+    console.log('hi');
   }
+
+  const deleteNotification = () => {
+    setShow(false);
+  }
+
   return (
-    <Toast>
+    <Toast show={show} onClose={deleteNotification}>
       <Toast.Header>
         <img src='/static/img/favicon.ico' className="rounded mr-2" alt="" />
         <strong className="mr-auto">{props.notification.data.message}</strong>
@@ -631,8 +638,6 @@ function NotificationTile (props) {
           {props.notification.data.link}
         </Link>
       </Toast.Body>
-      
-     
     </Toast>
   )
 }
