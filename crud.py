@@ -68,6 +68,12 @@ def create_notification(name, user_id, payload_json):
 
     return n
 
+def delete_notification_by_id(id):
+    """Delete a notification by its id."""
+    n = Notification.query.get(id)
+    db.session.delete(n)
+    db.session.commit()
+    
 def get_user_notifications(user_id):
     """Get the notifications for a user."""
     notifications = Notification.query.filter_by(user_id=user_id).order_by('timestamp').all()

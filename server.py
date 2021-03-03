@@ -140,6 +140,15 @@ def get_user_notifications(user_id):
     
     return jsonify([notification.to_dict() for notification in notifications])
 
+@app.route('/api/notification/<int:notification_id>', methods=['DELETE'])
+def delete_notification(notification_id):
+    """Delete a notification by its id."""
+    crud.delete_notification_by_id(notification_id)
+    return jsonify({
+        'status': 'success',
+        'message': 'Notification deleted.'
+    })
+    
 @app.route('/api/users/<int:user_id>/restaurants.json')
 def get_user_favorites(user_id):
     """Return a list of the user's favorite restaurants."""

@@ -624,10 +624,17 @@ function NotificationTile (props) {
 
   const deleteNotification = () => {
     setShow(false);
+    fetch(`/api/notification/${props.notification.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 
   return (
-    <Toast show={show} onClose={deleteNotification}>
+    <Toast show={show} onClose={deleteNotification} 
+      className={props.notification.status === 'UNREAD' ? 'bg-primary' : 'bg-light'}>
       <Toast.Header>
         <img src='/static/img/favicon.ico' className="rounded mr-2" alt="" />
         <strong className="mr-auto">{props.notification.data.message}</strong>
