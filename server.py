@@ -281,10 +281,10 @@ def create_message(recipient_id, sender_id):
 
     message = message.to_dict()
    
-    data = {'message': f'You have a new message from {message["sender"]["username"]}.',
+    notification_data = {'message': f'You have a new message from {message["sender"]["username"]}.',
             'link': 'Go to messages.',
             'url': '/messages'}
-    notification = crud.create_notification('new_message', recipient_id, json.dumps(data))
+    notification = crud.create_notification('new_message', recipient_id, json.dumps(notification_data))
 
     return jsonify({
         'status': 'success',
@@ -418,6 +418,15 @@ def create_meetup():
     meetup = crud.create_meetup(name, date, capacity, attendees_count, 
                 description, restaurant, host)
 
+    notification_data = {
+        'message': f'There is a new event at {restaurant.name}.',
+        'link': 'Go to meetup.',
+        'url': f'/meetup/{meetup.id}'
+    }
+
+    notifications = crud.create_many_notifications(
+        'new_meetup', restaurant_id, json.dumps(notification_data))
+
     return jsonify({
         'status': 'success',
         'message': 'Meetup created successfully.',
@@ -446,11 +455,11 @@ def update_meetup(meetup_id):
 
 @app.route('/api/meetups/<int:meetup_id>', methods=['DELETE'])
 def delete_meetup(meetup_id):
-    """Delete this meetup."""
-    meetup = crud.delete_meetup_by_id(meetup_id)
+    """Cancel this meetup."""
+    meetup = crud.cancel_meetup_by_id(meetup_id)
     return jsonify({
         'status': 'success',
-        'message': 'Successfully deleted meetup.'
+        'message': 'Successfully cancelled meetup.'
     })
 
 @app.route('/api/meetups/<int:meetup_id>/host.json')

@@ -11,7 +11,7 @@ function App(props) {
   React.useEffect(()=>{
     fetch('/api/users/login', {
       method: 'POST',
-      body: JSON.stringify({username: 'angela', password: 'test'}),
+      body: JSON.stringify({username: '', password: 'test'}),
       headers: {
         'Content-Type': 'application/json'
       }

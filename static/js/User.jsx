@@ -603,7 +603,7 @@ function Notifications (props) {
     })
   }, [])
   console.log(notifications);
-  if (notifications.length === 0) return <p>There are no notifications</p>
+  if (notifications.length === 0) return <p>You have no notifications</p>
   return (
     <Container>
       {notifications.map(notification => (

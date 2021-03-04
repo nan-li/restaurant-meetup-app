@@ -68,6 +68,26 @@ def create_notification(name, user_id, payload_json):
 
     return n
 
+def create_many_notifications(name, id, payload_json):
+    """Create and return notifications for all users to be notified.
+        name: new_meetup, meetup_changed, meetup_cancelled
+        id: meetup or restaurant id """
+
+    users = []
+    notifications = []
+    if name == 'new_meetup':
+        users = get_fans_by_restaurant_id(id)
+    
+    elif name == 'meetup_changed' or name == 'meetup_cancelled':
+        users = get_attendees_by_meetup_id(id)
+    
+    for user in users:
+        notifications.append(create_notification(name, user.id, payload_json))
+    
+    return notifications
+
+        
+
 def delete_notification_by_id(id):
     """Delete a notification by its id."""
     n = Notification.query.get(id)
@@ -238,11 +258,11 @@ def update_meetup_by_id(meetup_id, name, date, capacity, description):
     
     db.session.commit()
 
-def delete_meetup_by_id(meetup_id):
+def cancel_meetup_by_id(meetup_id):
     """Cancel the meetup with this id."""
     
     meetup = get_meetup_by_id(meetup_id)
-    db.session.delete(meetup)
+    meetup.status = 'CANCELLED'
     db.session.commit()
     return meetup
 

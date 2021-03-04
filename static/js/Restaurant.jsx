@@ -74,7 +74,7 @@ function RestaurantSearch(props) {
   
   const searchByCurrentLocation = (position) => {
     
-    let url = `/api/restaurants/search.json?term=${searchTerms.term}&latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`;
+    let url = (`/api/restaurants/search.json?term=${searchTerms.term}&latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
     console.log("url", url);
     fetch(url)
     .then(res => res.json()) 

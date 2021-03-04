@@ -14,6 +14,9 @@ function MeetupTile(props) {
           <hr />
           <p>Date: {props.meetup.date}</p>
           <p>Hosted by: {props.meetup.host.id === props.user.id ? "You!" : props.meetup.host.username}</p>
+          {(props.meetup.status === 'CANCELLED') &&
+            <hr /> && 
+            <Alert variant='danger'>This event is cancelled.</Alert> }
         </Media.Body>
       </Media>
     </Container>
@@ -113,7 +116,7 @@ function EditMeetupButton(props) {
     
   }
 
-  const deleteMeetup = (evt) => {
+  const cancelMeetup = (evt) => {
     evt.preventDefault();
     fetch (`/api/meetups/${props.meetupID}`, {
       method: 'DELETE',
@@ -167,7 +170,7 @@ function EditMeetupButton(props) {
               </textarea>
             </div>
             <Button variant="primary" type="submit">Save Changes</Button>
-            <Button variant="danger" onClick={deleteMeetup}>Delete Meetup</Button>
+            <Button variant="danger" onClick={cancelMeetup}>Cancel Meetup</Button>
 
           </form>
 
@@ -222,15 +225,19 @@ function MeetupDetails(props) {
   } else {
     return (
       <Container>
-        {(meetup.attendees_count === meetup.capacity) && 
+        {(meetup.status == 'CANCELLED') && 
+          <Alert variant='danger'>This event is cancelled.</Alert>}
+
+        {(meetup.status == 'ACTIVE') && (meetup.attendees_count === meetup.capacity) && 
           <Alert variant='warning'>This event is full.</Alert>}
 
-        {!hosting && 
+        {!hosting && (meetup.status == 'ACTIVE') &&
           <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
             setMeetup={setMeetup}
             meetup={meetup} user={props.user} />}
 
-        {hosting && <EditMeetupButton meetup={meetup} 
+        {hosting && (meetup.status == 'ACTIVE') &&
+          <EditMeetupButton meetup={meetup} 
           meetupID={meetupID} setReload={setReload} />}
 
         <h1>Meetup Details</h1>
