@@ -148,7 +148,7 @@ def delete_notification(notification_id):
         'status': 'success',
         'message': 'Notification deleted.'
     })
-    
+
 @app.route('/api/users/<int:user_id>/restaurants.json')
 def get_user_favorites(user_id):
     """Return a list of the user's favorite restaurants."""
@@ -342,9 +342,11 @@ def get_search_results():
     }
 
     params = request.args.to_dict()
+   
     # {'location': 'San Francisco', 'term': 'sushi'}
 
     params['limit'] = 50
+    print('\n' * 5)
     print(params)
     print(request.args.to_dict())
     # request.args.to_dict()
@@ -352,7 +354,8 @@ def get_search_results():
     print("*" * 100)
     print('The status code from YELP is', req.status_code)
     print(req.json())
-
+    if 'error' in req.json():
+        print("THERES AN ERROR")
     return req.json()
 
 

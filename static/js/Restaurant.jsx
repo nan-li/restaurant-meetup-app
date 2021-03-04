@@ -8,7 +8,7 @@ function Restaurants(props) {
   const [displaySearchResults, setDisplaySearchResults] = React.useState(false);
   const [searchResults, setSearchResults] = React.useState([]);
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);
-  // console.log("searchResults is: ", searchResults);
+
   return (
     // <Router>
       <Container>
@@ -57,6 +57,7 @@ const initialSearchTerms = Object.freeze({
 function RestaurantSearch(props) {
   const [searchTerms, setSearchTerms] = React.useState(initialSearchTerms);
   const [error, setError] = React.useState(null);
+  console.log("searchTerms at top of Component", searchTerms);
 
   const handleChange = (evt) => {
     setSearchTerms({
@@ -64,13 +65,41 @@ function RestaurantSearch(props) {
     });
   };
 
+  
+
+  const getLocation = () => {
+    document.querySelector('[name="location"]').placeholder = 'Current Location'; 
+    navigator.geolocation.getCurrentPosition(searchByCurrentLocation);
+  }
+  
+  const searchByCurrentLocation = (position) => {
+    
+    let url = `/api/restaurants/search.json?term=${searchTerms.term}&latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`;
+    console.log("url", url);
+    fetch(url)
+    .then(res => res.json()) 
+    .then(
+      (result) => {
+        if (result.error) {
+          alert(result.error.description);
+        } else {
+        props.setSearchResults(result.businesses);
+        props.setDisplaySearchResults(true);
+        }
+        
+      },
+      (error) => {
+        setError(error);
+      });
+  }
+
   function handleSubmit(evt) {
     evt.preventDefault();
 
     let url = `/api/restaurants/search.json?term=${searchTerms.term}&location=${searchTerms.location}`;
     console.log("URL: ", url);
     fetch(url)
-      .then(res => res.json()) //don't reach here
+      .then(res => res.json()) 
       .then(
         (result) => {
           props.setSearchResults(result.businesses);
@@ -87,9 +116,17 @@ function RestaurantSearch(props) {
         <form onSubmit={handleSubmit}>
           <input type="text" name="term" placeholder="sushi, salad, korean..."
             required onChange={handleChange}/>
-          <input type="text" name="location" placeholder="San Francisco" 
-            required onChange={handleChange}/>
-          <button type="submit">Search</button>
+          < hr />
+          <Row>
+            <Col>
+            <input type="text" name="location" placeholder="San Francisco" 
+              onChange={handleChange} required/>
+            <button type="submit">Search</button>
+            </Col>
+          </Row>
+          
+          <p> - or - </p>
+          <Button onClick={getLocation}>Use Current Location</Button>
         </form>
       </div>
     );
