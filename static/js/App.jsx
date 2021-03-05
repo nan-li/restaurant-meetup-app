@@ -1,7 +1,7 @@
 const Router = ReactRouterDOM.BrowserRouter;
-const {Link, Switch, Route, useHistory} = ReactRouterDOM;
-
-const {Container, Image, Button, Navbar, Nav} = ReactBootstrap;
+const {Link, Switch, Route, useHistory, Redirect} = ReactRouterDOM;
+const Img = ReactBootstrap.Image;
+const {Container, Button, Navbar, Nav} = ReactBootstrap;
 
 function App(props) {
   const [user, setUser] = React.useState(null);
@@ -11,7 +11,7 @@ function App(props) {
   React.useEffect(()=>{
     fetch('/api/users/login', {
       method: 'POST',
-      body: JSON.stringify({username: '', password: 'test'}),
+      body: JSON.stringify({username: 'john', password: 'test'}),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -42,8 +42,8 @@ function App(props) {
   } else {
     return (
         <div>
-          <SiteNavbar />
-        
+          <SiteNavbar setUser={setUser} />
+          <Switch>
             <Route path={["/restaurant", "/restaurants"]}>
               <Restaurants user={user}/>
             </Route>
@@ -52,9 +52,13 @@ function App(props) {
               <MeetupDetails user={user} />
             </Route>
 
+            <Redirect from={`/user/${user.id}`} to='/myprofile' />
+            
             <Route exact path="/user/:userID">
               <UserProfile setUser={setUser} user={user}/>
             </Route>
+
+            
 
             <Route exact path="/">
               <h1>Todo</h1>
@@ -79,6 +83,7 @@ function App(props) {
             <Route exact path="/myprofile">
               <MyProfile setUser={setUser} user={user} />
             </Route>        
+          </Switch>
         </div>
     );
   }
@@ -91,6 +96,7 @@ function App(props) {
   Accessed when user is logged in
 */
 function SiteNavbar(props) {
+  let history = useHistory();
   return (
     <Container>
       <Navbar>
@@ -106,6 +112,9 @@ function SiteNavbar(props) {
           <Link className="navbar-brand" to="/myprofile">My Profile</Link>
           <Link className="navbar-brand" to="/messages">Messages</Link>
           <Link className="navbar-brand" to="/notifications">Notifications</Link>
+          <Button onClick={() => {
+            props.setUser(null);
+            history.push('/');}}>Logout</Button>
         </Nav>
       </Navbar>
       
@@ -145,7 +154,7 @@ function Homepage(props) {
         {/* <Switch> */}
           <Route exact path="/">
             <Container fluid id="banner">
-              <Image fluid className="mx-auto d-block" src="/static/img/banner.png" />
+              <Img fluid className="mx-auto d-block" src="/static/img/banner.png" />
               <Link to="/signup">
                 <span className="btn btn-primary" id="join-button">Join Meet+Eat</span>
               </Link>

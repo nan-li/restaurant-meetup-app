@@ -6,33 +6,34 @@ const {useParams, useHistory} = ReactRouterDOM;
 
 function Restaurants(props) {
   const [displaySearchResults, setDisplaySearchResults] = React.useState(false);
-  const [searchResults, setSearchResults] = React.useState([]);
+  const [searchResults, setSearchResults] = React.useState(null);
+  const [coordinates, setCoordinates] = React.useState(null);
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);
 
   return (
-    // <Router>
       <Container>
         <Switch>
           <Route exact path='/restaurants'>
             <Row>
               <Col>
+                {!displaySearchResults && 
                   <MyFavoriteRestaurants user={props.user} 
                     favoriteRestaurants={favoriteRestaurants}
-                    setFavoriteRestaurants={setFavoriteRestaurants} />
+                    setFavoriteRestaurants={setFavoriteRestaurants} />}
+                {displaySearchResults && 
+                  <MapContainer searchResults={searchResults}
+                    coordinates={coordinates} />}
               </Col>
               <Col>
                 <RestaurantSearch 
                   setDisplaySearchResults={setDisplaySearchResults} 
-                  setSearchResults={setSearchResults} />
+                  setSearchResults={setSearchResults} 
+                  setCoordinates={setCoordinates} />
              
                 {displaySearchResults && 
                   <RestaurantSearchResults user={props.user} restaurants={searchResults} />}
               </Col>
             </Row>
-
-            
-            
- 
           </Route>
           <Route path='/restaurant/:restaurantID'>
             <RestaurantDetails user={props.user} 
@@ -41,13 +42,9 @@ function Restaurants(props) {
               favoriteRestaurants={favoriteRestaurants} />
           </Route>
         </Switch>
-      </Container>   
-    // </Router>
-
-     
+      </Container>     
   );
 }
-
 
 const initialSearchTerms = Object.freeze({
   term: "",
@@ -65,15 +62,17 @@ function RestaurantSearch(props) {
     });
   };
 
-  
-
   const getLocation = () => {
     document.querySelector('[name="location"]').placeholder = 'Current Location'; 
     navigator.geolocation.getCurrentPosition(searchByCurrentLocation);
   }
   
   const searchByCurrentLocation = (position) => {
-    
+    props.setCoordinates({
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    });
+
     let url = (`/api/restaurants/search.json?term=${searchTerms.term}&latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
     console.log("url", url);
     fetch(url)
@@ -191,7 +190,6 @@ function FavoriteUnfavoriteRestaurantButton(props) {
   let history = useHistory();
 
   const createUserRestaurantRelationship = () => {
-    props.setFavorited(true);
     // POST to server
     fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}.json`, {
       method: 'POST',
@@ -204,6 +202,7 @@ function FavoriteUnfavoriteRestaurantButton(props) {
     .then(
       (data) => {
         console.log(data);
+        props.setFavorited(true);
       }
     );
   }

@@ -11,6 +11,7 @@ const initialLoginFormData = Object.freeze({
 function LoginForm(props) {
   const [formData, setFormData] = React.useState(initialLoginFormData);
   const [error, setError] = React.useState(null);
+  let history = useHistory();
 
   const handleChange = (evt) => {
     setFormData({
@@ -37,14 +38,12 @@ function LoginForm(props) {
       // console.log('Success:', data)
       if (data.status != 'error') {
         props.setUser(data.user);
-
-      }
-      alert(data.message);
+        history.push('/');
+      } else alert(data.message);
     },
     (error) => {
       setError(error)
     });
-    
   }
 
   return (
@@ -113,7 +112,7 @@ function SignupForm(props) {
         (data) => {
           if (data.status != 'error') {
             props.setUser(data.user);
-          }
+          } 
           alert(data.message);
         },
         (error) => {
@@ -170,6 +169,7 @@ function SignupForm(props) {
   );
 }
 
+
 const initialMessageData = Object.freeze({
   body: ""
 });
@@ -219,10 +219,6 @@ function UserProfile(props) {
       document.querySelector('[name="body"]').value = '';
       
     })
-  }
-  
-  if (userID == props.user.id) {
-    return <MyProfile user={props.user} setUser={props.seUser} />;
   }
 
   React.useEffect(() => {

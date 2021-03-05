@@ -4,12 +4,20 @@ from flask import (Flask, render_template, redirect,
                     flash, request, session, jsonify, request)
 from datetime import datetime
 from model import connect_to_db, User, Restaurant, Meetup
+import cloudinary
 import os
 import requests
 import json
 import crud
 
 YELP_API_KEY = os.environ['YELP_API_KEY']
+
+cloudinary.config(
+  cloud_name = os.environ['CLOUDINARY_CLOUD_NAME'],  
+  api_key = os.environ['CLOUDINARY_API_KEY'],  
+  api_secret = os.environ['CLOUDINARY_API_SECRET'] 
+)
+
 
 app = Flask(__name__)
 app.secret_key = 'dev'
