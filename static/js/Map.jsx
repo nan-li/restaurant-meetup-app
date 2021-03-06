@@ -36,31 +36,7 @@
 //   },
 // }
 
-const locations = [
-  {
-    name: 'Hackbright Academy',
-    coords: {
-      lat: 37.7887459,
-      lng: -122.4115852
-    }
-  },
-  {
-    name: 'Powell Street Station',
-    coords: {
-      lat: 37.7844605,
-      lng: -122.4079702
-    }
-  },
-  {
-    name: 'Montgomery Station',
-    coords: {
-      lat: 37.7894094,
-      lng: -122.4013037
-    }
-  },
-];
-
-
+const GOOGLE_MAPS_API_KEY = '-';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);
@@ -106,6 +82,7 @@ function MapComponent(props) {
   const locs = props.searchResults;
   const ref = React.useRef();
   const markers = [];
+  let history = useHistory();
 
 
   React.useEffect(() => {
@@ -114,7 +91,7 @@ function MapComponent(props) {
 
     if (!window.google) { // Create an html element with a script tag in the DOM
       const script = document.createElement('script');
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAdDBsi8si_qW5snlDOESFtr6LxkJn_Hzg';
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}`;
       document.head.append(script);
       script.addEventListener('load', createMap);
       console.log('and now there is a map 1');
@@ -132,7 +109,13 @@ function MapComponent(props) {
   
   let bounds;
   let userMarker;
+
+  let restaurantInfo;
+  let restaurant_id = '';
+
   const addMarkers = () => {
+    restaurantInfo = new google.maps.InfoWindow();
+   
     // Add a marker for user's current location if provided
     if (props.coordinates) {
       userMarker = new google.maps.Marker({
@@ -149,12 +132,31 @@ function MapComponent(props) {
 
       if (loc.coordinates.latitude && loc.coordinates.longitude) {
         // add all the restaurant markers to the map
-        markers.push(new google.maps.Marker({
+        const restaurantInfoContent = (`
+        <div>
+            <img class="google-maps-img" src=${loc.image_url} />
+            <hr/>
+            <h3>${loc.name}</h3>
+            
+            <h5>${loc.location.display_address}</h5>
+        </div>
+        `);
+
+        const restaurantMarker = new google.maps.Marker({
           position: {lat: loc.coordinates.latitude,
                       lng: loc.coordinates.longitude},
           title: loc.name,
           map: props.map 
-        }));
+        });
+
+        restaurantMarker.addListener('click', () => {
+          restaurant_id = loc.id;
+          restaurantInfo.close();
+          restaurantInfo.setContent(restaurantInfoContent);
+          restaurantInfo.open(props.map, restaurantMarker);
+        });
+
+        markers.push(restaurantMarker);
 
         // fit the map to the markers
         if (!props.coordinates) {
@@ -163,7 +165,7 @@ function MapComponent(props) {
             loc.coordinates.longitude
           ));
         } 
-      }
+      } // end outer if statement
     } // end for loop
   
     if (!props.coordinates) {
