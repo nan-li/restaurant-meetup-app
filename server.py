@@ -276,7 +276,7 @@ def add_user_to_meetup(user_id, meetup_id):
 
     return jsonify({
         'status': 'success',
-        'message': "You're added to this Meetup.",
+        'message': "You've successfully joined this meetup.",
         'meetup': meetup.to_dict()
     })
 
@@ -288,7 +288,7 @@ def delete_user_from_meetup(user_id, meetup_id):
 
     return jsonify({
         'status': 'success',
-        'message': "You're not attending this Meetup anymore.",
+        'message': "You've successfully unjoined this meetup.",
         'meetup': meetup.to_dict()
     })
 

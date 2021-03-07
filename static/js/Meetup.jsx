@@ -41,6 +41,7 @@ function JoinUnjoinMeetupButton(props) {
       .then(
         (data) => {
           console.log(data);
+          props.setAlert(data.message);
       }
     );
   }
@@ -58,6 +59,8 @@ function JoinUnjoinMeetupButton(props) {
       .then(
         (data) => {
           console.log(data);
+          props.setAlert(data.message);
+
       }
     );
   }
@@ -236,8 +239,8 @@ function MeetupDetails(props) {
 
         {!hosting && (meetup.status == 'ACTIVE') &&
           <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
-            setMeetup={setMeetup}
-            meetup={meetup} user={props.user} />}
+            setMeetup={setMeetup} meetup={meetup} user={props.user}
+            setAlert={props.setAlert} />}
 
         {hosting && (meetup.status == 'ACTIVE') &&
           <EditMeetupButton meetup={meetup} 

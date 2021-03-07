@@ -357,8 +357,8 @@ function MyProfile(props) {
         (data) => {
           if (data.status != 'error') {
             props.setUser(data.user);
-            alert(data.message);
             setShow(false);
+            props.setAlert(data.message);
           } else {
             alert(data.message);
           }

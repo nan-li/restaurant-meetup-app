@@ -5,6 +5,7 @@ const {Container, Button, Navbar, Nav} = ReactBootstrap;
 
 function App(props) {
   const [user, setUser] = React.useState(null);
+  const [alert, setAlert] = React.useState(null);
   // console.log("User info:", user);
 
   // for now, hardcode a user in
@@ -43,47 +44,62 @@ function App(props) {
     return (
         <div>
           <SiteNavbar setUser={setUser} />
-          <Switch>
-            <Route path={["/restaurant", "/restaurants"]}>
-              <Restaurants user={user}/>
-            </Route>
+          <Container>
 
-            <Route exact path="/meetup/:meetupID">
-              <MeetupDetails user={user} />
-            </Route>
+            {alert && 
+              <Alert variant='success'>
+                <p>{alert}</p>
+                <div className="d-flex justify-content-end">
+                  <Button onClick={() => setAlert(null)} variant="outline-success">
+                    Close
+                  </Button>
+                </div>
+                
+              </Alert>}
 
-            <Redirect from={`/user/${user.id}`} to='/myprofile' />
-            
-            <Route exact path="/user/:userID">
-              <UserProfile setUser={setUser} user={user}/>
-            </Route>
+            <Switch>
+              <Route path={["/restaurant", "/restaurants"]}>
+                <Restaurants user={user}/>
+              </Route>
 
-            
+              <Route exact path="/meetup/:meetupID">
+                <MeetupDetails user={user} setAlert={setAlert} />
+              </Route>
 
-            <Route exact path="/">
-              <h1>Todo</h1>
-              <p>Your Next Meetup</p>
-            </Route>
+              <Redirect from={`/user/${user.id}`} to='/myprofile' />
+              
+              <Route exact path="/user/:userID">
+                <UserProfile setUser={setUser} user={user}/>
+              </Route>
 
-            <Route exact path="/meetups">
-              <Row>
-                <Col><MyHostedMeetups user={user} /></Col>
-                <Col><MyAttendingMeetups user={user} /></Col>
-              </Row>
-            </Route>
+              
 
-            <Route exact path="/messages">
-              <Messages user={user} />
-            </Route>
+              <Route exact path="/">
+                <h1>Todo</h1>
+                <p>Your Next Meetup</p>
+              </Route>
 
-            <Route exact path="/notifications">
-              <Notifications user={user} />
-            </Route>
+              <Route exact path="/meetups">
+                <Row>
+                  <Col><MyHostedMeetups user={user} /></Col>
+                  <Col><MyAttendingMeetups user={user} /></Col>
+                </Row>
+              </Route>
 
-            <Route exact path="/myprofile">
-              <MyProfile setUser={setUser} user={user} />
-            </Route>        
-          </Switch>
+              <Route exact path="/messages">
+                <Messages user={user} />
+              </Route>
+
+              <Route exact path="/notifications">
+                <Notifications user={user} />
+              </Route>
+
+              <Route exact path="/myprofile">
+                <MyProfile setUser={setUser} user={user} setAlert={setAlert} />
+              </Route>        
+            </Switch>
+          </Container>
+
         </div>
     );
   }
