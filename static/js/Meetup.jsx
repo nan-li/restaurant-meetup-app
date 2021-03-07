@@ -2,6 +2,7 @@ const {useParams, useHistory} = ReactRouterDOM;
 
 function MeetupTile(props) {
 
+  console.log('props.displayhost', props.displayHost);
   return (
     <Container>
       <Media className="list-group-item">
@@ -13,7 +14,9 @@ function MeetupTile(props) {
           </Link>
           <hr />
           <p>Date: {props.meetup.date}</p>
-          <p>Hosted by: {props.meetup.host.id === props.user.id ? "You!" : props.meetup.host.username}</p>
+          {!props.dontDisplayHost &&
+            <p>Hosted by: {props.meetup.host.id === props.user.id ? "You!" : props.meetup.host.username}</p>
+          }
           {(props.meetup.status === 'CANCELLED') &&
             <hr /> && 
             <Alert variant='danger'>This event is cancelled.</Alert> }
@@ -276,7 +279,7 @@ function MyHostedMeetups(props) {
       <h1>My Hosted Meetups</h1>
       <div className="list-group">
         {hostedMeetups.map(meetup => (
-          <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
+          <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
         
       ))} 
       </div>

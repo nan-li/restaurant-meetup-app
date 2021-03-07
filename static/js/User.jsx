@@ -292,7 +292,7 @@ function UserProfile(props) {
           </Col>
         </Row>
         <Row>
-          <Col><MyHostedMeetups user={user} /></Col>
+          <Col><MyHostedMeetups user={user} dontDisplayHost={true} /></Col>
           <Col><MyAttendingMeetups user={user} /></Col>
         </Row>
       </Container>
