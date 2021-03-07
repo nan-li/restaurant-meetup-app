@@ -114,9 +114,9 @@ function EditMeetupButton(props) {
       })
       .then(res => res.json())
       .then((data) => {
-        alert(data.message);
+        props.setAlert(data.message);
         setShow(false);
-        props.setReload(true);
+        props.setReload(!props.reload);
       });
     }
     
@@ -134,8 +134,8 @@ function EditMeetupButton(props) {
     .then(res => res.json())
     .then((data) => {
       setShow(false);
-      history.push('/meetups');
-      alert(data.message);
+      props.setAlert(data.message);
+      props.setReload(!props.reload);
     });
   }  
   return (
@@ -202,6 +202,7 @@ function MeetupDetails(props) {
   const [reload, setReload] = React.useState(false);
   console.log("You're attending:", attending);
   console.log("You're hosting:", hosting);
+  console.log('reload', reload);
 
 
   let {meetupID} = useParams();
@@ -244,7 +245,8 @@ function MeetupDetails(props) {
 
         {hosting && (meetup.status == 'ACTIVE') &&
           <EditMeetupButton meetup={meetup} 
-          meetupID={meetupID} setReload={setReload} />}
+            meetupID={meetupID} setReload={setReload} reload={reload}
+            setAlert={props.setAlert} />}
 
         <h1>Meetup Details</h1>
         <img src={meetup.restaurant.image_url} width={400}/>

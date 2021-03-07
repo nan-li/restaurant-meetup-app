@@ -80,6 +80,7 @@ const initialSignupFormData = Object.freeze({
 function SignupForm(props) {
   const [formData, setFormData] = React.useState(initialSignupFormData);
   const [error, setError] = React.useState(null);
+  let history = useHistory();
 
   const handleChange = (evt) => {
     setFormData({
@@ -113,8 +114,11 @@ function SignupForm(props) {
         (data) => {
           if (data.status != 'error') {
             props.setUser(data.user);
-          } 
-          alert(data.message);
+            props.setAlert(data.message);
+            history.push('/');
+          } else {
+            alert(data.message);
+          }
         },
         (error) => {
           setError(error);
@@ -314,6 +318,7 @@ function MyProfile(props) {
   const [show, setShow] = React.useState(false);
   const [formData, setFormData] = React.useState(initialFormData);
   const [error, setError] = React.useState(null);
+  const [alert, setAlert] = React.useState(null);
   console.log(formData);
   
   const handleClose = () => setShow(false);
@@ -337,13 +342,13 @@ function MyProfile(props) {
 
     // validate passwords match
     if (formData.old_password && formData.new_password != formData.confirm) {
-      alert("Passwords don't match.");
+      setAlert("Passwords don't match.");
     } else if (!formData.old_password && (formData.new_password || formData.confirm)) {
-      alert("Please enter your old password to change password.")
+      setAlert("Please enter your old password to change password.");
     } else if (formData.old_password && (formData.new_password.length < 8 || formData.new_password.length > 20)) {
-      alert("Password must be 8-20 characters long.");
+      setAlert("Password must be 8-20 characters long.");
     } else if (formData == initialFormData) {
-      alert("Nothing to update.");
+      setAlert("Nothing to update.");
     } else {
 
       
@@ -360,7 +365,7 @@ function MyProfile(props) {
             setShow(false);
             props.setAlert(data.message);
           } else {
-            alert(data.message);
+            setAlert(data.message);
           }
           
           
@@ -380,6 +385,9 @@ function MyProfile(props) {
     <Container>
 
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        
+        
+
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile Details</Modal.Title>
         </Modal.Header>
@@ -430,11 +438,22 @@ function MyProfile(props) {
               <input type="file" className="form-control-file" name="image" onChange={handleChange} />
             </div>
 
+            {alert &&
+              <Alert variant='danger'>
+                <p>{alert}</p>
+                <div className="d-flex justify-content-end">
+                  <Button onClick={() => setAlert(null)} variant="outline-danger">
+                    Close
+                  </Button>
+                </div>
+              </Alert>}
             <Button variant="primary" type="submit">Save Changes</Button>
           </form>
+         
         </Modal.Body>
 
         <Modal.Footer>
+          
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>

@@ -39,7 +39,9 @@ function Restaurants(props) {
             <RestaurantDetails user={props.user} 
               displaySearchResults={displaySearchResults}
               restaurants={searchResults} 
-              favoriteRestaurants={favoriteRestaurants} />
+              favoriteRestaurants={favoriteRestaurants}
+              setAlert={props.setAlert} />
+
           </Route>
         </Switch>
       </Container>     
@@ -277,6 +279,8 @@ function RestaurantDetails(props) {
   console.log(formData);
 
   let {restaurantID} = useParams();
+  let history = useHistory();
+  
   console.log("restaurnt is", restaurant);
 
   const handleClose = () => setShow(false);
@@ -301,11 +305,11 @@ function RestaurantDetails(props) {
     .then(
       (data) => {
         if (data.status != 'error') {
-          alert(data.message);
+          props.setAlert(data.message);
           setShow(false);
-
+          history.push(`/meetup/${data.meetup.id}`)
         } else {
-          alert(data.message);
+          props.setAlert(data.message);
         }
       },
       (error) => {
@@ -321,6 +325,11 @@ function RestaurantDetails(props) {
       for (const res of props.restaurants) {
         if (res.id === restaurantID) {
           setRestaurant(res);
+          setFormData({
+            ...formData, 
+            ['restaurant_id']: restaurantID, 
+            ['host_id']: props.user.id
+          });
         }
       }
     } else {

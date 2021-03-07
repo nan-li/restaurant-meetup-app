@@ -36,7 +36,7 @@ function App(props) {
   if (!user) {
     return (
       <div>
-        <Homepage setUser={setUser} />
+        <Homepage setUser={setUser} setAlert={setAlert} />
       </div>    
     )
   // user is logged in
@@ -59,7 +59,7 @@ function App(props) {
 
             <Switch>
               <Route path={["/restaurant", "/restaurants"]}>
-                <Restaurants user={user}/>
+                <Restaurants user={user} setAlert={setAlert} />
               </Route>
 
               <Route exact path="/meetup/:meetupID">
@@ -180,7 +180,7 @@ function Homepage(props) {
             <LoginForm setUser={props.setUser} />
           </Route>
           <Route exact path="/signup">
-            <SignupForm setUser={props.setUser} />
+            <SignupForm setUser={props.setUser} setAlert={props.setAlert} />
           </Route>
         {/* </Switch> */}
       </Container>

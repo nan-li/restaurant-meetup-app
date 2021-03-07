@@ -436,6 +436,10 @@ def create_meetup():
     host_id = request.json.get('host_id')
 
     restaurant = crud.get_restaurant_by_id(restaurant_id)
+    print("\n" * 3)
+    print(restaurant)
+    print(request.json)
+
     host = crud.get_user_by_id(host_id)
 
     meetup = crud.create_meetup(name, date, capacity, attendees_count, 
