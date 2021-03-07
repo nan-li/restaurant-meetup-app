@@ -49,7 +49,7 @@ def create_fake_user():
     l = fake.last_name()
     e = fake.email()
     p = "test"
-    i = fake.image_url()
+    i = '/v1615087092/cefqkwfwygdcs6nr4drv.png'
     a = fake.text()
 
     db_user = crud.create_user(u,f,l,e,p,i,a)

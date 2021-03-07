@@ -4,7 +4,7 @@ from flask import (Flask, render_template, redirect,
                     flash, request, session, jsonify, request)
 from datetime import datetime
 from model import connect_to_db, User, Restaurant, Meetup
-import cloudinary
+import cloudinary.uploader
 import os
 import requests
 import json
@@ -64,8 +64,9 @@ def login_user():
 @app.route('/api/users/<int:user_id>', methods=['PATCH'])
 def update_user(user_id):
     """Update user information."""
-    old_password = request.json.get('old_password')
-    new_password = request.json.get('new_password')
+
+    old_password = request.form.get('old_password')
+    new_password = request.form.get('new_password')
 
     user = crud.get_user_by_id(user_id)
     if old_password and not user.check_password(old_password):
@@ -76,11 +77,18 @@ def update_user(user_id):
     
     password = new_password
 
-    fname = request.json.get('fname')
-    lname = request.json.get('lname')
-    email = request.json.get('email')
-    image_url = request.json.get('image_url')
-    about = request.json.get('about')
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+    image = request.files.get('image')
+    about = request.form.get('about')
+    image_url = ''
+    
+    if image:
+        cloudinary_upload = cloudinary.uploader.upload(image)
+        image_url = cloudinary_upload['url'].partition("upload")[2]
+
+
 
     user = crud.update_user(user, fname, lname, email, password, image_url, about)
     return jsonify({
@@ -94,13 +102,13 @@ def update_user(user_id):
 def register_user():
     """Create a new user account."""
 
-    username = request.json.get('username').lower()
-    fname = request.json.get('fname')
-    lname = request.json.get('lname')
-    email = request.json.get('email')
-    password = request.json.get('password')
-    image_url = request.json.get('image_url')
-    about = request.json.get('about')
+    username = request.form.get('username').lower()
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    image = request.files.get('image')
+    about = request.form.get('about')
 
     # Check if user with that email already exists
     user = crud.get_user_by_email(email)
@@ -117,6 +125,13 @@ def register_user():
                 'status': 'error',
                 'message': 'Username already exists. Please pick a different one.'
         })
+
+    # OK to create a new user account
+    cloudinary_upload = cloudinary.uploader.upload(image)
+    print("*" * 200, cloudinary_upload)
+    
+    image_url = cloudinary_upload['url'].partition("upload")[2]
+    print(image_url)
 
     user = crud.create_user(username, fname, lname, email, password, 
                 image_url, about)

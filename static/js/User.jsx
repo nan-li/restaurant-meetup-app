@@ -74,8 +74,7 @@ const initialSignupFormData = Object.freeze({
   username: "",
   password: "",
   confirm: "",
-  about: "",
-  image_url: ""
+  about: ""
 });
 
 function SignupForm(props) {
@@ -92,6 +91,11 @@ function SignupForm(props) {
     //handle the Signup form submission
     evt.preventDefault();
     console.log("formData from <Signup>:", formData);
+    
+    // make a FormData()
+    const data = new FormData();
+    Object.keys(formData).forEach(key => data.append(key, formData[key]));
+    data.append('image', document.querySelector('input[type="file"]').files[0]);
 
     // validate passwords match
     if (formData.password != formData.confirm) {
@@ -102,10 +106,7 @@ function SignupForm(props) {
       // Submit to API
       fetch ('/api/users/signup', {
         method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: data
       })
       .then(res => res.json())
       .then(
@@ -160,7 +161,7 @@ function SignupForm(props) {
 
         <div className="form-group p-2">
           <label>Upload a Profile Picture </label>
-          <input type="file" className="form-control-file" name="image_url" onChange={handleChange}/>
+          <input type="file" className="form-control-file" name="image" onChange={handleChange}/>
         </div>
 
         <button type="submit" className="btn btn-primary">Create Account</button>
@@ -279,7 +280,7 @@ function UserProfile(props) {
         <Row>
           <Col>
             <h1>User Details</h1>
-            <img src={user.image_url} />
+            <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + user.image_url} />
           </Col>
           <Col>
             <Button onClick={handleShow}>Send a Message to {user.username}</Button>
@@ -306,8 +307,7 @@ const initialFormData = Object.freeze({
   old_password: "",
   new_password: "",
   confirm: "",
-  about: "",
-  image_url: ""
+  about: ""
 });
 
 function MyProfile(props) {
@@ -328,8 +328,14 @@ function MyProfile(props) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
+    // make a FormData()
+    const data = new FormData();
+    Object.keys(formData).forEach(key => data.append(key, formData[key]));
+    data.append('image', document.querySelector('input[type="file"]').files[0]);
+
+    console.log("data is", data);
+
     // validate passwords match
-   
     if (formData.old_password && formData.new_password != formData.confirm) {
       alert("Passwords don't match.");
     } else if (!formData.old_password && (formData.new_password || formData.confirm)) {
@@ -339,13 +345,12 @@ function MyProfile(props) {
     } else if (formData == initialFormData) {
       alert("Nothing to update.");
     } else {
+
+      
       // Submit to API
       fetch (`/api/users/${props.user.id}`, {
         method: 'PATCH',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: data,
       })
       .then(res => res.json())
       .then(
@@ -422,7 +427,7 @@ function MyProfile(props) {
 
             <div className="form-group p-2">
               <label>Upload a Profile Picture</label>
-              <input type="file" className="form-control-file" name="image_url" onChange={handleChange} />
+              <input type="file" className="form-control-file" name="image" onChange={handleChange} />
             </div>
 
             <Button variant="primary" type="submit">Save Changes</Button>
@@ -439,7 +444,7 @@ function MyProfile(props) {
       <Row>
         <Col>
           <h1>My Profile</h1>
-          <img src={props.user.image_url} />
+          <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
         </Col>
         <Col>
           <Button onClick={handleShow}>Edit Profile</Button>
@@ -464,7 +469,7 @@ function UserTile(props) {
   return (
     <Container>
       <Media className="list-group-item" >
-          <img className="img-thumbnail" src={props.user.image_url} />
+          <img className="img-thumbnail" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
           <Media.Body>
             <Link to={`/user/${props.user.id}`}>
               <h5>{props.user.username}</h5>
