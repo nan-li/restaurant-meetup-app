@@ -218,14 +218,18 @@ def get_hosted_meetups_by_user_id(user_id):
     past_meetups = [meetup for meetup in meetups if meetup.date < datetime.now()]
     future_meetups = [meetup for meetup in meetups if meetup.date > datetime.now()]
 
-    
     return [past_meetups, future_meetups]
+
 
 def get_meetups_by_user_id(user_id):
     """Return all meetups user is attending."""
     user = get_user_by_id(user_id)
-    return user.meetups
+    meetups = user.meetups
+    
+    past_meetups = [meetup for meetup in meetups if meetup.date < datetime.now()]
+    future_meetups = [meetup for meetup in meetups if meetup.date > datetime.now()]
 
+    return [past_meetups, future_meetups]
 
 
 def get_restaurant_by_id(restaurant_id):

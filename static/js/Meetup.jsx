@@ -269,6 +269,7 @@ function MeetupDetails(props) {
   }
 }
 
+
 function MyHostedMeetups(props) {
   const [hostedMeetups, setHostedMeetups] = React.useState([]);
   console.log('hostedmeetups in', hostedMeetups);
@@ -279,8 +280,6 @@ function MyHostedMeetups(props) {
       .then(
         (result) => {
           setHostedMeetups(result);
-          console.log('result', result);
-          console.log('hostedmeetups in useeffect', hostedMeetups);
         }
       )
   }, [])
@@ -303,8 +302,7 @@ function MyHostedMeetups(props) {
               <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
             ))} 
           </div>
-        </Container>
-      }
+        </Container>}
       
       {hostedMeetups.future.length != 0 &&
       <Container>
@@ -339,15 +337,33 @@ function MyAttendingMeetups(props) {
       )
   }, [])
 
+  if (meetups.length === 0) return <p>Loading...</p>;
+
   return (
     <Container>
       <h1>Meetups Attending</h1>
-      <div className="list-group">
-        {meetups.map(meetup => (
-          <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
-        
-      ))} 
-      </div>
+      {meetups.past.length === 0 && meetups.future.length === 0 &&
+        <h3>No Meetups Attending</h3>}
+
+      {meetups.past.length != 0 &&
+        <Container>
+          <h3>Past Meetups</h3>
+          <div className="list-group">
+            {meetups.past.map(meetup => (
+              <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
+            ))} 
+          </div>
+        </Container>}
+
+        {meetups.future.length != 0 &&
+        <Container>
+          <h3>Upcoming Meetups</h3>
+          <div className="list-group">
+            {meetups.future.map(meetup => (
+              <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
+            ))} 
+          </div>
+        </Container>}      
     </Container>
   );
 }

@@ -264,10 +264,6 @@ def get_user_hosted_meetups(user_id):
     past_info = [m.to_dict() for m in past]
     future_info = [m.to_dict() for m in future]
 
-    print('\n'* 3)
-    print(past_info, future_info)
-    print(past, future)
-
     return jsonify({
         'past': past_info,
         'future': future_info
@@ -276,12 +272,18 @@ def get_user_hosted_meetups(user_id):
 
 @app.route('/api/users/<int:user_id>/meetups.json')
 def get_user_meetups(user_id):
-    """Return a list of meetups the user is attending."""
+    """Return a list of meetups the user is attending.
+        Split into past meetups and future meetups.
+        Meetups are sorted by date."""
     
-    meetups = crud.get_meetups_by_user_id(user_id)
-    meetups_info = [m.to_dict() for m in meetups]
+    [past, future] = crud.get_meetups_by_user_id(user_id)
+    past_info = [m.to_dict() for m in past]
+    future_info = [m.to_dict() for m in future]
         
-    return jsonify(meetups_info)
+    return jsonify({
+        'past': past_info,
+        'future': future_info
+    })
 
 
 @app.route('/api/users/<int:user_id>/meetups/<int:meetup_id>', methods=['POST'])
