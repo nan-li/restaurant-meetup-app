@@ -404,25 +404,37 @@ def get_search_results():
 
 @app.route('/api/restaurants/<restaurant_id>/meetups.json')
 def get_restaurant_meetups(restaurant_id):
-    """Return a list of meetups at this restaurant."""
-    meetups = crud.get_meetups_by_restaurant_id(restaurant_id)
-    if not meetups:
+    """Return a list of meetups at this restaurant.
+        Split into past and future meetups.
+        Meetups are sorted by date."""
+
+    [past, future] = crud.get_meetups_by_restaurant_id(restaurant_id)
+
+    if not past and not future:
         return jsonify({
             'status': 'error',
             'message': 'No meetups at this restaurant.'
         })
 
-    attending = crud.get_meetups_by_user_id(session['user_id'])
-
+    [attending_past, attending_future] = crud.get_meetups_by_user_id(session['user_id'])
+    
+    past_info = [m.to_dict() for m in past]
+    future_info = [m.to_dict() for m in future]
+    
     result = {
-        'meetups_info': [m.to_dict() for m in meetups]
+        'meetups_info': {
+            'past': past_info,
+                'future': future_info
+        }
     }
 
-    for meetup in meetups:
+    past.extend(future)
+    attending_past.extend(attending_future)
+    for meetup in past:
         if session['user_id'] == meetup.host_id:
             result['isHosting'] = 'true'
             break
-        if meetup in attending:
+        if meetup in attending_past:
             result['isAttending'] = 'true'
     
     return jsonify(result)

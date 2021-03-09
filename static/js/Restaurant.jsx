@@ -509,11 +509,27 @@ function RestaurantMeetups (props) {
   return (
     <Container>
       <h1>Meetups at this Restaurant</h1>
-      <div className="list-group">
-        {meetups.map(meetup => (
-          <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
-        ))}
-      </div>
+
+      {meetups.past.length === 0 && meetups.future.length === 0 &&
+        <h3>No Meetups Here Yet</h3>}
+      {meetups.past.length != 0 &&
+        <Container>
+          <h3>Past Meetups</h3>
+          <div className="list-group">
+            {meetups.past.map(meetup => (
+              <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
+            ))}
+          </div>
+        </Container>}
+        {meetups.future.length != 0 &&
+        <Container>
+          <h3>Upcoming Meetups</h3>
+          <div className="list-group">
+            {meetups.future.map(meetup => (
+              <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
+            ))}
+          </div>
+        </Container>}
     </Container>
   )
 }

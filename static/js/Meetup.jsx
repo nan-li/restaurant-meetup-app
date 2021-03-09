@@ -272,8 +272,7 @@ function MeetupDetails(props) {
 
 function MyHostedMeetups(props) {
   const [hostedMeetups, setHostedMeetups] = React.useState([]);
-  console.log('hostedmeetups in', hostedMeetups);
-  
+    
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/hosting.json`)
       .then(res => res.json())

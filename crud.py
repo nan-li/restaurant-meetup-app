@@ -245,9 +245,12 @@ def get_meetups_by_restaurant_id(restaurant_id):
     """Return all meetups at a restaurant.
         Return None if restaurant_id not found."""
     restaurant = get_restaurant_by_id(restaurant_id)
-    return restaurant.meetups if restaurant else None
-   
+    meetups = restaurant.meetups
+    
+    past_meetups = [meetup for meetup in meetups if meetup.date < datetime.now()]
+    future_meetups = [meetup for meetup in meetups if meetup.date > datetime.now()]
 
+    return [past_meetups, future_meetups]
 
 
 def get_meetup_by_id(meetup_id):
