@@ -36,13 +36,15 @@ class User(db.Model):
     image_url = db.Column(db.String, default='/static/img/avatar.jpg')
     about = db.Column(db.Text)
 
-    # hosted_meetups = list of Meetup objects hosted by this user
-
+    
     favorites = db.relationship('Restaurant', secondary=favorites,
                     backref='fans')
 
+    # hosted_meetups = list of Meetup objects hosted by this user
+    hosted_meetups = db.relationship('Meetup', order_by='Meetup.date')
+    
     meetups = db.relationship('Meetup', secondary=user_meetups,
-                backref='attendees')
+                backref='attendees', order_by='Meetup.date')
     
     messages_sent = db.relationship('Message', foreign_keys='Message.sender_id',
                         backref='sender')
@@ -189,7 +191,8 @@ class Meetup(db.Model):
     host_id = db.Column(db.Integer, 
                     db.ForeignKey('users.id'))
 
-    host = db.relationship('User', backref="hosted_meetups")
+    host = db.relationship('User')
+    
     restaurant = db.relationship('Restaurant', backref="meetups")
 
     # attendees = list of User objects attending

@@ -28,7 +28,7 @@ for r in restaurant_data:
         r['id'],
         r['name'],
         r['categories'][0]['title'],
-        r['location']['display_address'],
+        "\n".join(r['location']['display_address']),
         r['coordinates']['longitude'],
         r['coordinates']['latitude'],
         r['image_url']
@@ -41,18 +41,18 @@ for r in restaurant_data:
     restaurants_in_db.append(db_restaurant)
 
 
-def create_fake_user():
+def create_fake_user(i):
     fake = Faker()
 
     f = fake.first_name()
-    u = f.lower()
+    u = f'user{i}'
     l = fake.last_name()
     e = fake.email()
     p = "test"
-    i = '/v1615087092/cefqkwfwygdcs6nr4drv.png'
+    img = '/v1615087092/cefqkwfwygdcs6nr4drv.png'
     a = fake.text()
 
-    db_user = crud.create_user(u,f,l,e,p,i,a)
+    db_user = crud.create_user(u,f,l,e,p,img,a)
 
     return db_user
 
@@ -78,8 +78,8 @@ users_in_db = []
 meetups_in_db = []
 
 # Create 10 users
-for _ in range(10):
-    db_user = create_fake_user()
+for i in range(1, 11):
+    db_user = create_fake_user(i)
     users_in_db.append(db_user)
 
     # Favorite 5 restaurants
@@ -96,11 +96,11 @@ for _ in range(10):
 # Each will attend a Meetup from above iteratively
 # and favorite it
 
-for i in range(10):
-    db_user = create_fake_user()
+for i in range(11, 21):
+    db_user = create_fake_user(i)
     users_in_db.append(db_user)
 
-    meetup = meetups_in_db[i]
+    meetup = meetups_in_db[i-11]
     db_user.meetups.append(meetup)
     db_user.favorites.append(meetup.restaurant)
     db.session.commit()

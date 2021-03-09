@@ -150,6 +150,7 @@ def get_user(id):
     """Return user information."""
     return jsonify(crud.get_user_by_id(id).to_dict())
 
+
 @app.route('/api/user/<int:user_id>/notifications')
 def get_user_notifications(user_id):
     """Get the notifications for a user."""
@@ -163,6 +164,7 @@ def get_user_notifications(user_id):
     
     return jsonify([notification.to_dict() for notification in notifications])
 
+
 @app.route('/api/notification/<int:notification_id>', methods=['DELETE'])
 def delete_notification(notification_id):
     """Delete a notification by its id."""
@@ -171,6 +173,7 @@ def delete_notification(notification_id):
         'status': 'success',
         'message': 'Notification deleted.'
     })
+
 
 @app.route('/api/users/<int:user_id>/restaurants.json')
 def get_user_favorites(user_id):
@@ -236,7 +239,8 @@ def update_user_restaurant_relationship(user_id, restaurant_id):
         'status': 'success',
         'message': "Restaurant added to user's favorites."
     })
-    
+
+
 @app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json', methods=['DELETE'])
 def delete_restaurant_for_user(user_id, restaurant_id):
     user = crud.get_user_by_id(user_id)
@@ -251,12 +255,23 @@ def delete_restaurant_for_user(user_id, restaurant_id):
 
 @app.route('/api/users/<int:user_id>/hosting.json')
 def get_user_hosted_meetups(user_id):
-    """Return a list of meetups the user is hosting."""
+    """Return a list of meetups the user is hosting.
+       Split into meetups past meetups and future meetups.
+       Meetups are sorted by date."""
 
-    meetups = crud.get_hosted_meetups_by_user_id(user_id)
-    meetups_info = [m.to_dict() for m in meetups]
-        
-    return jsonify(meetups_info)
+    [past, future] = crud.get_hosted_meetups_by_user_id(user_id)
+
+    past_info = [m.to_dict() for m in past]
+    future_info = [m.to_dict() for m in future]
+
+    print('\n'* 3)
+    print(past_info, future_info)
+    print(past, future)
+
+    return jsonify({
+        'past': past_info,
+        'future': future_info
+    })
 
 
 @app.route('/api/users/<int:user_id>/meetups.json')
@@ -267,6 +282,7 @@ def get_user_meetups(user_id):
     meetups_info = [m.to_dict() for m in meetups]
         
     return jsonify(meetups_info)
+
 
 @app.route('/api/users/<int:user_id>/meetups/<int:meetup_id>', methods=['POST'])
 def add_user_to_meetup(user_id, meetup_id):

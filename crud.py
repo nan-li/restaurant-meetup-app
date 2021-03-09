@@ -213,7 +213,13 @@ def delete_user_from_meetup(user_id, meetup_id):
 def get_hosted_meetups_by_user_id(user_id):
     """Return all meetups hosted by user."""
     user = get_user_by_id(user_id)
-    return user.hosted_meetups
+    meetups = user.hosted_meetups
+
+    past_meetups = [meetup for meetup in meetups if meetup.date < datetime.now()]
+    future_meetups = [meetup for meetup in meetups if meetup.date > datetime.now()]
+
+    
+    return [past_meetups, future_meetups]
 
 def get_meetups_by_user_id(user_id):
     """Return all meetups user is attending."""

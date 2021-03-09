@@ -1,8 +1,8 @@
 const {useParams, useHistory} = ReactRouterDOM;
 
 function MeetupTile(props) {
+  console.log('type ', typeof(props.meetup));
 
-  console.log('props.displayhost', props.displayHost);
   return (
     <Container>
       <Media className="list-group-item">
@@ -250,6 +250,9 @@ function MeetupDetails(props) {
 
         <h1>Meetup Details</h1>
         <img src={meetup.restaurant.image_url} width={400}/>
+        <Link to={`/restaurant/${meetup.restaurant.id}`}>
+          <p>{meetup.restaurant.name}</p>
+        </Link>
         <p>Event Name: {meetup.name}</p>
         <p>Event Date: {meetup.date}</p>
         <p>Event Capacity: {meetup.capacity}</p>
@@ -268,26 +271,56 @@ function MeetupDetails(props) {
 
 function MyHostedMeetups(props) {
   const [hostedMeetups, setHostedMeetups] = React.useState([]);
-
+  console.log('hostedmeetups in', hostedMeetups);
+  
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/hosting.json`)
       .then(res => res.json())
       .then(
         (result) => {
           setHostedMeetups(result);
+          console.log('result', result);
+          console.log('hostedmeetups in useeffect', hostedMeetups);
         }
       )
   }, [])
+  if (hostedMeetups.length === 0) return <p>Loading...</p>;
+
+  
 
   return (
     <Container>
       <h1>My Hosted Meetups</h1>
-      <div className="list-group">
-        {hostedMeetups.map(meetup => (
-          <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
+      {hostedMeetups.past.length === 0 && hostedMeetups.future.length === 0 &&
+        <h3>No Meetups Hosted</h3>}
         
-      ))} 
-      </div>
+      {hostedMeetups.past.length != 0 &&
+        <Container>
+
+          <h3>Past Meetups</h3>
+          <div className="list-group">
+            {hostedMeetups.past.map(meetup => (
+              <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
+            ))} 
+          </div>
+        </Container>
+      }
+      
+      {hostedMeetups.future.length != 0 &&
+      <Container>
+
+      <h3>Upcoming Meetups</h3>
+        <div className="list-group">
+          {hostedMeetups.future.map(meetup => (
+            <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
+          ))} 
+        </div>
+      </Container>
+      }
+        
+        
+
+      
     </Container>
   );
 }
