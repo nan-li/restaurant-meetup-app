@@ -80,10 +80,13 @@ function App(props) {
               </Route>
 
               <Route exact path="/meetups">
-                <Row>
-                  <Col><MyHostedMeetups user={user} /></Col>
-                  <Col><MyAttendingMeetups user={user} /></Col>
-                </Row>
+                <Container fluid>
+                  <Row>
+                    <Col><MyHostedMeetups user={user} /></Col>
+                    <Col><MyAttendingMeetups user={user} /></Col>
+                  </Row>
+                </Container>
+                
               </Route>
 
               <Route exact path="/messages">

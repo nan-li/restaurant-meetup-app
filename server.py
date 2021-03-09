@@ -482,7 +482,7 @@ def create_meetup():
     }
 
     notifications = crud.create_many_notifications(
-        'new_meetup', restaurant_id, json.dumps(notification_data))
+        'new_meetup', restaurant_id, json.dumps(notification_data), host)
 
     return jsonify({
         'status': 'success',
@@ -495,6 +495,7 @@ def get_meetup(meetup_id):
     """Return meetup information."""
     return jsonify(crud.get_meetup_by_id(meetup_id).to_dict())
 
+
 @app.route('/api/meetups/<int:meetup_id>', methods=['PATCH'])
 def update_meetup(meetup_id):
     """Update meetup details."""
@@ -503,17 +504,40 @@ def update_meetup(meetup_id):
     capacity = request.json.get('capacity')
     description = request.json.get('description')
 
-    crud.update_meetup_by_id(meetup_id, name, date, capacity, description)
+    host = crud.get_user_by_id(session['user_id'])
+
+    meetup = crud.update_meetup_by_id(meetup_id, name, date, capacity, description)
+    
+    notification_data = {
+        'message': f'Your meetup at {meetup.restaurant.name} has been changed.',
+        'link': 'Go to meetup.',
+        'url': f'/meetup/{meetup_id}'
+    }
+
+    notifications = crud.create_many_notifications(
+        'meetup_changed', meetup_id, json.dumps(notification_data), host)
 
     return jsonify({
         'status': 'success',
         'message': 'Successfully updated meetup.'
     })
 
+
 @app.route('/api/meetups/<int:meetup_id>', methods=['DELETE'])
-def delete_meetup(meetup_id):
+def cancel_meetup(meetup_id):
     """Cancel this meetup."""
     meetup = crud.cancel_meetup_by_id(meetup_id)
+    host = crud.get_user_by_id(session['user_id'])
+
+    notification_data = {
+        'message': f'Your meetup at {meetup.restaurant.name} has been cancelled.',
+        'link': 'Go to meetup.',
+        'url': f'/meetup/{meetup_id}'
+    }
+
+    notifications = crud.create_many_notifications(
+        'meetup_cancelled', meetup_id, json.dumps(notification_data), host)
+    
     return jsonify({
         'status': 'success',
         'message': 'Successfully cancelled meetup.'

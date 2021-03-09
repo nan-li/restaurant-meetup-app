@@ -84,6 +84,11 @@ function MapComponent(props) {
   const markers = [];
   let history = useHistory();
 
+  function goToRestaurant(id) {
+      history.push(`/restaurant/${id}`);
+  }
+
+ 
 
   React.useEffect(() => {
     const createMap = () => props.setMap(new window.google.maps.Map(ref.current, options));
@@ -127,19 +132,32 @@ function MapComponent(props) {
       bounds = new google.maps.LatLngBounds();
     }
 
+    
     for (const loc of locs) {
       console.log("const is", loc);
 
       if (loc.coordinates.latitude && loc.coordinates.longitude) {
         // add all the restaurant markers to the map
         const restaurantInfoContent = (`
-        <div>
-            <img class="google-maps-img" src=${loc.image_url} />
-            <hr/>
-            <h3>${loc.name}</h3>
-            
-            <h5>${loc.location.display_address}</h5>
+        <script>
+          function goToRestaurant(id) {
+            history.push("/restaurant/id");
+          }
+        </script>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <img class="google-maps-img" src=${loc.image_url} />
+            </div>
+            <div class="col">
+              <button onclick="goToRestaurant(${loc.id})">Visit Restaurant</button>
+            </div>
+          </div>
+          <hr/>
+          <h3>${loc.name}</h3> 
+          <h5>${loc.location.display_address}</h5>
         </div>
+        
         `);
 
         const restaurantMarker = new google.maps.Marker({

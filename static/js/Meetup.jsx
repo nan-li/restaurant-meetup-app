@@ -284,10 +284,8 @@ function MyHostedMeetups(props) {
   }, [])
   if (hostedMeetups.length === 0) return <p>Loading...</p>;
 
-  
-
   return (
-    <Container>
+    <Container fluid>
       <h1>My Hosted Meetups</h1>
       {hostedMeetups.past.length === 0 && hostedMeetups.future.length === 0 &&
         <h3>No Meetups Hosted</h3>}
@@ -305,23 +303,16 @@ function MyHostedMeetups(props) {
       
       {hostedMeetups.future.length != 0 &&
       <Container>
-
       <h3>Upcoming Meetups</h3>
         <div className="list-group">
           {hostedMeetups.future.map(meetup => (
             <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
           ))} 
         </div>
-      </Container>
-      }
-        
-        
-
-      
+      </Container>} 
     </Container>
   );
 }
-
 
 function MyAttendingMeetups(props) {
   const [meetups, setMeetups] = React.useState([]);
@@ -339,7 +330,7 @@ function MyAttendingMeetups(props) {
   if (meetups.length === 0) return <p>Loading...</p>;
 
   return (
-    <Container>
+    <Container fluid>
       <h1>Meetups Attending</h1>
       {meetups.past.length === 0 && meetups.future.length === 0 &&
         <h3>No Meetups Attending</h3>}

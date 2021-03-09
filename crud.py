@@ -68,7 +68,7 @@ def create_notification(name, user_id, payload_json):
 
     return n
 
-def create_many_notifications(name, id, payload_json):
+def create_many_notifications(name, id, payload_json, host):
     """Create and return notifications for all users to be notified.
         name: new_meetup, meetup_changed, meetup_cancelled
         id: meetup or restaurant id """
@@ -82,7 +82,8 @@ def create_many_notifications(name, id, payload_json):
         users = get_attendees_by_meetup_id(id)
     
     for user in users:
-        notifications.append(create_notification(name, user.id, payload_json))
+        if not user == host:
+            notifications.append(create_notification(name, user.id, payload_json))
     
     return notifications
 
@@ -270,7 +271,8 @@ def update_meetup_by_id(meetup_id, name, date, capacity, description):
         meetup.description = description
     
     db.session.commit()
-
+    return meetup
+    
 def cancel_meetup_by_id(meetup_id):
     """Cancel the meetup with this id."""
     
