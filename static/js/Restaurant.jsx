@@ -159,29 +159,22 @@ function RestaurantSearchResults(props) {
 function RestaurantTile(props) {
 
   return (
-    
-      <Container>
-        <Media className="list-group-item" >
-          <img className="img-thumbnail" src={props.restaurant.image_url} />
-          <Media.Body>
-            <Link to={`/restaurant/${props.restaurant.id}`}>
-              <h5>{props.restaurant.name}</h5>
-            </Link>
-            <hr />
-            <p>{props.isFavorite ? props.restaurant.address : props.restaurant.location.display_address}</p>
-            <p>{props.isFavorite ? props.restaurant.cuisine : props.restaurant.categories[0].title}</p>
-          </Media.Body>
-        </Media>
-        
-          {/* needs to go up, don't pass single restaurant info. Pass all of them and find with id */}
-          {/* <Route exact path='/restaurants/:restaurant-id'>
-            <RestaurantDetails user={props.user} restaurant={props.restaurant}/>
-          </Route> */}
-       
-      </Container>
-   
-
-    
+    <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={props.restaurant.image_url}  />
+      <Card.Body>
+        <Card.Title>{props.restaurant.name}</Card.Title> 
+        <Card.Text>
+          {props.isFavorite ? props.restaurant.address : props.restaurant.location.display_address}
+        </Card.Text>
+        <Card.Text>
+          {props.isFavorite ? props.restaurant.cuisine : props.restaurant.categories[0].title}
+        </Card.Text>
+ 
+        <Link to={`/restaurant/${props.restaurant.id}`}>
+          <Button variant="primary">Go To Restaurant</Button>
+        </Link>
+      </Card.Body>
+    </Card> 
   )
 }
 

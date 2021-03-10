@@ -1,28 +1,26 @@
 
 function MeetupTile(props) {
-  console.log('type ', typeof(props.meetup));
 
   return (
-    <Container>
-      <Media className="list-group-item">
-        <img className="img-thumbnail" src={props.meetup.restaurant.image_url} />
-
-        <Media.Body>
-          <Link to={`/meetup/${props.meetup.id}`}>
-            <h5>{props.meetup.name}</h5>
-          </Link>
-          <hr />
-          <p>Date: {props.meetup.date}</p>
-          {!props.dontDisplayHost &&
-            <p>Hosted by: {props.meetup.host.id === props.user.id ? "You!" : props.meetup.host.username}</p>
+    <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={props.meetup.restaurant.image_url} />
+      <Card.Body>
+        <Card.Title>{props.meetup.name}</Card.Title>
+        <Card.Text>
+          Date: {props.meetup.date}
+        </Card.Text>  
+        {!props.dontDisplayHost &&
+          <Card.Text>Hosted by: {props.meetup.host.id === props.user.id ? 
+            "You!" : props.meetup.host.username}</Card.Text>
           }
-          {(props.meetup.status === 'CANCELLED') &&
-            <hr /> && 
-            <Alert variant='danger'>This event is cancelled.</Alert> }
-        </Media.Body>
-      </Media>
-    </Container>
-
+        {(props.meetup.status === 'CANCELLED') &&
+          <hr /> && 
+          <Alert variant='danger'>This event is cancelled.</Alert> }
+        <Link to={`/meetup/${props.meetup.id}`}>
+          <Button variant="primary">Go To Meetup</Button>
+        </Link>
+      </Card.Body>
+    </Card>
   )
 }
 
@@ -247,7 +245,15 @@ function MeetupDetails(props) {
             setAlert={props.setAlert} />}
 
         <h1>Meetup Details</h1>
-        <img src={meetup.restaurant.image_url} width={400}/>
+        <Row>
+          <Col>
+            <img src={meetup.restaurant.image_url} width={400}/>
+          </Col>
+          <Col>
+            {meetup.host.id === props.user.id ? "YOU'RE HOSTING!" : 
+              <UserTile host={true} user={meetup.host} currentUser={props.user} />}
+          </Col>
+        </Row>
         <Link to={`/restaurant/${meetup.restaurant.id}`}>
           <p>{meetup.restaurant.name}</p>
         </Link>
@@ -255,10 +261,6 @@ function MeetupDetails(props) {
         <p>Event Date: {meetup.date}</p>
         <p>Event Capacity: {meetup.capacity}</p>
         <p>Event Description: {meetup.description}</p>
-
-        <p>Hosted by:</p>
-        {meetup.host.id === props.user.id ? "You!" : 
-          <UserTile user={meetup.host} currentUser={props.user} />}
         
         <MeetupAttendees meetup_id={meetupID} attending={attending}
           setAttending={setAttending} user={props.user}/>
@@ -382,7 +384,7 @@ function MeetupAttendees(props) {
     return <div>No Attendees Yet</div>;
   } else {
     return (
-    <div className="container border rounded">
+    <Container>
 
       <h1>Attendees</h1>
       <div className="list-group">
@@ -391,7 +393,7 @@ function MeetupAttendees(props) {
         ))}
       </div>
 
-    </div>
+    </Container>
     );
   }
 }

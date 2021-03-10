@@ -485,25 +485,26 @@ function UserTile(props) {
   //   return null;
   // }
   return (
-    <Container>
-      <Media className="list-group-item" >
-          <img className="img-thumbnail" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
-          <Media.Body>
-            <Link to={`/user/${props.user.id}`}>
-              <h5>{props.user.username}</h5>
-            </Link>
-            {props.currentUser && props.user.id === props.currentUser.id && <p>That's YOU!</p>}
-            <hr />
-            <p>{props.user.fname} {props.user.lname}</p>
-            <hr />
-            {props.setSelectedUser && 
-              <Button onClick={() => {
-                props.setSelectedUser(props.user);
-                window.scrollTo({top: 0, behavior: 'auto'});
-                }}>Messages</Button>}
-          </Media.Body>
-        </Media>
-    </Container>
+    <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
+      <Card.Body>
+        <Card.Title>{props.user.username} {props.host && <span>HOST!</span>}</Card.Title>
+        <Card.Text>
+          {props.user.fname} {props.user.lname}
+        </Card.Text>  
+        {props.currentUser && props.user.id === props.currentUser.id && 
+          <Card.Text>That's YOU!</Card.Text>}
+
+        {props.setSelectedUser && 
+          <Button onClick={() => {
+            props.setSelectedUser(props.user);
+            window.scrollTo({top: 0, behavior: 'auto'});
+            }}>Messages</Button>}
+        <Link to={`/user/${props.user.id}`}>
+          <Button variant="primary">Go To User</Button>
+        </Link>
+      </Card.Body>
+    </Card>
   )
 }
 
