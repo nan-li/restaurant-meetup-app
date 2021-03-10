@@ -1,7 +1,8 @@
 const Router = ReactRouterDOM.BrowserRouter;
 const {Link, Switch, Route, useHistory, useParams, Redirect} = ReactRouterDOM;
 const Img = ReactBootstrap.Image;
-const {Container, Button, Navbar, Nav, Media, Row, Col, Modal, Alert, Toast, Card} = ReactBootstrap;
+const {Container, Button, ButtonGroup, Navbar, 
+  Nav, Media, Row, Col, Modal, Alert, Toast, Card, Spinner} = ReactBootstrap;
 
 function App() {
   const [user, setUser] = React.useState(null);

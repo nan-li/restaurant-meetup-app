@@ -1,42 +1,3 @@
-
-// const {Image} = ReactBootstrap;
-
-/* https://janosh.dev/blog/google-maps+react-hooks */
-
-// function Map () {
-//   const ref = React.useRef();
-//   const [map, setMap] = React.useState();
-
-//   React.useEffect(() => {
-//     const onLoad = () => setMap(new window.google.maps.Map(ref.current, options));
-    
-//     if (!window.google) {
-//       const script = document.createElement(`script`)
-//       script.src =
-//         `https://maps.googleapis.com/maps/api/js?key=AIzaSyAdDBsi8si_qW5snlDOESFtr6LxkJn_Hzg`
-//       document.head.append(script)
-//       script.addEventListener(`load`, onLoad)
-//       return () => script.removeEventListener(`load`, onLoad)
-//     } else onLoad()
-//   }, [options])
-
-//   if (map && typeof onMount === `function`) onMount(map, onMountProps)
-
-//   return (
-//     <div
-//       style={{ height: `60vh`, margin: `1em 0`, borderRadius: `0.5em` }}
-//       {...{ ref, className }}
-//     />
-//   )
-// }
-
-// Map.defaultProps = {
-//   options: {
-//     center: { lat: 48, lng: 8 },
-//     zoom: 5,
-//   },
-// }
-
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAo73W-Fo1yehL1wmSDj8T6cR7JW7OaUTU';
 
 function MapContainer(props) {
@@ -69,7 +30,7 @@ function MapContainer(props) {
   }
 
   return (
-    <MapComponent options={options} map={map} setMap={setMap} 
+    <MapComponent id='map' options={options} map={map} setMap={setMap} 
       searchResults={props.searchResults} mapDimensions={mapDimensions}
       coordinates={props.coordinates} />
   );
@@ -199,7 +160,8 @@ function MapComponent(props) {
     <div id="map-div"
       style={{ height: props.mapDimensions.height, 
         margin: `1em 0`, borderRadius: `0.5em`, 
-        width: props.mapDimensions.width }}
+        width: props.mapDimensions.width,
+        position: 'fixed' }}
       ref={ref}
     ></div>
   )

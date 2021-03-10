@@ -29,7 +29,7 @@ a {
 }
 
 hr {
-    width: 50%;
+    width: 100%;
 }
 
 #banner {
@@ -41,16 +41,46 @@ hr {
     left: 10em;
 }
 
+.alert-cancelled {
+    float: right;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+.alert-past {
+    float: left;
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+}
+/* Overwrite default Bootstrap styles */
+.card-img-top {
+    height: 16rem;
+    overflow: hidden;
+}
+.card {
+    margin-top: 1rem;
+}
 .btn-primary {
-    background-color: #bb0e28;
-    border-color: #8f091d;
+    background-color: #597813;
+    border-color: #475e10;
 }
-.btn-primary:hover {
-    background-color: #720616;
+.btn-primary:hover, .btn-primary:focus  {
+    background-color: #728c36;
+}
+.bg-primary {
+    background-color: rgb(144, 165, 95);
 }
 
-
+.btn-static {
+    background-color: #6a9603;
+    border: 1px solid #4a6804;
+}
 .google-maps-img {
     width: 100px;
     height: auto;
+}
+
+#map-div {
+    position: fixed;
 }

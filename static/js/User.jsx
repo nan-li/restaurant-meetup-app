@@ -286,7 +286,9 @@ function UserProfile(props) {
             <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + user.image_url} />
           </Col>
           <Col>
-            <Button onClick={handleShow}>Send a Message to {user.username}</Button>
+            <Button variant='link' onClick={handleShow}>
+              <Img width={50} src='/static/img/message-icon.png'/>
+            </Button>
             <p>Username: {user.username}</p>
             <p>First Name: {user.fname}</p>
             <p>About {user.username}:</p>
@@ -485,24 +487,25 @@ function UserTile(props) {
   //   return null;
   // }
   return (
-    <Card style={{ width: '18rem' }}>
+    <Card style={{ width: '24rem' }}>
       <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
       <Card.Body>
-        <Card.Title>{props.user.username} {props.host && <span>HOST!</span>}</Card.Title>
+        <Card.Title>{props.user.username} 
+        {props.host && <div className='btn btn-default disabled'>HOST</div>}</Card.Title>
         <Card.Text>
           {props.user.fname} {props.user.lname}
         </Card.Text>  
         {props.currentUser && props.user.id === props.currentUser.id && 
           <Card.Text>That's YOU!</Card.Text>}
 
-        {props.setSelectedUser && 
-          <Button onClick={() => {
-            props.setSelectedUser(props.user);
-            window.scrollTo({top: 0, behavior: 'auto'});
-            }}>Messages</Button>}
         <Link to={`/user/${props.user.id}`}>
           <Button variant="primary">Go To User</Button>
         </Link>
+        {props.setSelectedUser && 
+          <Button variant='link' onClick={() => {
+            props.setSelectedUser(props.user);
+            window.scrollTo({top: 0, behavior: 'auto'});
+            }}><Img width={50} src='/static/img/message-icon.png'/></Button>}
       </Card.Body>
     </Card>
   )
@@ -664,14 +667,13 @@ function NotificationTile (props) {
 
   return (
     <Toast show={show} onClose={deleteNotification} 
-      className={props.notification.status === 'UNREAD' ? 'bg-primary' : 'bg-light'}>
+      className={props.notification.status === 'UNREAD' ? 'bg-secondary' : 'bg-light'}>
       <Toast.Header>
         <img src='/static/img/favicon.ico' className="rounded mr-2" alt="" />
         <strong className="mr-auto">{props.notification.data.message}</strong>
       </Toast.Header>
       <Toast.Body onClick={markNotificationAsRead}>
         <p>{props.notification.timestamp}</p>
-        <p>This notification is {props.notification.status}</p>
         <Link to={props.notification.data.url} onClick={markNotificationAsRead}>
           {props.notification.data.link}
         </Link>

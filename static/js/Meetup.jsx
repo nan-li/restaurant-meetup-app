@@ -2,7 +2,7 @@
 function MeetupTile(props) {
 
   return (
-    <Card style={{ width: '18rem' }}>
+    <Card style={{ width: '24rem' }}>
       <Card.Img variant="top" src={props.meetup.restaurant.image_url} />
       <Card.Body>
         <Card.Title>{props.meetup.name}</Card.Title>
@@ -13,9 +13,12 @@ function MeetupTile(props) {
           <Card.Text>Hosted by: {props.meetup.host.id === props.user.id ? 
             "You!" : props.meetup.host.username}</Card.Text>
           }
+        {props.past &&
+          <hr /> && 
+          <Alert className='alert-past' variant='warning'>Past Event</Alert> }
         {(props.meetup.status === 'CANCELLED') &&
           <hr /> && 
-          <Alert variant='danger'>This event is cancelled.</Alert> }
+          <Alert className='alert-cancelled' variant='danger'>This event is cancelled.</Alert> }
         <Link to={`/meetup/${props.meetup.id}`}>
           <Button variant="primary">Go To Meetup</Button>
         </Link>
@@ -272,7 +275,9 @@ function MeetupDetails(props) {
 
 function MyHostedMeetups(props) {
   const [hostedMeetups, setHostedMeetups] = React.useState([]);
-    
+  const [showPast, setShowPast] = React.useState(false);
+  const [showUpcoming, setShowUpcoming] = React.useState(true);
+
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/hosting.json`)
       .then(res => res.json())
@@ -287,35 +292,48 @@ function MyHostedMeetups(props) {
   return (
     <Container fluid>
       <h1>My Hosted Meetups</h1>
-      {hostedMeetups.past.length === 0 && hostedMeetups.future.length === 0 &&
-        <h3>No Meetups Hosted</h3>}
-        
-      {hostedMeetups.past.length != 0 &&
+      <ButtonGroup aria-label="Show Meetups">
+        <Button onClick={() => {setShowPast(true);
+                                setShowUpcoming(false);}}>Past Meetups</Button>
+        <Button onClick={() => {setShowUpcoming(true);
+                              setShowPast(false);}}>Upcoming Meetups</Button>
+      </ButtonGroup>
+      
+      {showPast &&
         <Container>
-
           <h3>Past Meetups</h3>
-          <div className="list-group">
-            {hostedMeetups.past.map(meetup => (
-              <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
-            ))} 
-          </div>
+          {hostedMeetups.past.length != 0 ? 
+            <div className="list-group">
+              {hostedMeetups.past.map(meetup => (
+                <MeetupTile meetup={meetup} 
+                            past={true}
+                            dontDisplayHost={props.dontDisplayHost} 
+                            user={props.user} 
+                            key={meetup.id} />
+              ))} 
+            </div> : <Alert variant='warning'>No Meetups</Alert>}
         </Container>}
       
-      {hostedMeetups.future.length != 0 &&
+      {showUpcoming &&
       <Container>
       <h3>Upcoming Meetups</h3>
+        {hostedMeetups.future.length != 0 ? 
         <div className="list-group">
           {hostedMeetups.future.map(meetup => (
-            <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} user={props.user} key={meetup.id} />
+            <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} 
+              user={props.user} key={meetup.id} />
           ))} 
-        </div>
-      </Container>} 
+        </div> : <Alert variant='warning'>No Meetups</Alert>}
+      </Container>}
+
     </Container>
   );
 }
 
 function MyAttendingMeetups(props) {
   const [meetups, setMeetups] = React.useState([]);
+  const [showPast, setShowPast] = React.useState(false);
+  const [showUpcoming, setShowUpcoming] = React.useState(true);
 
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/meetups.json`)
@@ -332,27 +350,33 @@ function MyAttendingMeetups(props) {
   return (
     <Container fluid>
       <h1>Meetups Attending</h1>
-      {meetups.past.length === 0 && meetups.future.length === 0 &&
-        <h3>No Meetups Attending</h3>}
+      <ButtonGroup aria-label="Show Meetups">
+        <Button onClick={() => {setShowPast(true);
+                                setShowUpcoming(false);}}>Past Meetups</Button>
+        <Button onClick={() => {setShowUpcoming(true);
+                              setShowPast(false);}}>Upcoming Meetups</Button>
+      </ButtonGroup>
 
-      {meetups.past.length != 0 &&
+      {showPast &&
         <Container>
           <h3>Past Meetups</h3>
-          <div className="list-group">
-            {meetups.past.map(meetup => (
-              <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
-            ))} 
-          </div>
+          {meetups.past.length != 0 ? 
+            <div className="list-group">
+              {meetups.past.map(meetup => (
+                <MeetupTile past={true} user={props.user} meetup={meetup} key={meetup.id} />
+              ))} 
+            </div> : <Alert variant='warning'>No Meetups</Alert>}
         </Container>}
 
-        {meetups.future.length != 0 &&
+        {showUpcoming &&
         <Container>
           <h3>Upcoming Meetups</h3>
-          <div className="list-group">
-            {meetups.future.map(meetup => (
-              <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
-            ))} 
-          </div>
+          {meetups.future.length != 0 ? 
+            <div className="list-group">
+              {meetups.future.map(meetup => (
+                <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
+              ))} 
+            </div> : <Alert variant='warning'>No Meetups</Alert>}
         </Container>}      
     </Container>
   );

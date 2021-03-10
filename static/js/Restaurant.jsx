@@ -136,30 +136,21 @@ function RestaurantSearch(props) {
 function RestaurantSearchResults(props) {
 
   return (
-    
       <Container>
         <h1>Search Results</h1>
         <div className="list-group">
-          {props.restaurants.map(rest => (
-            
-              <RestaurantTile restaurant={rest} user={props.user} key={rest.id}/>
-            
+          {props.restaurants.map(rest => (        
+              <RestaurantTile restaurant={rest} user={props.user} key={rest.id}/>     
           ))}
         </div>
       </Container>
-   
-
-      
   );
 }
-
-
-
 
 function RestaurantTile(props) {
 
   return (
-    <Card style={{ width: '18rem' }}>
+    <Card style={{ width: '24rem' }}>
       <Card.Img variant="top" src={props.restaurant.image_url}  />
       <Card.Body>
         <Card.Title>{props.restaurant.name}</Card.Title> 
@@ -229,21 +220,18 @@ function FavoriteUnfavoriteRestaurantButton(props) {
 
   return (
     <React.Fragment>
-      {console.log("HERE")}
       {!props.favorited && 
         <Button onClick={createUserRestaurantRelationship}>
           Add to Favorites
         </Button>}
       {props.favorited && 
-        <Button onClick={deleteUserRestaurantRelationship}>
+        <Button variant='danger' onClick={deleteUserRestaurantRelationship}>
           Remove From Favorites
         </Button>}
       
     </React.Fragment>
-    
   );
 }
-
 
 
 const initialMeetupData = Object.freeze({
@@ -353,8 +341,6 @@ function RestaurantDetails(props) {
   
   return (
     <Container>
-      {favorited && 
-        <Button onClick={handleShow}>Create a Meetup</Button>}
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Create a New Meetup</Modal.Title>
@@ -397,19 +383,29 @@ function RestaurantDetails(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <h1>{restaurant.name}</h1>
-      <img height={200} src={restaurant.image_url} />
+      <Row>
+        <Col>
+          <img width={400} src={restaurant.image_url} />
+        </Col>
+        <Col>
+          {favorited && 
+            <Button onClick={handleShow} className='mr-1'>Create a Meetup</Button>}
+          <FavoriteUnfavoriteRestaurantButton 
+            favorited={favorited} setFavorited={setFavorited}
+            restaurant={restaurant}
+            restaurantID={restaurantID} user={props.user} 
+            isHostingMeetupHere={isHostingMeetupHere} 
+            isAttendingMeetupHere={isAttendingMeetupHere} />
+          <br />
+          <br />
+          <h1>{restaurant.name}</h1>
+          <p>{props.displaySearchResults ? restaurant.location.display_address : restaurant.address}</p>
+          <p>{props.displaySearchResults ? restaurant.categories[0].title : restaurant.cuisine}</p>
+        </Col>
+      </Row>
+      
+      
       <hr />
-      <p>{props.displaySearchResults ? restaurant.location.display_address : restaurant.address}</p>
-      <p>{props.displaySearchResults ? restaurant.categories[0].title : restaurant.cuisine}</p>
-     
-      <FavoriteUnfavoriteRestaurantButton 
-        favorited={favorited} setFavorited={setFavorited}
-        restaurant={restaurant}
-        restaurantID={restaurantID} user={props.user} 
-        isHostingMeetupHere={isHostingMeetupHere} 
-        isAttendingMeetupHere={isAttendingMeetupHere} />
 
       <Row>
         <Col>
@@ -455,30 +451,22 @@ function MyFavoriteRestaurants(props) {
   }, [])
   
   return (
-
     <Container>
       <h1>My Favorite Restaurants</h1>
       <div className="list-group">
-        {favoriteRestaurants.map(rest => (
-          
+        {favoriteRestaurants.map(rest => (       
           <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
-        // <a href={`/api/restaurants/${rest.id}.json`} className="list-group-item" key={rest.id}>
-        //   <img className="img-thumbnail" src={rest.image_url} />
-        //   {rest.name}
-        // </a>
-
         ))}
       </div>
-
     </Container>
-
-      
   );
 }
 
 function RestaurantMeetups (props) {
   const [meetups, setMeetups] = React.useState([]);
-  
+  const [showPast, setShowPast] = React.useState(false);
+  const [showUpcoming, setShowUpcoming] = React.useState(true);
+
   React.useEffect(() => {
     fetch(`/api/restaurants/${props.restaurantID}/meetups.json`)
       .then(res => res.json())
@@ -501,26 +489,34 @@ function RestaurantMeetups (props) {
   return (
     <Container>
       <h1>Meetups at this Restaurant</h1>
+      <ButtonGroup aria-label="Show Meetups">
+        <Button onClick={() => {setShowPast(true);
+                                setShowUpcoming(false);}}>Past Meetups</Button>
+        <Button onClick={() => {setShowUpcoming(true);
+                              setShowPast(false);}}>Upcoming Meetups</Button>
+      </ButtonGroup>
 
-      {meetups.past.length === 0 && meetups.future.length === 0 &&
-        <h3>No Meetups Here Yet</h3>}
-      {meetups.past.length != 0 &&
+      {showPast &&
         <Container>
           <h3>Past Meetups</h3>
-          <div className="list-group">
-            {meetups.past.map(meetup => (
-              <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
-            ))}
-          </div>
+          {meetups.past.length != 0 ? 
+            <div className="list-group">
+              {meetups.past.map(meetup => (
+                <MeetupTile past={true} meetup={meetup} user={props.user} key={meetup.id} />
+              ))}
+            </div> : <Alert variant='warning'>No Meetups</Alert>}
         </Container>}
-        {meetups.future.length != 0 &&
+
+        {showUpcoming &&
         <Container>
           <h3>Upcoming Meetups</h3>
-          <div className="list-group">
-            {meetups.future.map(meetup => (
-              <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
-            ))}
-          </div>
+          {meetups.future.length != 0 ? 
+            <div className="list-group">
+              {meetups.future.map(meetup => (
+                <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
+              ))}
+            </div> : <Alert variant='warning'>No Meetups</Alert>}
+          
         </Container>}
     </Container>
   )
