@@ -89,10 +89,18 @@ def create_many_notifications(name, id, payload_json, host):
 
         
 
-def delete_notification_by_id(id):
-    """Delete a notification by its id."""
+def update_notification_by_id(id, method):
+    """Delete or mark as READ a notification by its id.
+        method: DELETE or READ """
+
     n = Notification.query.get(id)
-    db.session.delete(n)
+
+    if method == 'DELETE':
+        db.session.delete(n)
+    elif method == 'READ':
+        print("\n" * 3)
+        print("IN HERE")
+        n.status = 'READ'
     db.session.commit()
     
 def get_user_notifications(user_id):
@@ -272,7 +280,7 @@ def update_meetup_by_id(meetup_id, name, date, capacity, description):
     
     db.session.commit()
     return meetup
-    
+
 def cancel_meetup_by_id(meetup_id):
     """Cancel the meetup with this id."""
     

@@ -1,36 +1,42 @@
 const Router = ReactRouterDOM.BrowserRouter;
-const {Link, Switch, Route, useHistory, Redirect} = ReactRouterDOM;
+const {Link, Switch, Route, useHistory, useParams, Redirect} = ReactRouterDOM;
 const Img = ReactBootstrap.Image;
-const {Container, Button, Navbar, Nav} = ReactBootstrap;
+const {Container, Button, Navbar, Nav, Media, Row, Col, Modal, Alert, Toast} = ReactBootstrap;
 
-function App(props) {
+function App() {
   const [user, setUser] = React.useState(null);
   const [alert, setAlert] = React.useState(null);
-  // console.log("User info:", user);
+  console.log("User info:", user);
 
   // for now, hardcode a user in
-  React.useEffect(()=>{
-    fetch('/api/users/login', {
-      method: 'POST',
-      body: JSON.stringify({username: 'user1', password: 'test'}),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => res.json())
-    .then(
-      (data) => {
-      // console.log('Success:', data)
-      if (data.status != 'error') {
-        setUser(data.user);
-      }
-    },
-    (error) => {
-      setError(error)
-    });
-  }, [])
+  // React.useEffect(()=>{
+  //   fetch('/api/users/login', {
+  //     method: 'POST',
+  //     body: JSON.stringify({username: 'user1', password: 'test'}),
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //   .then(res => res.json())
+  //   .then(
+  //     (data) => {
+  //     // console.log('Success:', data)
+  //     if (data.status != 'error') {
+  //       setUser(data.user);
+  //     }
+  //   },
+  //   (error) => {
+  //     setError(error)
+  //   });
+  // }, [])
   // end for now hardcode user in
-
+  
+  // Find the logged in user
+  React.useEffect(() => {
+    if (localStorage.getItem('user') !== 'null') {
+      setUser(JSON.parse(localStorage.getItem('user'))); 
+    }
+  }, [])
 
   // no one is logged in
   if (!user) {
@@ -133,6 +139,7 @@ function SiteNavbar(props) {
           <Link className="navbar-brand" to="/notifications">Notifications</Link>
           <Button onClick={() => {
             props.setUser(null);
+            localStorage.setItem('user', null);
             history.push('/');}}>Logout</Button>
         </Nav>
       </Navbar>

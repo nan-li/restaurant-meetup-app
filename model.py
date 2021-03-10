@@ -132,6 +132,7 @@ class Notification(db.Model):
             'id': self.id,
             'name': self.name,
             'status': self.status,
+            'timestamp': self.timestamp,
             'data': self.get_data()
         }
         return data

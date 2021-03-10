@@ -1,4 +1,3 @@
-const {useParams, useHistory} = ReactRouterDOM;
 
 function MeetupTile(props) {
   console.log('type ', typeof(props.meetup));
@@ -29,7 +28,6 @@ function MeetupTile(props) {
 
 function JoinUnjoinMeetupButton(props) {
   const createUserMeetupRelationship = () => {
-    props.setAttending(true);
     // POST to server
     fetch(`/api/users/${props.user.id}/meetups/${props.meetup.id}`, {
       method: 'POST',
@@ -40,6 +38,7 @@ function JoinUnjoinMeetupButton(props) {
       .then(res => res.json())
       .then(
         (data) => {
+          props.setAttending(true);
           console.log(data);
           props.setAlert(data.message);
       }
@@ -47,7 +46,6 @@ function JoinUnjoinMeetupButton(props) {
   }
 
   const deleteUserMeetupRelationship = () => {
-    props.setAttending(false);
     // POST to server
     fetch(`/api/users/${props.user.id}/meetups/${props.meetup.id}`, {
       method: 'DELETE',
@@ -58,9 +56,9 @@ function JoinUnjoinMeetupButton(props) {
       .then(res => res.json())
       .then(
         (data) => {
+          props.setAttending(false);
           console.log(data);
           props.setAlert(data.message);
-
       }
     );
   }
@@ -68,10 +66,10 @@ function JoinUnjoinMeetupButton(props) {
   return (
     <React.Fragment>
       
-      {props.attending &&
-        <Button onClick={deleteUserMeetupRelationship}>Leave Meetup</Button> }
       {!props.attending && (props.meetup.attendees_count < props.meetup.capacity) &&  
         <Button onClick={createUserMeetupRelationship}>Join Meetup</Button>}
+      {props.attending &&
+        <Button onClick={deleteUserMeetupRelationship}>Leave Meetup</Button> }
     </React.Fragment>
   );
 }
@@ -102,7 +100,7 @@ function EditMeetupButton(props) {
     evt.preventDefault();
 
     // check new capacity against attendees_count
-    if (formData.capacity < props.meetup.attendees_count) {
+    if (formData.capacity && formData.capacity < props.meetup.attendees_count) {
       alert("Capacity is less than the number of attendees currently RSVP'd.")
     } else {
       fetch (`/api/meetups/${props.meetupID}`, {

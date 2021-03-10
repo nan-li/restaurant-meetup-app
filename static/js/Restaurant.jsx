@@ -1,4 +1,3 @@
-const {useParams, useHistory} = ReactRouterDOM;
 /* 
   This component will render RestaurantSearch
   and MyFavoriteRestaurants  

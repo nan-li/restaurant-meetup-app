@@ -22,11 +22,11 @@ cloudinary.config(
 app = Flask(__name__)
 app.secret_key = 'dev'
 
-
-@app.route('/')
-def show_homepage():
+@app.route('/', defaults={'path': ''}) 
+@app.route('/<path:path>') 
+def show_homepage(path):
     """View the homepage."""
-
+    
     return render_template('index.html')
 
 
@@ -37,7 +37,6 @@ API Routes.
 @app.route('/api/users/login', methods=['POST'])
 def login_user():
     username = request.json['username'].lower()
-    print(username)
     password = request.json['password']
 
     user = crud.get_user_by_username(username)
@@ -165,13 +164,20 @@ def get_user_notifications(user_id):
     return jsonify([notification.to_dict() for notification in notifications])
 
 
-@app.route('/api/notification/<int:notification_id>', methods=['DELETE'])
-def delete_notification(notification_id):
-    """Delete a notification by its id."""
-    crud.delete_notification_by_id(notification_id)
+@app.route('/api/notification/<int:notification_id>', methods=['DELETE', 'PATCH'])
+def update_notification(notification_id):
+    """Delete or mark as read a notification by its id."""
+    message = ''
+    if request.method == 'DELETE':
+        crud.update_notification_by_id(notification_id, 'DELETE')
+        message = 'Notification deleted.'
+    else:
+        crud.update_notification_by_id(notification_id, 'READ')
+        message = 'Notification marked as read.'
+
     return jsonify({
         'status': 'success',
-        'message': 'Notification deleted.'
+        'message': message
     })
 
 

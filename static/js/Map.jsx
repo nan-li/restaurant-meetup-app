@@ -1,3 +1,4 @@
+
 // const {Image} = ReactBootstrap;
 
 /* https://janosh.dev/blog/google-maps+react-hooks */
@@ -36,7 +37,7 @@
 //   },
 // }
 
-const GOOGLE_MAPS_API_KEY = '-';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyAo73W-Fo1yehL1wmSDj8T6cR7JW7OaUTU';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);
@@ -73,8 +74,12 @@ function MapContainer(props) {
       coordinates={props.coordinates} />
   );
 }
-
-
+  
+function goToRestaurant() {
+    // console.log(id);
+    let history = useHistory();
+    history.push(`/restaurant/VPXezwmTETrwitrzj9BZPA`);
+    }
 /* From Andrew */
 function MapComponent(props) {
   console.log('rendering the map')
@@ -84,11 +89,7 @@ function MapComponent(props) {
   const markers = [];
   let history = useHistory();
 
-  function goToRestaurant(id) {
-      history.push(`/restaurant/${id}`);
-  }
-
- 
+  
 
   React.useEffect(() => {
     const createMap = () => props.setMap(new window.google.maps.Map(ref.current, options));
@@ -139,25 +140,20 @@ function MapComponent(props) {
       if (loc.coordinates.latitude && loc.coordinates.longitude) {
         // add all the restaurant markers to the map
         const restaurantInfoContent = (`
-        <script>
-          function goToRestaurant(id) {
-            history.push("/restaurant/id");
-          }
-        </script>
+
         <div class="container">
           <div class="row">
             <div class="col">
               <img class="google-maps-img" src=${loc.image_url} />
             </div>
             <div class="col">
-              <button onclick="goToRestaurant(${loc.id})">Visit Restaurant</button>
+              <button onClick="goToRestaurant()">Visit Restaurant</button>
             </div>
           </div>
           <hr/>
           <h3>${loc.name}</h3> 
           <h5>${loc.location.display_address}</h5>
-        </div>
-        
+        </div>        
         `);
 
         const restaurantMarker = new google.maps.Marker({

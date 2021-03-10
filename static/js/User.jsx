@@ -1,5 +1,3 @@
-const {Media, Row, Col, Modal, Alert, Toast} = ReactBootstrap;
-const {useParams} = ReactRouterDOM;
 
 // Following this: 
 // https://linguinecode.com/post/how-to-get-form-data-on-submit-in-reactjs
@@ -38,6 +36,7 @@ function LoginForm(props) {
       // console.log('Success:', data)
       if (data.status != 'error') {
         props.setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
         history.push('/');
       } else alert(data.message);
     },
@@ -561,7 +560,6 @@ function Messages (props) {
 
 function MessageContainer(props) {
   const [formData, setFormData] = React.useState(initialMessageData);
-  const [reload, setReload] = React.useState(false);
 
   const handleChange = (evt) => {
     setFormData({
@@ -612,6 +610,7 @@ function MessageContainer(props) {
 
 function Notifications (props) {
   const [notifications, setNotifications] = React.useState([]);
+  const [reload, setReload] = React.useState(false);
 
   React.useEffect(() => {
     fetch(`/api/user/${props.user.id}/notifications`)
@@ -626,7 +625,7 @@ function Notifications (props) {
   if (notifications.length === 0) return <p>You have no notifications</p>
   return (
     <Container>
-      {notifications.map(notification => (
+      {notifications.reverse().map(notification => (
         <NotificationTile key={notification.id} 
           notification={notification} />
       ))}
@@ -636,11 +635,8 @@ function Notifications (props) {
 
 function NotificationTile (props) {
   const [show, setShow] = React.useState(true);
+  const [reload, setReload] = React.useState(false);
   console.log(show);
-  // change background color based on status
-  const markNotificationAsRead = () => {
-    console.log('hi');
-  }
 
   const deleteNotification = () => {
     setShow(false);
@@ -652,6 +648,19 @@ function NotificationTile (props) {
     })
   }
 
+  const markNotificationAsRead = () => {
+    fetch(`/api/notification/${props.notification.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      props.notification.status = 'READ';
+      setReload(!reload);
+    })
+  }
+
   return (
     <Toast show={show} onClose={deleteNotification} 
       className={props.notification.status === 'UNREAD' ? 'bg-primary' : 'bg-light'}>
@@ -659,7 +668,8 @@ function NotificationTile (props) {
         <img src='/static/img/favicon.ico' className="rounded mr-2" alt="" />
         <strong className="mr-auto">{props.notification.data.message}</strong>
       </Toast.Header>
-      <Toast.Body>
+      <Toast.Body onClick={markNotificationAsRead}>
+        <p>{props.notification.timestamp}</p>
         <p>This notification is {props.notification.status}</p>
         <Link to={props.notification.data.url} onClick={markNotificationAsRead}>
           {props.notification.data.link}
