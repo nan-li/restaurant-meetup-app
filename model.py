@@ -33,7 +33,7 @@ class User(db.Model):
     lname = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password_hash = db.Column(db.String)
-    image_url = db.Column(db.String, default='/static/img/avatar.jpg')
+    image_url = db.Column(db.String, default='/v1615408384/user-avatar_gejisd.png')
     about = db.Column(db.Text)
 
     
@@ -185,8 +185,11 @@ class Meetup(db.Model):
     capacity = db.Column(db.Integer)
     attendees_count = db.Column(db.Integer)
     description = db.Column(db.Text)
+    image_url = db.Column(db.String, default='/v1615407752/gn4vjpy16debw6sghogu.jpg')
+
     # 'CANCELLED' 'ACTIVE'
     status = db.Column(db.String(10), default='ACTIVE')
+
     restaurant_id = db.Column(db.String, 
                     db.ForeignKey('restaurants.id'))
     host_id = db.Column(db.Integer, 
@@ -210,6 +213,7 @@ class Meetup(db.Model):
             'attendees_count': self.attendees_count,
             'description': self.description,
             'status': self.status,
+            'image_url': self.image_url,
             'restaurant_id': self.restaurant_id,
             'host_id': self.host_id, 
             'host': self.host.to_dict(),

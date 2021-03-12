@@ -34,15 +34,15 @@ def create_user(username, fname, lname, email, password,
     return u
 
 def create_meetup(name, date, capacity, attendees_count,
-                description, restaurant, host):
+                description, image_url, restaurant, host):
     """Create and return a new meetup.
         restaurant and host are Restaurant and User objects"""
     
 
     m = Meetup(name=name, date=date, capacity=capacity, 
                 attendees_count=attendees_count,
-                description=description, restaurant=restaurant, 
-                host=host)
+                description=description, image_url=image_url, 
+                restaurant=restaurant, host=host)
 
     db.session.add(m)
     db.session.commit()

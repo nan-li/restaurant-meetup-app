@@ -83,7 +83,7 @@ function SignupForm(props) {
 
   const handleChange = (evt) => {
     setFormData({
-      ...formData, [evt.target.name]: evt.target.value.trim()
+      ...formData, [evt.target.id]: evt.target.value.trim()
     });
   };
 
@@ -126,49 +126,58 @@ function SignupForm(props) {
   }
 
   return (
-    <div className="container border rounded col-md-6 p-5" id="signup-form">
+    <div className="container border rounded col-md-9 p-5" id="signup-form">
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <Row>
-          <Col>
-            <input type="text" className="form-control" name="fname" placeholder="First Name" required onChange={handleChange} />
-          </Col>
 
-          <Col>
-            <input type="text" className="form-control" name="lname" placeholder="Last Name" required onChange={handleChange} />
-          </Col>
-        </Row>
+      <Form onSubmit={handleSubmit}>
+        <Form.Row>
+          <Form.Group as={Col} controlId="fname">
+            <Form.Label>First Name</Form.Label>
+            <Form.Control placeholder="First Name" required onChange={handleChange}/>
+          </Form.Group>
 
-        <div className="form-group p-2">
-          <input type="email" className="form-control" name="email" placeholder="Email" required onChange={handleChange} />
-        </div>
+          <Form.Group as={Col} controlId="lname">
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control placeholder="Last Name " required onChange={handleChange}/>
+          </Form.Group>
+        </Form.Row>
 
-        <div className="form-group p-2">
-        <input type="text" className="form-control" name="username" placeholder="Username" required onChange={handleChange} />
-        </div>
+        <Form.Group controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" placeholder="Email" required onChange={handleChange}/>
+        </Form.Group>
 
-        <div className="form-group p-2">
-        <input type="password" className="form-control" name="password" placeholder="Password" required onChange={handleChange} />
-        <small id="passwordHelpInline" className="text-muted">
-          Must be 8-20 characters long.
-        </small>
-        </div>
+        <Form.Group controlId="username">
+          <Form.Label>Username</Form.Label>
+          <Form.Control placeholder="Username" required onChange={handleChange}/>
+        </Form.Group>
 
-        <div className="form-group p-2">
-        <input type="password" className="form-control" name="confirm" placeholder="Confirm Password" required onChange={handleChange} />
-        </div>
+        <Form.Row>
+          <Form.Group as={Col} controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Password" required onChange={handleChange} />
+            <small id="passwordHelpInline" className="text-muted">
+              Must be 8-20 characters long.
+            </small>
+          </Form.Group>
 
-        <div className="form-group p-2">
-        <textarea className="form-control"  name="about" placeholder="About Me" onChange={handleChange}></textarea>
-        </div>
+          <Form.Group as={Col} controlId="confirm">
+            <Form.Label>Confirm Password</Form.Label>
+            <Form.Control type="password" placeholder="Confirm Password" required onChange={handleChange} />
+          </Form.Group>
+        </Form.Row>
 
-        <div className="form-group p-2">
-          <label>Upload a Profile Picture </label>
-          <input type="file" className="form-control-file" name="image" onChange={handleChange}/>
-        </div>
+        <Form.Group controlId="about">
+          <Form.Label>About Me</Form.Label>
+          <Form.Control as="textarea" rows={3} placeholder="About Me" onChange={handleChange}/>
+        </Form.Group>
+        <Form.Group>
+          <Form.File id="image" label="Upload a Profile Picture." />
+        </Form.Group> 
 
         <button type="submit" className="btn btn-primary">Create Account</button>
-      </form>
+      </Form>
+
     </div>
   );
 }
@@ -221,7 +230,6 @@ function UserProfile(props) {
     .then(res => {
       setReload(!reload);
       document.querySelector('[name="body"]').value = '';
-      
     })
   }
 
@@ -244,7 +252,7 @@ function UserProfile(props) {
     return <div>Loading...</div>;
   } else {
     return (
-      <Container>
+      <Container fluid>
         <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
           <Modal.Header closeButton>
             <Modal.Title>Compose Your Message</Modal.Title>
@@ -282,23 +290,29 @@ function UserProfile(props) {
         </Modal>
         <Row>
           <Col>
-            <h1>User Details</h1>
-            <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + user.image_url} />
+            <h1>User Details 
+              <span><Button variant='link' onClick={handleShow}>
+                <Img width={50} alt='A message icon.' src='/static/img/message-icon.png'/>
+              </Button></span>
+            </h1>        
+            <img alt='A profile photo of this user.' 
+              src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + user.image_url} />
           </Col>
           <Col>
-            <Button variant='link' onClick={handleShow}>
-              <Img width={50} src='/static/img/message-icon.png'/>
-            </Button>
             <p>Username: {user.username}</p>
             <p>First Name: {user.fname}</p>
             <p>About {user.username}:</p>
-            <p>{user.about}</p>  
-            <MyFavoriteRestaurants user={user} />    
+            <p>{user.about}</p>    
           </Col>
         </Row>
+        <hr />
         <Row>
-          <Col><MyHostedMeetups user={user} dontDisplayHost={true} /></Col>
-          <Col><MyAttendingMeetups user={user} /></Col>
+          <Col><MyFavoriteRestaurants user={user} /></Col>
+          <Col>
+            <MyHostedMeetups user={user} dontDisplayHost={true} />
+            <hr />
+            <MyAttendingMeetups user={user} />
+          </Col>
         </Row>
       </Container>
     );
@@ -368,31 +382,19 @@ function MyProfile(props) {
           } else {
             setAlert(data.message);
           }
-          
-          
         },
         (error) => {
           setError(error)
       });
-  
     }
-    
-    
-      
-
   }
 
   return (
     <Container>
-
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-        
-        
-
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile Details</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
           <p>Fill in the fields that you would like to update.</p>
           <form onSubmit={handleSubmit}>
@@ -450,45 +452,41 @@ function MyProfile(props) {
               </Alert>}
             <Button variant="primary" type="submit">Save Changes</Button>
           </form>
-         
         </Modal.Body>
-
-        <Modal.Footer>
-          
+        <Modal.Footer>   
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>
       </Modal>
-
+      <Row className='mb-3'>
+        <h1>My Profile <span><Button onClick={handleShow}>Edit Profile</Button></span></h1>
+      </Row>
       <Row>
-        <Col>
-          <h1>My Profile</h1>
-          <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
+        <Col>      
+          <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url}
+            alt='Your profile picture.' />
         </Col>
         <Col>
-          <Button onClick={handleShow}>Edit Profile</Button>
           <p>Username: {props.user.username}</p>
           <p>Name: {props.user.fname} {props.user.lname}</p>
           <p>About Me:</p>
           <p>{props.user.about}</p> 
         </Col>
       </Row>
-      
-      
     </Container>
   );
 }
-
-
 
 function UserTile(props) {
   // if (props.user.id === props.currentUser.id) {
   //   return null;
   // }
   return (
-    <Card style={{ width: '24rem' }}>
-      <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
+    <Card style={{ width: '16rem' }}>
+      <Link to={`/user/${props.user.id}`}>
+        <Card.Img variant="top" alt='Profile photo.' src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
+      </Link>
       <Card.Body>
         <Card.Title>{props.user.username} 
         {props.host && <div className='btn btn-default disabled'>HOST</div>}</Card.Title>
@@ -498,14 +496,11 @@ function UserTile(props) {
         {props.currentUser && props.user.id === props.currentUser.id && 
           <Card.Text>That's YOU!</Card.Text>}
 
-        <Link to={`/user/${props.user.id}`}>
-          <Button variant="primary">Go To User</Button>
-        </Link>
         {props.setSelectedUser && 
           <Button variant='link' onClick={() => {
             props.setSelectedUser(props.user);
             window.scrollTo({top: 0, behavior: 'auto'});
-            }}><Img width={50} src='/static/img/message-icon.png'/></Button>}
+            }}><Img alt='A message icon.' width={50} src='/static/img/message-icon.png'/></Button>}
       </Card.Body>
     </Card>
   )
@@ -667,7 +662,7 @@ function NotificationTile (props) {
 
   return (
     <Toast show={show} onClose={deleteNotification} 
-      className={props.notification.status === 'UNREAD' ? 'bg-secondary' : 'bg-light'}>
+      className={props.notification.status === 'UNREAD' ? 'unread-toast' : 'bg-light'}>
       <Toast.Header>
         <img src='/static/img/favicon.ico' className="rounded mr-2" alt="" />
         <strong className="mr-auto">{props.notification.data.message}</strong>

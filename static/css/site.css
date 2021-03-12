@@ -7,6 +7,14 @@
     position: fixed;
     z-index: 99;
 } */
+body {
+    font-family: 'Open Sans', sans-serif;
+
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Arvo', serif;    
+}
+
 
 a {
     color: #91091e;
@@ -55,20 +63,22 @@ hr {
 }
 /* Overwrite default Bootstrap styles */
 .card-img-top {
-    height: 16rem;
     overflow: hidden;
 }
 .card {
     margin-top: 1rem;
 }
+
 .btn-primary {
     background-color: #597813;
     border-color: #475e10;
 }
+
 .btn-primary:hover, .btn-primary:focus  {
     background-color: #728c36;
 }
-.bg-primary {
+
+.unread-toast {
     background-color: rgb(144, 165, 95);
 }
 
@@ -81,6 +91,7 @@ hr {
     height: auto;
 }
 
-#map-div {
-    position: fixed;
+#map-container {
+    position: sticky;
+    top: 0;
 }

@@ -126,11 +126,10 @@ def register_user():
         })
 
     # OK to create a new user account
-    cloudinary_upload = cloudinary.uploader.upload(image)
-    print("*" * 200, cloudinary_upload)
-    
-    image_url = cloudinary_upload['url'].partition("upload")[2]
-    print(image_url)
+    image_url = None
+    if image:
+        cloudinary_upload = cloudinary.uploader.upload(image)
+        image_url = cloudinary_upload['url'].partition("upload")[2]
 
     user = crud.create_user(username, fname, lname, email, password, 
                 image_url, about)
@@ -197,7 +196,7 @@ def get_user_favorites(user_id):
 def get_a_restaurant_for_user(user_id, restaurant_id):
     """Get restaurant for a user.
         Give status if restaurant is favorited by user.
-        Return error is restaurant is not found."""
+        Return error if restaurant is not found."""
     
     user = crud.get_user_by_id(user_id)
     restaurant = crud.get_restaurant_by_id(restaurant_id)
@@ -434,13 +433,11 @@ def get_restaurant_meetups(restaurant_id):
         }
     }
 
-    past.extend(future)
-    attending_past.extend(attending_future)
-    for meetup in past:
+    for meetup in future:
         if session['user_id'] == meetup.host_id:
             result['isHosting'] = 'true'
             break
-        if meetup in attending_past:
+        if meetup in attending_future:
             result['isAttending'] = 'true'
     
     return jsonify(result)
@@ -463,23 +460,24 @@ def get_restaurant_fans(restaurant_id):
 @app.route('/api/meetups/create', methods=['POST'])
 def create_meetup():
     """Create a new meetup."""
-    name = request.json.get('name')
-    date = datetime.strptime(request.json.get('date'), '%Y-%m-%dT%H:%M')
-    capacity = request.json.get('capacity')
+    name = request.form.get('name')
+    date = datetime.strptime(request.form.get('date'), '%Y-%m-%dT%H:%M')
+    capacity = request.form.get('capacity')
     attendees_count = 0
-    description = request.json.get('description')
-    restaurant_id = request.json.get('restaurant_id')
-    host_id = request.json.get('host_id')
+    description = request.form.get('description')
+    restaurant_id = request.form.get('restaurant_id')
+    host_id = request.form.get('host_id')
+    image = request.files.get('image')
+    image_url = None
 
     restaurant = crud.get_restaurant_by_id(restaurant_id)
-    print("\n" * 3)
-    print(restaurant)
-    print(request.json)
-
     host = crud.get_user_by_id(host_id)
 
-    meetup = crud.create_meetup(name, date, capacity, attendees_count, 
-                description, restaurant, host)
+    if image:
+        cloudinary_upload = cloudinary.uploader.upload(image)
+        image_url = cloudinary_upload['url'].partition("upload")[2]
+    
+    meetup = crud.create_meetup(name, date, capacity, attendees_count, description, image_url, restaurant, host)
 
     notification_data = {
         'message': f'There is a new event at {restaurant.name}.',

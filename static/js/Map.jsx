@@ -1,4 +1,4 @@
-const GOOGLE_MAPS_API_KEY = 'AIzaSyAo73W-Fo1yehL1wmSDj8T6cR7JW7OaUTU';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyAfpnvg82fMimMY3fSpnmQAj9cb6AI5JUk';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);
@@ -30,7 +30,7 @@ function MapContainer(props) {
   }
 
   return (
-    <MapComponent id='map' options={options} map={map} setMap={setMap} 
+    <MapComponent options={options} map={map} setMap={setMap} 
       searchResults={props.searchResults} mapDimensions={mapDimensions}
       coordinates={props.coordinates} />
   );
@@ -40,7 +40,8 @@ function goToRestaurant() {
     // console.log(id);
     let history = useHistory();
     history.push(`/restaurant/VPXezwmTETrwitrzj9BZPA`);
-    }
+}
+
 /* From Andrew */
 function MapComponent(props) {
   console.log('rendering the map')
@@ -101,14 +102,17 @@ function MapComponent(props) {
       if (loc.coordinates.latitude && loc.coordinates.longitude) {
         // add all the restaurant markers to the map
         const restaurantInfoContent = (`
-
         <div class="container">
           <div class="row">
             <div class="col">
               <img class="google-maps-img" src=${loc.image_url} />
             </div>
             <div class="col">
-              <button onClick="goToRestaurant()">Visit Restaurant</button>
+              <a href="/restaurant/${loc.id}">
+                <button class="btn btn-primary" onClick="goToRestaurant()">
+                  Visit Restaurant
+                </button>
+              </a>
             </div>
           </div>
           <hr/>
@@ -157,11 +161,10 @@ function MapComponent(props) {
 
   } else { console.log('but there is no map')}
   return (
-    <div id="map-div"
+    <div id="map-div" className='position-fixed'
       style={{ height: props.mapDimensions.height, 
         margin: `1em 0`, borderRadius: `0.5em`, 
-        width: props.mapDimensions.width,
-        position: 'fixed' }}
+        width: props.mapDimensions.width}}
       ref={ref}
     ></div>
   )

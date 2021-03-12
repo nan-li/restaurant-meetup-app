@@ -3,7 +3,9 @@ function MeetupTile(props) {
 
   return (
     <Card style={{ width: '24rem' }}>
-      <Card.Img variant="top" src={props.meetup.restaurant.image_url} />
+      <Link to={`/meetup/${props.meetup.id}`}>
+        <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.meetup.image_url} />
+      </Link>
       <Card.Body>
         <Card.Title>{props.meetup.name}</Card.Title>
         <Card.Text>
@@ -19,9 +21,6 @@ function MeetupTile(props) {
         {(props.meetup.status === 'CANCELLED') &&
           <hr /> && 
           <Alert className='alert-cancelled' variant='danger'>This event is cancelled.</Alert> }
-        <Link to={`/meetup/${props.meetup.id}`}>
-          <Button variant="primary">Go To Meetup</Button>
-        </Link>
       </Card.Body>
     </Card>
   )
@@ -250,7 +249,8 @@ function MeetupDetails(props) {
         <h1>Meetup Details</h1>
         <Row>
           <Col>
-            <img src={meetup.restaurant.image_url} width={400}/>
+            <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
+              width={400}/>
           </Col>
           <Col>
             {meetup.host.id === props.user.id ? "YOU'RE HOSTING!" : 
@@ -291,17 +291,19 @@ function MyHostedMeetups(props) {
 
   return (
     <Container fluid>
-      <h1>My Hosted Meetups</h1>
-      <ButtonGroup aria-label="Show Meetups">
+      <h1 className='mb-3'>My Hosted Meetups</h1>
+      <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
-                                setShowUpcoming(false);}}>Past Meetups</Button>
+                                setShowUpcoming(false);}}>Show Past</Button>
+        <Button onClick={() => {setShowPast(false);
+                                setShowUpcoming(false);}}>Hide All</Button>                     
         <Button onClick={() => {setShowUpcoming(true);
-                              setShowPast(false);}}>Upcoming Meetups</Button>
+                              setShowPast(false);}}>Show Upcoming</Button>
       </ButtonGroup>
       
       {showPast &&
         <Container>
-          <h3>Past Meetups</h3>
+          <h3 className='mb-3'>Past Meetups</h3>
           {hostedMeetups.past.length != 0 ? 
             <div className="list-group">
               {hostedMeetups.past.map(meetup => (
@@ -323,7 +325,9 @@ function MyHostedMeetups(props) {
             <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} 
               user={props.user} key={meetup.id} />
           ))} 
-        </div> : <Alert variant='warning'>No Meetups</Alert>}
+        </div> : <Alert variant='warning'>
+          <p>No upcoming meetups.</p>
+          <p>Perhaps you'd like to host a new meetup?</p></Alert>}
       </Container>}
 
     </Container>
@@ -350,16 +354,18 @@ function MyAttendingMeetups(props) {
   return (
     <Container fluid>
       <h1>Meetups Attending</h1>
-      <ButtonGroup aria-label="Show Meetups">
+      <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
-                                setShowUpcoming(false);}}>Past Meetups</Button>
+                                setShowUpcoming(false);}}>Show Past</Button>
+        <Button onClick={() => {setShowPast(false);
+                                setShowUpcoming(false);}}>Hide All</Button>                     
         <Button onClick={() => {setShowUpcoming(true);
-                              setShowPast(false);}}>Upcoming Meetups</Button>
+                              setShowPast(false);}}>Show Upcoming</Button>
       </ButtonGroup>
 
       {showPast &&
         <Container>
-          <h3>Past Meetups</h3>
+          <h3 className='mb-3'>Past Meetups</h3>
           {meetups.past.length != 0 ? 
             <div className="list-group">
               {meetups.past.map(meetup => (
@@ -370,13 +376,15 @@ function MyAttendingMeetups(props) {
 
         {showUpcoming &&
         <Container>
-          <h3>Upcoming Meetups</h3>
+          <h3 className='mb-3'>Upcoming Meetups</h3>
           {meetups.future.length != 0 ? 
             <div className="list-group">
               {meetups.future.map(meetup => (
                 <MeetupTile user={props.user} meetup={meetup} key={meetup.id} />
               ))} 
-            </div> : <Alert variant='warning'>No Meetups</Alert>}
+            </div> : <Alert variant='warning'>
+              <p>No upcoming meetups.</p>
+              <p>Feel free to look around and find one to join.</p></Alert>}
         </Container>}      
     </Container>
   );

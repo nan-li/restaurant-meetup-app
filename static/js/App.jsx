@@ -1,7 +1,7 @@
 const Router = ReactRouterDOM.BrowserRouter;
 const {Link, Switch, Route, useHistory, useParams, Redirect} = ReactRouterDOM;
 const Img = ReactBootstrap.Image;
-const {Container, Button, ButtonGroup, Navbar, 
+const {Container, Button, ButtonGroup, Navbar, Form, 
   Nav, Media, Row, Col, Modal, Alert, Toast, Card, Spinner} = ReactBootstrap;
 
 function App() {
@@ -124,7 +124,7 @@ function App() {
 function SiteNavbar(props) {
   let history = useHistory();
   return (
-    <Container>
+    <Container fluid>
       <Navbar>
         <Navbar.Brand>
           <Link to="/">
@@ -183,7 +183,7 @@ function Homepage(props) {
             <Container fluid id="banner">
               <Img fluid className="mx-auto d-block" src="/static/img/banner.png" />
               <Link to="/signup">
-                <span className="btn btn-primary" id="join-button">Join Meet+Eat</span>
+                <Button size='lg' variant="primary" id="join-button">Join Meet+Eat</Button>
               </Link>
             </Container>             
           </Route>

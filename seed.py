@@ -49,7 +49,7 @@ def create_fake_user(i):
     l = fake.last_name()
     e = fake.email()
     p = "test"
-    img = '/v1615087092/cefqkwfwygdcs6nr4drv.png'
+    img = None
     a = fake.text()
 
     db_user = crud.create_user(u,f,l,e,p,img,a)
@@ -65,10 +65,11 @@ def create_fake_meetup(rest):
     c = 10
     a = 0
     d = fake.text()
+    img = None
     r = rest
     h = db_user
 
-    db_meetup = crud.create_meetup(n,dt,c,a,d,r,h)
+    db_meetup = crud.create_meetup(n,dt,c,a,d,img,r,h)
     return db_meetup
 
 # Create 10 users

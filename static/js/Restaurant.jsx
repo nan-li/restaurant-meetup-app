@@ -14,15 +14,13 @@ function Restaurants(props) {
         <Switch>
           <Route exact path='/restaurants'>
             <Row>
-              <Col>
-                {!displaySearchResults && 
+                {!displaySearchResults && <Col>
                   <MyFavoriteRestaurants user={props.user} 
                     favoriteRestaurants={favoriteRestaurants}
-                    setFavoriteRestaurants={setFavoriteRestaurants} />}
-                {displaySearchResults && 
+                    setFavoriteRestaurants={setFavoriteRestaurants} /> </Col>}
+                {displaySearchResults && <Col>
                   <MapContainer searchResults={searchResults}
-                    coordinates={coordinates} />}
-              </Col>
+                    coordinates={coordinates} /> </Col>}
               <Col>
                 <RestaurantSearch 
                   setDisplaySearchResults={setDisplaySearchResults} 
@@ -55,6 +53,7 @@ const initialSearchTerms = Object.freeze({
 function RestaurantSearch(props) {
   const [searchTerms, setSearchTerms] = React.useState(initialSearchTerms);
   const [error, setError] = React.useState(null);
+
   console.log("searchTerms at top of Component", searchTerms);
 
   const handleChange = (evt) => {
@@ -64,6 +63,7 @@ function RestaurantSearch(props) {
   };
 
   const getLocation = () => {
+    props.setDisplaySearchResults(true);
     document.querySelector('[name="location"]').placeholder = 'Current Location'; 
     navigator.geolocation.getCurrentPosition(searchByCurrentLocation);
   }
@@ -84,7 +84,9 @@ function RestaurantSearch(props) {
           alert(result.error.description);
         } else {
         props.setSearchResults(result.businesses);
-        props.setDisplaySearchResults(true);
+        localStorage.setItem('searchResults', JSON.stringify(result.businesses));
+        console.log("*******", JSON.parse(localStorage.getItem('searchResults')));
+        // props.setDisplaySearchResults(true);
         }
         
       },
@@ -95,6 +97,7 @@ function RestaurantSearch(props) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    props.setDisplaySearchResults(true);
 
     let url = `/api/restaurants/search.json?term=${searchTerms.term}&location=${searchTerms.location}`;
     console.log("URL: ", url);
@@ -103,8 +106,11 @@ function RestaurantSearch(props) {
       .then(
         (result) => {
           props.setSearchResults(result.businesses);
+          localStorage.setItem('searchResults', JSON.stringify(result.businesses));
+          // console.log("*******", JSON.parse(localStorage.getItem('searchResults')));
+
           console.log("Returned from call");
-          props.setDisplaySearchResults(true);
+          // props.setDisplaySearchResults(true);
         },
         (error) => {
           setError(error);
@@ -112,7 +118,7 @@ function RestaurantSearch(props) {
     }
     return (
       <div>
-        <h1>Search for New Restaurants to Love</h1>
+        <h1>Search</h1>
         <form onSubmit={handleSubmit}>
           <input type="text" name="term" placeholder="sushi, salad, korean..."
             required onChange={handleChange}/>
@@ -124,8 +130,7 @@ function RestaurantSearch(props) {
             <button type="submit">Search</button>
             </Col>
           </Row>
-          
-          <p> - or - </p>
+          <p className='mt-1'> - or - </p>
           <Button onClick={getLocation}>Use Current Location</Button>
         </form>
       </div>
@@ -134,7 +139,9 @@ function RestaurantSearch(props) {
 
 
 function RestaurantSearchResults(props) {
-
+  if (!props.restaurants) return <Spinner animation="border" variant="success" />;
+    
+  
   return (
       <Container>
         <h1>Search Results</h1>
@@ -151,7 +158,10 @@ function RestaurantTile(props) {
 
   return (
     <Card style={{ width: '24rem' }}>
-      <Card.Img variant="top" src={props.restaurant.image_url}  />
+      <Link to={`/restaurant/${props.restaurant.id}`}>
+          <Card.Img variant="top" src={props.restaurant.image_url}  />
+        </Link>
+      
       <Card.Body>
         <Card.Title>{props.restaurant.name}</Card.Title> 
         <Card.Text>
@@ -160,10 +170,7 @@ function RestaurantTile(props) {
         <Card.Text>
           {props.isFavorite ? props.restaurant.cuisine : props.restaurant.categories[0].title}
         </Card.Text>
- 
-        <Link to={`/restaurant/${props.restaurant.id}`}>
-          <Button variant="primary">Go To Restaurant</Button>
-        </Link>
+
       </Card.Body>
     </Card> 
   )
@@ -246,6 +253,7 @@ const initialMeetupData = Object.freeze({
 
 function RestaurantDetails(props) {
   const [favorited, setFavorited] = React.useState(false);
+  const [fromYelp, setFromYelp] = React.useState(false);
   console.log("favorited?", favorited);
 
   const [restaurant, setRestaurant] = React.useState([]);
@@ -274,12 +282,15 @@ function RestaurantDetails(props) {
   
   const handleSubmit = (evt) => {
     evt.preventDefault();
+
+    // make a FormData()
+    const data = new FormData();
+    Object.keys(formData).forEach(key => data.append(key, formData[key]));
+    data.append('image', document.querySelector('input[type="file"]').files[0]);
+
     fetch ('/api/meetups/create', {
       method: 'POST',
-      body: JSON.stringify(formData),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      body: data
     })
     .then(res => res.json())
     .then(
@@ -298,41 +309,40 @@ function RestaurantDetails(props) {
     )
   }
   
-    
   React.useEffect(() => {
-    // this was rendered from Yelp search results
-    if (props.displaySearchResults) {
-      for (const res of props.restaurants) {
-        if (res.id === restaurantID) {
-          setRestaurant(res);
+    // get the restaurant data from own database with restaurantID
+    fetch(`/api/users/${props.user.id}/restaurants/${restaurantID}.json`)
+    .then(res => res.json())
+    .then(
+      (data) => {
+        if (data.status != 'error') {
+          setRestaurant(data.restaurant);
           setFormData({
             ...formData, 
             ['restaurant_id']: restaurantID, 
             ['host_id']: props.user.id
           });
-        }
-      }
-    } else {
-      // get the restaurant data from own database with restaurantID
-      fetch(`/api/users/${props.user.id}/restaurants/${restaurantID}.json`)
-        .then(res => res.json())
-        .then(
-          (data) => {
-            if (data.status != 'error') {
-              setRestaurant(data.restaurant);
+          if (data.favorited) {
+            setFavorited(true);
+          }          
+        } else {
+          // this was rendered from Yelp search results
+          for (const res of JSON.parse(localStorage.getItem('searchResults'))) {
+            console.log('res', res);
+            if (res.id === restaurantID) {
+              setRestaurant(res);
               setFormData({
                 ...formData, 
                 ['restaurant_id']: restaurantID, 
                 ['host_id']: props.user.id
               });
-              
-            }
-            if (data.favorited) {
-              setFavorited(true);
+              setFromYelp(true);
+              return;
             }
           }
-        )
-    }
+        }
+      }
+    )
   }, [])
 
 
@@ -373,6 +383,12 @@ function RestaurantDetails(props) {
               </textarea>
             </div>
 
+            <div className="form-group p-2">
+              <label>Upload an Event Picture</label>
+              <input type="file" className="form-control-file" name="image" 
+                onChange={handleChange} />
+            </div>
+
             <Button variant="primary" type="submit">Create Meetup</Button>
           </form>
         </Modal.Body>
@@ -399,8 +415,8 @@ function RestaurantDetails(props) {
           <br />
           <br />
           <h1>{restaurant.name}</h1>
-          <p>{props.displaySearchResults ? restaurant.location.display_address : restaurant.address}</p>
-          <p>{props.displaySearchResults ? restaurant.categories[0].title : restaurant.cuisine}</p>
+          <p>{fromYelp ? restaurant.location.display_address : restaurant.address}</p>
+          <p>{fromYelp ? restaurant.categories[0].title : restaurant.cuisine}</p>
         </Col>
       </Row>
       
@@ -436,7 +452,7 @@ function MyFavoriteRestaurants(props) {
   // this component wasn't rendered from Restaurant component
   
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);  
-  
+  console.log('faves', favoriteRestaurants);
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/restaurants.json`)
       .then(res => res.json())
@@ -453,11 +469,18 @@ function MyFavoriteRestaurants(props) {
   return (
     <Container>
       <h1>My Favorite Restaurants</h1>
-      <div className="list-group">
-        {favoriteRestaurants.map(rest => (       
-          <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
-        ))}
-      </div>
+      {favoriteRestaurants.length !== 0 ? 
+        <div className="list-group">
+          {favoriteRestaurants.map(rest => (       
+            <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
+          ))}
+        </div> : <Alert variant='warning'>
+          <p>You have no favorite restaurants yet.</p>
+          <p>Why not search for some new restaurants to visit?</p>
+        </Alert>
+
+      }
+
     </Container>
   );
 }
@@ -491,9 +514,11 @@ function RestaurantMeetups (props) {
       <h1>Meetups at this Restaurant</h1>
       <ButtonGroup aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
-                                setShowUpcoming(false);}}>Past Meetups</Button>
+                                setShowUpcoming(false);}}>Show Past</Button>
+        <Button onClick={() => {setShowPast(false);
+                                setShowUpcoming(false);}}>Hide All</Button>                     
         <Button onClick={() => {setShowUpcoming(true);
-                              setShowPast(false);}}>Upcoming Meetups</Button>
+                              setShowPast(false);}}>Show Upcoming</Button>
       </ButtonGroup>
 
       {showPast &&
@@ -515,7 +540,9 @@ function RestaurantMeetups (props) {
               {meetups.future.map(meetup => (
                 <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
               ))}
-            </div> : <Alert variant='warning'>No Meetups</Alert>}
+            </div> : <Alert variant='warning'>
+              <p>No upcoming meetups.</p>
+              <p>Perhaps you'd like to host one here?</p></Alert>}
           
         </Container>}
     </Container>
