@@ -233,10 +233,13 @@ function MeetupDetails(props) {
         {(meetup.status == 'CANCELLED') && 
           <Alert variant='danger'>This event is cancelled.</Alert>}
 
+        {(meetup.status == 'PAST') && 
+          <Alert variant='warning'>This event has passed.</Alert>}
+
         {(meetup.status == 'ACTIVE') && (meetup.attendees_count === meetup.capacity) && 
           <Alert variant='warning'>This event is full.</Alert>}
 
-        {!hosting && (meetup.status == 'ACTIVE') &&
+        {!hosting && (meetup.status == 'ACTIVE') && 
           <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
             setMeetup={setMeetup} meetup={meetup} user={props.user}
             setAlert={props.setAlert} />}

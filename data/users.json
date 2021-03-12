@@ -1,0 +1,79 @@
+[
+    {
+        "username": "balloonicorn",
+        "fname": "Balloonicorn",
+        "lname": "Sprinkles",
+        "image_url": "/v1615521074/users/unicorn_smiwnl.jpg",
+        "about": "Hi, I am balloonicorn. I am a special balloon unicorn who is super fun and friendly. I love riding on rainbows and meeting new people. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "prettycat",
+        "fname": "Whiskers",
+        "lname": "McFluffers",
+        "image_url": "/v1615521074/users/prettycat_l1ow81.png",
+        "about": "I am a very pretty cat as you can see from my username and my photo. Aren't I a pretty cat? I love fish, yum, and sushi! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "hellokitty",
+        "fname": "Hello",
+        "lname": "Kitty",
+        "image_url": "/v1615521073/users/hellokitty_cioavj.jpg",
+        "about": "I am the very beloved Sanrio character Hello Kitty. While I have no mouth, that is ok! I can still eat nom nom nom nom nom. Here are some more filler words about me lorem ipsum catum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "icebear",
+        "fname": "Ice",
+        "lname": "Bear",
+        "image_url": "/v1615521074/users/icebear_k1i2pj.jpg",
+        "about": "Hi I'm Ice Bear of We Bare Bears. I live in San Francisco! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "tonton",
+        "fname": "Tonton",
+        "lname": "Friend",
+        "image_url": "/v1615521074/users/tonton_ktyeec.jpg",
+        "about": "I am someone from tonton friends, I don't know who I am other than that. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "totoro",
+        "fname": "Totoro",
+        "lname": "Yourneighbor",
+        "image_url": "/v1615521074/users/totoro_pgkffp.jpg",
+        "about": "I am your neighbor Totoro! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "lisasimpson",
+        "fname": "Lisa",
+        "lname": "Simpson",
+        "image_url": "/v1615521075/users/lisa_hqqw3e.png",
+        "about": "I'm Lisa Simpson and I am very intelligent and forward thinkig for my age. My mom said I needed to make new friends. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "panda",
+        "fname": "Panda",
+        "lname": "Bear",
+        "image_url": "/v1615521074/users/panda_rmamfi.jpg",
+        "about": "Hi I'm Panda of We Bare Bears. I love Boba and I also live in San Francisco! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "snoopy",
+        "fname": "Snoopy",
+        "lname": "Dog",
+        "image_url": "/v1615521074/users/snoopy_qauu99.jpg",
+        "about": "I'm the beloved Snoopy of course! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "grizz",
+        "fname": "Grizzly",
+        "lname": "Bear",
+        "image_url": "/v1615521074/users/grizz_v96kcx.jpg",
+        "about": "I'm Grizz! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+        "username": "peppa",
+        "fname": "Peppa",
+        "lname": "Pig",
+        "image_url": "/v1615521074/users/peppa_fyctla.jpg",
+        "about": "I'm Peppa Pig. I eat a halal diet of course, and apparently I am over 7 feet tall! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    }
+]

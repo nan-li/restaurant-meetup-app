@@ -494,10 +494,18 @@ def create_meetup():
         'meetup': meetup.to_dict()
     })
 
+
 @app.route('/api/meetups/<int:meetup_id>.json')
 def get_meetup(meetup_id):
     """Return meetup information."""
-    return jsonify(crud.get_meetup_by_id(meetup_id).to_dict())
+    meetup = crud.get_meetup_by_id(meetup_id)
+    meetup_info = meetup.to_dict()
+    
+    # check if the event has already passed
+    if meetup.date < datetime.now():
+        meetup_info['status'] = 'PAST'
+
+    return jsonify(meetup_info)
 
 
 @app.route('/api/meetups/<int:meetup_id>', methods=['PATCH'])

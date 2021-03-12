@@ -46,7 +46,7 @@ function LoginForm(props) {
   }
 
   return (
-    <div className="container border rounded col-md-6 p-5" id="login-form">
+    <div className="container border rounded mt-5 col-md-6 p-5" id="login-form">
       <h1>Log In</h1>
         <form onSubmit={handleSubmit}>
 
@@ -126,7 +126,7 @@ function SignupForm(props) {
   }
 
   return (
-    <div className="container border rounded col-md-9 p-5" id="signup-form">
+    <div className="mt-5 mb-5 container border rounded col-md-9 p-5" id="signup-form">
       <h1>Sign Up</h1>
 
       <Form onSubmit={handleSubmit}>
@@ -296,7 +296,7 @@ function UserProfile(props) {
               </Button></span>
             </h1>        
             <img alt='A profile photo of this user.' 
-              src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + user.image_url} />
+              src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + user.image_url} />
           </Col>
           <Col>
             <p>Username: {user.username}</p>
@@ -351,9 +351,7 @@ function MyProfile(props) {
     // make a FormData()
     const data = new FormData();
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
-    data.append('image', document.querySelector('input[type="file"]').files[0]);
-
-    console.log("data is", data);
+    data.append('image', document.querySelector('input[type="file"]').files[0]);g
 
     // validate passwords match
     if (formData.old_password && formData.new_password != formData.confirm) {
@@ -488,19 +486,18 @@ function UserTile(props) {
         <Card.Img variant="top" alt='Profile photo.' src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
       </Link>
       <Card.Body>
-        <Card.Title>{props.user.username} 
-        {props.host && <div className='btn btn-default disabled'>HOST</div>}</Card.Title>
-        <Card.Text>
-          {props.user.fname} {props.user.lname}
-        </Card.Text>  
+        <Card.Title>
+          {props.setSelectedUser && 
+            <Button variant='link' onClick={() => {
+              props.setSelectedUser(props.user);
+              window.scrollTo({top: 0, behavior: 'auto'});
+              }}><Img alt='A message icon.' width={50} src='/static/img/message-icon.png'/></Button>}
+          {props.user.username} 
+          {props.host && <div className='btn btn-default disabled'>HOST</div>}
+        </Card.Title>
+
         {props.currentUser && props.user.id === props.currentUser.id && 
           <Card.Text>That's YOU!</Card.Text>}
-
-        {props.setSelectedUser && 
-          <Button variant='link' onClick={() => {
-            props.setSelectedUser(props.user);
-            window.scrollTo({top: 0, behavior: 'auto'});
-            }}><Img alt='A message icon.' width={50} src='/static/img/message-icon.png'/></Button>}
       </Card.Body>
     </Card>
   )
@@ -664,11 +661,11 @@ function NotificationTile (props) {
     <Toast show={show} onClose={deleteNotification} 
       className={props.notification.status === 'UNREAD' ? 'unread-toast' : 'bg-light'}>
       <Toast.Header>
-        <img src='/static/img/favicon.ico' className="rounded mr-2" alt="" />
-        <strong className="mr-auto">{props.notification.data.message}</strong>
+        <img src='/static/img/favicon.ico' width={20} className="rounded mr-2" alt="" />
+        <strong className="mr-auto">{props.notification.timestamp}</strong>
       </Toast.Header>
       <Toast.Body onClick={markNotificationAsRead}>
-        <p>{props.notification.timestamp}</p>
+        <p>{props.notification.data.message}</p>
         <Link to={props.notification.data.url} onClick={markNotificationAsRead}>
           {props.notification.data.link}
         </Link>

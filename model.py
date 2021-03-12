@@ -33,7 +33,7 @@ class User(db.Model):
     lname = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password_hash = db.Column(db.String)
-    image_url = db.Column(db.String, default='/v1615408384/user-avatar_gejisd.png')
+    image_url = db.Column(db.String, default='/v1615521119/users/kawaiiavocado_ey59sf.png')
     about = db.Column(db.Text)
 
     

@@ -8,29 +8,6 @@ function App() {
   const [user, setUser] = React.useState(null);
   const [alert, setAlert] = React.useState(null);
   console.log("User info:", user);
-
-  // for now, hardcode a user in
-  // React.useEffect(()=>{
-  //   fetch('/api/users/login', {
-  //     method: 'POST',
-  //     body: JSON.stringify({username: 'user1', password: 'test'}),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //   .then(res => res.json())
-  //   .then(
-  //     (data) => {
-  //     // console.log('Success:', data)
-  //     if (data.status != 'error') {
-  //       setUser(data.user);
-  //     }
-  //   },
-  //   (error) => {
-  //     setError(error)
-  //   });
-  // }, [])
-  // end for now hardcode user in
   
   // Find the logged in user
   React.useEffect(() => {
@@ -42,16 +19,14 @@ function App() {
   // no one is logged in
   if (!user) {
     return (
-      <div>
-        <Homepage setUser={setUser} setAlert={setAlert} />
-      </div>    
+        <Homepage setUser={setUser} setAlert={setAlert} />  
     )
   // user is logged in
   } else {
     return (
         <div>
           <SiteNavbar setUser={setUser} />
-          <Container>
+          <Container className='mt-5'>
 
             {alert && 
               <Alert variant='success'>
@@ -78,8 +53,6 @@ function App() {
               <Route exact path="/user/:userID">
                 <UserProfile setUser={setUser} user={user}/>
               </Route>
-
-              
 
               <Route exact path="/">
                 <h1>Todo</h1>
@@ -109,12 +82,9 @@ function App() {
               </Route>        
             </Switch>
           </Container>
-
         </div>
     );
-  }
-
-  
+  } 
 }
 
 /*
@@ -124,11 +94,10 @@ function App() {
 function SiteNavbar(props) {
   let history = useHistory();
   return (
-    <Container fluid>
       <Navbar>
         <Navbar.Brand>
           <Link to="/">
-            <img src="/static/img/logo.png" height={100}/>
+            <img src="/static/img/small-new-logo.png"/>
           </Link>
         </Navbar.Brand>
         <Nav>
@@ -144,13 +113,6 @@ function SiteNavbar(props) {
             history.push('/');}}>Logout</Button>
         </Nav>
       </Navbar>
-      
-
-      {/* <img id="header-img" src="/static/img/people-in-restaurant.jpg" 
-        className="container col-md-6" 
-        alt="Busy restaurant with diners." /> */}
-        
-    </Container>
   );
 }
 
@@ -162,8 +124,8 @@ function SiteNavbar(props) {
 function Homepage(props) {
   return (
     // <Router>
-      <Container>
-        <Navbar static="top">
+      <React.Fragment>
+        <Navbar>
           <Navbar.Brand>
             <Link to="/">
               <img src="/static/img/logo.png" height={100}/>
@@ -180,7 +142,7 @@ function Homepage(props) {
         </Navbar>       
         {/* <Switch> */}
           <Route exact path="/">
-            <Container fluid id="banner">
+            <Container className='mt-5' id="banner">
               <Img fluid className="mx-auto d-block" src="/static/img/banner.png" />
               <Link to="/signup">
                 <Button size='lg' variant="primary" id="join-button">Join Meet+Eat</Button>
@@ -194,13 +156,9 @@ function Homepage(props) {
             <SignupForm setUser={props.setUser} setAlert={props.setAlert} />
           </Route>
         {/* </Switch> */}
-      </Container>
+      </React.Fragment>
    
     // </Router>
-
-      
-   
-
   )
 }
 
@@ -209,10 +167,6 @@ ReactDOM.render(
     <Router>
       <App />
     </Router>
-      
-
-      
-    
   ),
   document.getElementById('root')
 );

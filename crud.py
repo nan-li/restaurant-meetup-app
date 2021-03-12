@@ -266,6 +266,7 @@ def get_meetup_by_id(meetup_id):
     """Return a meetup by primary key."""
     return Meetup.query.get(meetup_id)
 
+
 def update_meetup_by_id(meetup_id, name, date, capacity, description):
     """Update the details of a meetup."""
     meetup = get_meetup_by_id(meetup_id)

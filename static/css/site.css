@@ -45,7 +45,7 @@ hr {
 }
 #join-button {
     position: absolute;
-    bottom: 4em;  
+    bottom: 8em;  
     left: 10em;
 }
 
@@ -79,7 +79,7 @@ hr {
 }
 
 .unread-toast {
-    background-color: rgb(144, 165, 95);
+    background-color: #dae4ba;
 }
 
 .btn-static {
@@ -94,4 +94,8 @@ hr {
 #map-container {
     position: sticky;
     top: 0;
+}
+
+.navbar {
+    background-color: #eef1e1;
 }

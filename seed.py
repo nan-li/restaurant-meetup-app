@@ -41,30 +41,16 @@ for r in restaurant_data:
     restaurants_in_db.append(db_restaurant)
 
 
-def create_fake_user(i):
+
+def create_fake_meetup(rest, status):
     fake = Faker()
 
-    f = fake.first_name()
-    u = f'user{i}'
-    l = fake.last_name()
-    e = fake.email()
-    p = "test"
-    img = None
-    a = fake.text()
-
-    db_user = crud.create_user(u,f,l,e,p,img,a)
-
-    return db_user
-
-
-def create_fake_meetup(rest):
-    fake = Faker()
-
-    n = 'Fun Dinner'
-    dt = fake.date_time()
-    c = 10
+    n = 'Fun Meetup'
+    dt = fake.date_time(start_date='-3y', end_date='-3d') if status == 'past' 
+            else fake.date_time(start_date='+10m', end_date='+2y')
+    c = 5
     a = 0
-    d = fake.text()
+    d = 'Super fun and chill meetup event. \n Feel free to come join and let us eat together!"
     img = None
     r = rest
     h = db_user
@@ -72,15 +58,25 @@ def create_fake_meetup(rest):
     db_meetup = crud.create_meetup(n,dt,c,a,d,img,r,h)
     return db_meetup
 
-# Create 10 users
-# Each will favorite 5 restaurants
-# Each will create 2 meetups at a favorited restaurant
+
+# Create the 11 users
+with open('data/users.json') as f:
+    user_data = json.loads(f.read())
+
 users_in_db = []
 meetups_in_db = []
 
-# Create 10 users
-for i in range(1, 11):
-    db_user = create_fake_user(i)
+for u in user_data:
+    fname, lname, username, image_url, about = (
+        u['fname'],
+        u['lname'],
+        u['username'],
+        u['image_url'],
+        u['about']
+    )
+    email = f'{username}@username.com'
+    password = 'test'
+    db_user = crud.create_user(username,fname,lname,email,password,image_url,about)
     users_in_db.append(db_user)
 
     # Favorite 5 restaurants
@@ -88,10 +84,11 @@ for i in range(1, 11):
     for r in r_list:
         db_user.favorites.append(r)
 
-    # create a Meetup
-    db_meetup = create_fake_meetup(r_list[0])
-    db_meetup = create_fake_meetup(r_list[1])
+    # create 2 Meetups
+    db_meetup = create_fake_meetup(r_list[0], 'past')
+    db_meetup = create_fake_meetup(r_list[1], 'upcoming')
     meetups_in_db.append(db_meetup)
+
 
 # Create 10 users
 # Each will attend a Meetup from above iteratively
