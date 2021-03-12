@@ -128,16 +128,12 @@ function Homepage(props) {
         <Navbar>
           <Navbar.Brand>
             <Link to="/">
-              <img src="/static/img/logo.png" height={100}/>
+              <img src="/static/img/small-new-logo.png"/>
             </Link>
           </Navbar.Brand>
           <Nav>
-            <span className="nav-link">
-              <Link to="/login">Login</Link>
-            </span>
-            <span className="nav-link">
-            <Link to="/signup">Signup</Link>
-            </span>
+            <Link className="navbar-brand" to="/login">Login</Link>
+            <Link className="navbar-brand" to="/signup">Signup</Link>
           </Nav>
         </Navbar>       
         {/* <Switch> */}

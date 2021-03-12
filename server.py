@@ -254,7 +254,7 @@ def delete_restaurant_for_user(user_id, restaurant_id):
 
     return jsonify({
         'status': 'success',
-        'message': 'Restaurant is unfavorited.'
+        'message': 'Restaurant successfully removed from favorites.'
     })
 
 

@@ -113,6 +113,7 @@ function SignupForm(props) {
         (data) => {
           if (data.status != 'error') {
             props.setUser(data.user);
+            localStorage.setItem('user', JSON.stringify(data.user));
             props.setAlert(data.message);
             history.push('/');
           } else {

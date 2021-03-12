@@ -220,6 +220,7 @@ function FavoriteUnfavoriteRestaurantButton(props) {
       .then(res => res.json())
       .then((data) => {
         console.log(data);
+        props.setAlert(data.message);
         history.push('/restaurants');
       })
     }
@@ -407,6 +408,7 @@ function RestaurantDetails(props) {
           {favorited && 
             <Button onClick={handleShow} className='mr-1'>Create a Meetup</Button>}
           <FavoriteUnfavoriteRestaurantButton 
+            setAlert={props.setAlert}
             favorited={favorited} setFavorited={setFavorited}
             restaurant={restaurant}
             restaurantID={restaurantID} user={props.user} 
