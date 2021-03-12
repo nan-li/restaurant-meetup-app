@@ -83,13 +83,14 @@ const initialMeetupData = Object.freeze({
 
 function EditMeetupButton(props) {
   let history = useHistory();
-
   const [show, setShow] = React.useState(false);
   const [formData, setFormData] = React.useState(initialMeetupData);
-
+  console.log('meetup form data', formData);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+  const handleShow = () => {
+    setFormData(initialMeetupData);
+    setShow(true);
+  }
   const handleChange = (evt) => {
     setFormData({
       ...formData, [evt.target.name]: evt.target.value.trim()
@@ -102,6 +103,8 @@ function EditMeetupButton(props) {
     // check new capacity against attendees_count
     if (formData.capacity && formData.capacity < props.meetup.attendees_count) {
       alert("Capacity is less than the number of attendees currently RSVP'd.")
+    } else if (formData == initialMeetupData) {
+      alert("Nothing to update.");
     } else {
       fetch (`/api/meetups/${props.meetupID}`, {
         method: 'PATCH',
@@ -117,7 +120,6 @@ function EditMeetupButton(props) {
         props.setReload(!props.reload);
       });
     }
-    
   }
 
   const cancelMeetup = (evt) => {

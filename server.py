@@ -71,7 +71,7 @@ def update_user(user_id):
     if old_password and not user.check_password(old_password):
         return jsonify({
             'status': 'error',
-            'message': 'Incorrect password.'
+            'message': 'Previous password is incorrect.'
         })
     
     password = new_password
@@ -92,7 +92,7 @@ def update_user(user_id):
     user = crud.update_user(user, fname, lname, email, password, image_url, about)
     return jsonify({
                     'status': 'success',
-                    'message': 'Successfully update information.',
+                    'message': 'Information updated successfully.',
                     'user': user.to_dict('include_email')
                 })
 

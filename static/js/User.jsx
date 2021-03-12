@@ -338,7 +338,11 @@ function MyProfile(props) {
   console.log(formData);
   
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setFormData(initialFormData);
+    setShow(true);
+  }
+  
 
   const handleChange = (evt) => {
     setFormData({
@@ -352,15 +356,15 @@ function MyProfile(props) {
     // make a FormData()
     const data = new FormData();
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
-    data.append('image', document.querySelector('input[type="file"]').files[0]);g
+    data.append('image', document.querySelector('input[type="file"]').files[0]);
 
     // validate passwords match
     if (formData.old_password && formData.new_password != formData.confirm) {
-      setAlert("Passwords don't match.");
+      setAlert("New passwords don't match.");
     } else if (!formData.old_password && (formData.new_password || formData.confirm)) {
-      setAlert("Please enter your old password to change password.");
+      setAlert("Please enter your old password to update password.");
     } else if (formData.old_password && (formData.new_password.length < 8 || formData.new_password.length > 20)) {
-      setAlert("Password must be 8-20 characters long.");
+      setAlert("New password must be 8-20 characters long.");
     } else if (formData == initialFormData) {
       setAlert("Nothing to update.");
     } else {
