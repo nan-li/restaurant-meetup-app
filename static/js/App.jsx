@@ -1,7 +1,7 @@
 const Router = ReactRouterDOM.BrowserRouter;
 const {Link, Switch, Route, useHistory, useParams, Redirect} = ReactRouterDOM;
 const Img = ReactBootstrap.Image;
-const {Container, Button, ButtonGroup, Navbar, Form, 
+const {Container, Button, ButtonGroup, Navbar, Form, NavDropdown,
   Nav, Media, Row, Col, Modal, Alert, Toast, Card, Spinner} = ReactBootstrap;
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
     return (
         <div>
           <SiteNavbar setUser={setUser} />
-          <Container className='mt-5'>
+          <div className="ml-5 mr-5 mt-5 mb-5">
 
             {alert && 
               <Alert variant='success'>
@@ -81,7 +81,7 @@ function App() {
                 <MyProfile setUser={setUser} user={user} setAlert={setAlert} />
               </Route>        
             </Switch>
-          </Container>
+          </div>
         </div>
     );
   } 
@@ -94,24 +94,36 @@ function App() {
 function SiteNavbar(props) {
   let history = useHistory();
   return (
-      <Navbar>
+      <Navbar sticky="top">
         <Navbar.Brand>
           <Link to="/">
-            <img src="/static/img/small-new-logo.png"/>
+            <img height={60} src="/static/img/small-new-logo.png"/>
           </Link>
         </Navbar.Brand>
-        <Nav>
-          <Link className="navbar-brand" to="/">Home</Link>
-          <Link className="navbar-brand" to="/restaurants">Restaurants</Link>
-          <Link className="navbar-brand" to="/meetups">Meetups</Link>
-          <Link className="navbar-brand" to="/myprofile">My Profile</Link>
-          <Link className="navbar-brand" to="/messages">Messages</Link>
-          <Link className="navbar-brand" to="/notifications">Notifications</Link>
-          <Button onClick={() => {
-            props.setUser(null);
-            localStorage.setItem('user', null);
-            history.push('/');}}>Logout</Button>
-        </Nav>
+        <Navbar.Collapse className="justify-content-end">
+          <Nav>
+            <Link className="navbar-brand" to="/">Home</Link>
+            <Link className="navbar-brand mr-0" to="/restaurants">Restaurants</Link>
+              <NavDropdown>
+              <NavDropdown.Item>
+                <Link className="navbar-brand" to="/restaurants">Restaurants</Link>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item>
+                <Link className="navbar-brand" to="/restaurants/favorites">Favorites</Link>
+              </NavDropdown.Item>
+              </NavDropdown>
+            <Link className="navbar-brand ml-3" to="/meetups">Meetups</Link>
+            <Link className="navbar-brand" to="/myprofile">My Profile</Link>
+            <Link className="navbar-brand" to="/messages">Messages</Link>
+            <Link className="navbar-brand" to="/notifications">Notifications</Link>
+            <Button onClick={() => {
+              props.setUser(null);
+              localStorage.setItem('user', null);
+              history.push('/');}}>Logout</Button>
+          </Nav>          
+        </Navbar.Collapse>
+
       </Navbar>
   );
 }
@@ -125,16 +137,18 @@ function Homepage(props) {
   return (
     // <Router>
       <React.Fragment>
-        <Navbar>
+        <Navbar sticky='top'>
           <Navbar.Brand>
             <Link to="/">
-              <img src="/static/img/small-new-logo.png"/>
+              <img height={60} src="/static/img/small-new-logo.png"/>
             </Link>
           </Navbar.Brand>
-          <Nav>
-            <Link className="navbar-brand" to="/login">Login</Link>
-            <Link className="navbar-brand" to="/signup">Signup</Link>
-          </Nav>
+          <Navbar.Collapse className="justify-content-end">
+            <Nav>
+              <Link className="navbar-brand" to="/login">Login</Link>
+              <Link className="navbar-brand" to="/signup">Signup</Link>
+            </Nav>  
+          </Navbar.Collapse>          
         </Navbar>       
         {/* <Switch> */}
           <Route exact path="/">

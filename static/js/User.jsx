@@ -290,14 +290,16 @@ function UserProfile(props) {
 
         </Modal>
         <Row>
-          <Col>
-            <h1>User Details 
-              <span><Button variant='link' onClick={handleShow}>
-                <Img width={50} alt='A message icon.' src='/static/img/message-icon.png'/>
-              </Button></span>
-            </h1>        
-            <img alt='A profile photo of this user.' 
-              src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + user.image_url} />
+          <h1>User Details 
+            <span><Button variant='link' onClick={handleShow}>
+              <Img width={50} alt='A message icon.' src='/static/img/message-icon.png'/>
+            </Button></span>
+          </h1>  
+        </Row>
+        <Row className='mb-5'>
+          <Col>      
+            <img alt='A profile photo of this user.' width={400}
+              src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/' + user.image_url} />
           </Col>
           <Col>
             <p>Username: {user.username}</p>
@@ -306,12 +308,14 @@ function UserProfile(props) {
             <p>{user.about}</p>    
           </Col>
         </Row>
+        
         <hr />
-        <Row>
+        <Row className='mt-5'>
           <Col><MyFavoriteRestaurants user={user} /></Col>
           <Col>
             <MyHostedMeetups user={user} dontDisplayHost={true} />
-            <hr />
+            <br />
+            <br />
             <MyAttendingMeetups user={user} />
           </Col>
         </Row>
@@ -463,17 +467,20 @@ function MyProfile(props) {
         </Modal.Footer>
       </Modal>
       <Row className='mb-3'>
-        <h1>My Profile <span><Button onClick={handleShow}>Edit Profile</Button></span></h1>
+        <Col>
+          <h1>My Profile <span><Button onClick={handleShow}>Edit Profile</Button></span></h1>
+        </Col>
+        
       </Row>
       <Row>
         <Col>      
           <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url}
-            alt='Your profile picture.' />
+            alt='Your profile picture.' width={400} />
         </Col>
         <Col>
-          <p>Username: {props.user.username}</p>
-          <p>Name: {props.user.fname} {props.user.lname}</p>
-          <p>About Me:</p>
+          <p><strong>Username: </strong>{props.user.username}</p>
+          <p><strong>Name: </strong>{props.user.fname} {props.user.lname}</p>
+          <p><strong>About Me:</strong></p>
           <p>{props.user.about}</p> 
         </Col>
       </Row>
@@ -488,7 +495,7 @@ function UserTile(props) {
   return (
     <Card style={{ width: '16rem' }}>
       <Link to={`/user/${props.user.id}`}>
-        <Card.Img variant="top" alt='Profile photo.' src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url} />
+        <Card.Img variant="top" alt='Profile photo.' src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + props.user.image_url} />
       </Link>
       <Card.Body>
         <Card.Title>
@@ -497,12 +504,13 @@ function UserTile(props) {
               props.setSelectedUser(props.user);
               window.scrollTo({top: 0, behavior: 'auto'});
               }}><Img alt='A message icon.' width={50} src='/static/img/message-icon.png'/></Button>}
-          {props.user.username} 
+          {props.user.username}
+          {props.currentUser && props.user.id === props.currentUser.id && 
+          <span>  <em>(That's you!)</em></span>}
           {props.host && <div className='btn btn-default disabled'>HOST</div>}
         </Card.Title>
 
-        {props.currentUser && props.user.id === props.currentUser.id && 
-          <Card.Text>That's YOU!</Card.Text>}
+        
       </Card.Body>
     </Card>
   )

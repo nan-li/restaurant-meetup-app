@@ -15,9 +15,13 @@ def show_all():
         for rest in user.favorites:
             print("- ", rest.name)
         
+        print("Hosted Meetups")     
+        
         for meetup in user.hosted_meetups:
             print("*** Host: ", meetup.restaurant)
 
+        print("Attending Meetups")
+        
         for meetup in user.meetups:
             print("     Meetup: ", meetup.restaurant)
 

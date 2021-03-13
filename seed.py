@@ -41,24 +41,6 @@ for r in restaurant_data:
     restaurants_in_db.append(db_restaurant)
 
 
-
-def create_fake_meetup(rest, status):
-    fake = Faker()
-
-    n = 'Fun Meetup'
-    dt = fake.date_time(start_date='-3y', end_date='-3d') if status == 'past' 
-            else fake.date_time(start_date='+10m', end_date='+2y')
-    c = 5
-    a = 0
-    d = 'Super fun and chill meetup event. \n Feel free to come join and let us eat together!"
-    img = None
-    r = rest
-    h = db_user
-
-    db_meetup = crud.create_meetup(n,dt,c,a,d,img,r,h)
-    return db_meetup
-
-
 # Create the 11 users
 with open('data/users.json') as f:
     user_data = json.loads(f.read())
@@ -79,26 +61,13 @@ for u in user_data:
     db_user = crud.create_user(username,fname,lname,email,password,image_url,about)
     users_in_db.append(db_user)
 
-    # Favorite 5 restaurants
-    r_list = sample(restaurants_in_db, 5)
-    for r in r_list:
-        db_user.favorites.append(r)
+    if u['username'] == 'peppa':
+        db_user.favorites.extend(restaurants_in_db)
+    else:
+        # Favorite 5 restaurants
+        r_list = sample(restaurants_in_db, 5)
+        for r in r_list:
+            db_user.favorites.append(r)
 
-    # create 2 Meetups
-    db_meetup = create_fake_meetup(r_list[0], 'past')
-    db_meetup = create_fake_meetup(r_list[1], 'upcoming')
-    meetups_in_db.append(db_meetup)
+db.session.commit()
 
-
-# Create 10 users
-# Each will attend a Meetup from above iteratively
-# and favorite it
-
-for i in range(11, 21):
-    db_user = create_fake_user(i)
-    users_in_db.append(db_user)
-
-    meetup = meetups_in_db[i-11]
-    db_user.meetups.append(meetup)
-    db_user.favorites.append(meetup.restaurant)
-    db.session.commit()

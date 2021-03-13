@@ -10,7 +10,7 @@ function Restaurants(props) {
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);
 
   return (
-      <Container>
+      <React.Fragment>
         <Switch>
           <Route exact path='/restaurants'>
             <Row>
@@ -32,6 +32,11 @@ function Restaurants(props) {
               </Col>
             </Row>
           </Route>
+          <Route exact path='/restaurants/favorites'>
+            <MyFavoriteRestaurants user={props.user} displayGrid
+                    favoriteRestaurants={favoriteRestaurants}
+                    setFavoriteRestaurants={setFavoriteRestaurants} />
+          </Route>
           <Route path='/restaurant/:restaurantID'>
             <RestaurantDetails user={props.user} 
               displaySearchResults={displaySearchResults}
@@ -41,7 +46,7 @@ function Restaurants(props) {
 
           </Route>
         </Switch>
-      </Container>     
+      </React.Fragment>     
   );
 }
 
@@ -400,7 +405,7 @@ function RestaurantDetails(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Row>
+      <Row className='mb-5'>
         <Col>
           <img width={400} src={restaurant.image_url} />
         </Col>
@@ -450,10 +455,10 @@ function RestaurantDetails(props) {
 /*
   Shows favorite restaurants for a logged in user using user state
 */
-function MyFavoriteRestaurants(props) {
-  // this component wasn't rendered from Restaurant component
+function MyFavoriteRestaurants(props) {  
   
-  const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);  
+  const [favoriteRestaurants, setFavoriteRestaurants] = React.useState(null);
+
   console.log('faves', favoriteRestaurants);
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/restaurants.json`)
@@ -467,24 +472,41 @@ function MyFavoriteRestaurants(props) {
         }
       )
   }, [])
-  
-  return (
-    <Container>
-      <h1>My Favorite Restaurants</h1>
-      {favoriteRestaurants.length !== 0 ? 
-        <div className="list-group">
-          {favoriteRestaurants.map(rest => (       
-            <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
-          ))}
-        </div> : <Alert variant='warning'>
-          <p>You have no favorite restaurants yet.</p>
-          <p>Why not search for some new restaurants to visit?</p>
-        </Alert>
-
-      }
-
-    </Container>
-  );
+  if (!favoriteRestaurants) return <Spinner animation="border" variant="success" />;
+  // display the restaurants in a grid
+  if (props.displayGrid) {
+    return (
+      <React.Fragment>
+        <h1>My Favorite Restaurants</h1>
+        {favoriteRestaurants.length !== 0 ? 
+          <div className="d-flex flex-wrap justify-content-center">
+            {favoriteRestaurants.map(rest => (       
+              <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
+            ))}
+          </div> : <Alert variant='warning'>
+            <p>You have no favorite restaurants yet.</p>
+            <p>Why not search for some new restaurants to visit?</p>
+          </Alert>
+        }
+      </React.Fragment>
+    )
+  } else {
+    return (
+      <Container>
+        <h1>My Favorite Restaurants</h1>
+        {favoriteRestaurants.length !== 0 ? 
+          <div className="list-group">
+            {favoriteRestaurants.map(rest => (       
+              <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
+            ))}
+          </div> : <Alert variant='warning'>
+            <p>You have no favorite restaurants yet.</p>
+            <p>Why not search for some new restaurants to visit?</p>
+          </Alert>
+        }
+      </Container>
+    );    
+  }
 }
 
 function RestaurantMeetups (props) {

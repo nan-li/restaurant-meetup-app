@@ -246,29 +246,33 @@ function MeetupDetails(props) {
             setMeetup={setMeetup} meetup={meetup} user={props.user}
             setAlert={props.setAlert} />}
 
-        {hosting && (meetup.status == 'ACTIVE') &&
-          <EditMeetupButton meetup={meetup} 
-            meetupID={meetupID} setReload={setReload} reload={reload}
-            setAlert={props.setAlert} />}
+        
 
-        <h1>Meetup Details</h1>
+        
         <Row>
           <Col>
             <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
               width={400}/>
           </Col>
           <Col>
+            <h1>Meetup Details</h1>
+            {hosting && (meetup.status == 'ACTIVE') &&
+              <EditMeetupButton meetup={meetup} 
+                meetupID={meetupID} setReload={setReload} reload={reload}
+                setAlert={props.setAlert} />}
             {meetup.host.id === props.user.id ? "YOU'RE HOSTING!" : 
               <UserTile host={true} user={meetup.host} currentUser={props.user} />}
+
+            <Link to={`/restaurant/${meetup.restaurant.id}`}>
+              <p>{meetup.restaurant.name}</p>
+            </Link>
+            <p>Event Name: {meetup.name}</p>
+            <p>Event Date: {meetup.date}</p>
+            <p>Event Capacity: {meetup.capacity}</p>
+            <p>Event Description: {meetup.description}</p>
           </Col>
         </Row>
-        <Link to={`/restaurant/${meetup.restaurant.id}`}>
-          <p>{meetup.restaurant.name}</p>
-        </Link>
-        <p>Event Name: {meetup.name}</p>
-        <p>Event Date: {meetup.date}</p>
-        <p>Event Capacity: {meetup.capacity}</p>
-        <p>Event Description: {meetup.description}</p>
+
         
         <MeetupAttendees meetup_id={meetupID} attending={attending}
           setAttending={setAttending} user={props.user}/>
@@ -296,7 +300,7 @@ function MyHostedMeetups(props) {
 
   return (
     <Container fluid>
-      <h1 className='mb-3'>My Hosted Meetups</h1>
+      <h1 className='mb-3'>Meetups I'm Hosting</h1>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
                                 setShowUpcoming(false);}}>Show Past</Button>
@@ -358,7 +362,7 @@ function MyAttendingMeetups(props) {
 
   return (
     <Container fluid>
-      <h1>Meetups Attending</h1>
+      <h1>Meetups I'm Attending</h1>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
                                 setShowUpcoming(false);}}>Show Past</Button>

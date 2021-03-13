@@ -11,7 +11,7 @@ body {
     font-family: 'Open Sans', sans-serif;
 
 }
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, strong {
     font-family: 'Arvo', serif;    
 }
 
@@ -67,6 +67,8 @@ hr {
 }
 .card {
     margin-top: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .btn-primary {
@@ -97,5 +99,9 @@ hr {
 }
 
 .navbar {
+    background-color: #eef1e1;
+}
+
+.dropdown-item:active {
     background-color: #eef1e1;
 }
