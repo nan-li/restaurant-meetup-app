@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, User, Restaurant, Meetup, Message, Notification, connect_to_db
+from model import db, User, Restaurant, Meetup, Message, Comment, Notification, connect_to_db
 from datetime import datetime
 
 def create_restaurant(id, name, cuisine, address, 
@@ -33,6 +33,7 @@ def create_user(username, fname, lname, email, password,
 
     return u
 
+
 def create_meetup(name, date, capacity, attendees_count,
                 description, image_url, restaurant, host):
     """Create and return a new meetup.
@@ -49,6 +50,7 @@ def create_meetup(name, date, capacity, attendees_count,
 
     return m
 
+
 def create_message(sender, recipient, body):
     """Create and return a message from sender to recipient."""
     m = Message(sender=sender, recipient=recipient, body=body)
@@ -58,6 +60,12 @@ def create_message(sender, recipient, body):
 
     return m
 
+def create_comment(writer, meetup, text):
+    """Create and return a comment by a user for a meetup."""
+    c = Comment(writer=writer, meetup=meetup, text=text)
+    db.session.add(c)
+    db.session.commit()
+    return c
 
 def create_notification(name, user_id, payload_json):
     """Create and return a notification."""
@@ -307,3 +315,10 @@ def get_attendees_by_meetup_id(meetup_id):
     """Return the attendees of a meetup."""
     meetup = get_meetup_by_id(meetup_id)
     return meetup.attendees
+
+def get_comments_by_meetup_id(meetup_id):
+    """Return the comments of a meetup."""
+    meetup = get_meetup_by_id(meetup_id)
+    return meetup.comments
+
+

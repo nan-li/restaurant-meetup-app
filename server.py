@@ -59,44 +59,6 @@ def login_user():
                 'message': 'Invalid password.'
             })
 
-
-@app.route('/api/users/<int:user_id>', methods=['PATCH'])
-def update_user(user_id):
-    """Update user information."""
-
-    old_password = request.form.get('old_password')
-    new_password = request.form.get('new_password')
-
-    user = crud.get_user_by_id(user_id)
-    if old_password and not user.check_password(old_password):
-        return jsonify({
-            'status': 'error',
-            'message': 'Previous password is incorrect.'
-        })
-    
-    password = new_password
-
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
-    email = request.form.get('email')
-    image = request.files.get('image')
-    about = request.form.get('about')
-    image_url = ''
-    
-    if image:
-        cloudinary_upload = cloudinary.uploader.upload(image)
-        image_url = cloudinary_upload['url'].partition("upload")[2]
-
-
-
-    user = crud.update_user(user, fname, lname, email, password, image_url, about)
-    return jsonify({
-                    'status': 'success',
-                    'message': 'Information updated successfully.',
-                    'user': user.to_dict('include_email')
-                })
-
-
 @app.route('/api/users/signup', methods=['POST'])
 def register_user():
     """Create a new user account."""
@@ -143,10 +105,58 @@ def register_user():
     })
 
 
-@app.route('/api/users/<int:id>.json')
+@app.route('/api/users/<int:id>')
 def get_user(id):
     """Return user information."""
     return jsonify(crud.get_user_by_id(id).to_dict())
+
+
+@app.route('/api/users/<int:user_id>', methods=['PATCH'])
+def update_user(user_id):
+    """Update user information."""
+
+    old_password = request.form.get('old_password')
+    new_password = request.form.get('new_password')
+
+    user = crud.get_user_by_id(user_id)
+    if old_password and not user.check_password(old_password):
+        return jsonify({
+            'status': 'error',
+            'message': 'Previous password is incorrect.'
+        })
+    
+    password = new_password
+
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+    image = request.files.get('image')
+    about = request.form.get('about')
+    image_url = ''
+    
+    if image:
+        cloudinary_upload = cloudinary.uploader.upload(image)
+        image_url = cloudinary_upload['url'].partition("upload")[2]
+
+
+
+    user = crud.update_user(user, fname, lname, email, password, image_url, about)
+    return jsonify({
+                    'status': 'success',
+                    'message': 'Information updated successfully.',
+                    'user': user.to_dict('include_email')
+                })
+
+@app.route('/api/users/<int:user_id>/restaurants')
+def get_user_favorites(user_id):
+    """Return a list of the user's favorite restaurants."""
+
+    restaurants = crud.get_favorites_by_user_id(user_id)
+
+    restaurants_info = [r.to_dict() for r in restaurants]
+
+    return jsonify(restaurants_info)
+
 
 
 @app.route('/api/user/<int:user_id>/notifications')
@@ -180,19 +190,9 @@ def update_notification(notification_id):
     })
 
 
-@app.route('/api/users/<int:user_id>/restaurants.json')
-def get_user_favorites(user_id):
-    """Return a list of the user's favorite restaurants."""
-
-    restaurants = crud.get_favorites_by_user_id(user_id)
-
-    restaurants_info = [r.to_dict() for r in restaurants]
-
-    return jsonify(restaurants_info)
 
 
-
-@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json')
+@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>')
 def get_a_restaurant_for_user(user_id, restaurant_id):
     """Get restaurant for a user.
         Give status if restaurant is favorited by user.
@@ -217,7 +217,7 @@ def get_a_restaurant_for_user(user_id, restaurant_id):
 
 
 
-@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json', methods=['POST'])
+@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>', methods=['POST'])
 def update_user_restaurant_relationship(user_id, restaurant_id):
     """Make restaurant a favorite of the user."""
     #TODO: Make user able to un-favorite a restaurant
@@ -246,7 +246,7 @@ def update_user_restaurant_relationship(user_id, restaurant_id):
     })
 
 
-@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>.json', methods=['DELETE'])
+@app.route('/api/users/<int:user_id>/restaurants/<restaurant_id>', methods=['DELETE'])
 def delete_restaurant_for_user(user_id, restaurant_id):
     user = crud.get_user_by_id(user_id)
     restaurant = crud.get_restaurant_by_id(restaurant_id)
@@ -258,7 +258,7 @@ def delete_restaurant_for_user(user_id, restaurant_id):
     })
 
 
-@app.route('/api/users/<int:user_id>/hosting.json')
+@app.route('/api/users/<int:user_id>/hosting')
 def get_user_hosted_meetups(user_id):
     """Return a list of meetups the user is hosting.
        Split into meetups past meetups and future meetups.
@@ -275,7 +275,7 @@ def get_user_hosted_meetups(user_id):
     })
 
 
-@app.route('/api/users/<int:user_id>/meetups.json')
+@app.route('/api/users/<int:user_id>/meetups')
 def get_user_meetups(user_id):
     """Return a list of meetups the user is attending.
         Split into past meetups and future meetups.
@@ -369,14 +369,14 @@ def get_user_messages(user_id):
         'messages': messages
     })
     
-@app.route('/api/restaurants/<id>.json')
+@app.route('/api/restaurants/<id>')
 def get_restaurant(id):
     """Return restaurant information."""
     return jsonify(crud.get_restaurant_by_id(id).to_dict())
 
 
 
-@app.route('/api/restaurants/search.json')
+@app.route('/api/restaurants/search')
 def get_search_results():
     """Return restaurants from a Yelp search."""
 
@@ -407,7 +407,7 @@ def get_search_results():
 
 
 
-@app.route('/api/restaurants/<restaurant_id>/meetups.json')
+@app.route('/api/restaurants/<restaurant_id>/meetups')
 def get_restaurant_meetups(restaurant_id):
     """Return a list of meetups at this restaurant.
         Split into past and future meetups.
@@ -443,7 +443,7 @@ def get_restaurant_meetups(restaurant_id):
     return jsonify(result)
 
 
-@app.route('/api/restaurants/<restaurant_id>/fans.json')
+@app.route('/api/restaurants/<restaurant_id>/fans')
 def get_restaurant_fans(restaurant_id):
     """Return a list of users favoriting the restaurant."""
     fans = crud.get_fans_by_restaurant_id(restaurant_id)
@@ -495,7 +495,7 @@ def create_meetup():
     })
 
 
-@app.route('/api/meetups/<int:meetup_id>.json')
+@app.route('/api/meetups/<int:meetup_id>')
 def get_meetup(meetup_id):
     """Return meetup information."""
     meetup = crud.get_meetup_by_id(meetup_id)
@@ -555,24 +555,43 @@ def cancel_meetup(meetup_id):
         'message': 'Successfully cancelled meetup.'
     })
 
-@app.route('/api/meetups/<int:meetup_id>/host.json')
+@app.route('/api/meetups/<int:meetup_id>/host')
 def get_host(meetup_id):
     """Return host information for a meetup."""
     return jsonify(crud.get_host_by_meetup_id(meetup_id).to_dict())
 
 
-@app.route('/api/meetups/<int:meetup_id>/restaurant.json')
+@app.route('/api/meetups/<int:meetup_id>/restaurant')
 def get_meetup_restaurant(meetup_id):
     return jsonify(crud.get_restaurant_by_meetup_id(meetup_id).to_dict())
 
 
-@app.route('/api/meetups/<int:meetup_id>/attendees.json')
+@app.route('/api/meetups/<int:meetup_id>/attendees')
 def get_meetup_attendees(meetup_id):
     """Return a list of attendees for the meetup."""
     attendees = crud.get_attendees_by_meetup_id(meetup_id)
     attendees_info = [a.to_dict() for a in attendees]
     return jsonify(attendees_info)
 
+@app.route('/api/meetups/<int:meetup_id>/comments')
+def get_comments(meetup_id):
+    """Return a list of comments for a meetup."""
+    comments = crud.get_comments_by_meetup_id(meetup_id)
+    comments_info = [c.to_dict() for c in comments]
+    return jsonify(comments_info)
+
+@app.route('/api/meetups/<int:meetup_id>/comments', methods=['POST'])
+def post_comment(meetup_id):
+    """Post a comment to a meetup."""
+    text = request.json['text']
+
+    writer = crud.get_user_by_id(session['user_id'])
+    meetup = crud.get_meetup_by_id(meetup_id)
+    comment = crud.create_comment(writer, meetup, text)
+    return jsonify({
+        'status': 'success',
+        'comment': comment.to_dict()
+    })
 
 if __name__ == '__main__':
     connect_to_db(app)

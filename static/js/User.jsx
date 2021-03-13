@@ -235,7 +235,7 @@ function UserProfile(props) {
   }
 
   React.useEffect(() => {
-    fetch(`/api/users/${userID}.json`)
+    fetch(`/api/users/${userID}`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -289,22 +289,21 @@ function UserProfile(props) {
           </Modal.Footer>
 
         </Modal>
-        <Row>
-          <h1>User Details 
-            <span><Button variant='link' onClick={handleShow}>
-              <Img width={50} alt='A message icon.' src='/static/img/message-icon.png'/>
-            </Button></span>
-          </h1>  
-        </Row>
+  
         <Row className='mb-5'>
-          <Col>      
+          <Col sm={4}>      
             <img alt='A profile photo of this user.' width={400}
               src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/' + user.image_url} />
           </Col>
-          <Col>
-            <p>Username: {user.username}</p>
-            <p>First Name: {user.fname}</p>
-            <p>About {user.username}:</p>
+          <Col sm={1}>            
+            <Button variant='link' onClick={handleShow}>
+              <Img width={50} alt='A message icon.' src='/static/img/message-icon.png'/>
+            </Button>
+          </Col>
+          <Col sm={7}>
+            <p><strong>Username: </strong>{user.username}</p>
+            <p><strong>First Name: </strong>{user.fname}</p>
+            <p><strong>About {user.username}:</strong></p>
             <p>{user.about}</p>    
           </Col>
         </Row>
@@ -499,12 +498,12 @@ function UserTile(props) {
       </Link>
       <Card.Body>
         <Card.Title>
+          {props.user.username}
           {props.setSelectedUser && 
             <Button variant='link' onClick={() => {
               props.setSelectedUser(props.user);
               window.scrollTo({top: 0, behavior: 'auto'});
               }}><Img alt='A message icon.' width={50} src='/static/img/message-icon.png'/></Button>}
-          {props.user.username}
           {props.currentUser && props.user.id === props.currentUser.id && 
           <span>  <em>(That's you!)</em></span>}
           {props.host && <div className='btn btn-default disabled'>HOST</div>}
@@ -596,8 +595,9 @@ function MessageContainer(props) {
     <Container>
       {props.messages.map(message => (
         <Container key={message.id}>
-          <p>From: {message.sender.fname} To: {message.recipient.fname} </p>
-          <p>Sent on: {message.timestamp}</p>
+          <p><strong>From: </strong>{message.sender.fname}</p>
+          <p><strong>To: </strong>{message.recipient.fname}</p>
+          <p><strong>Sent on: </strong>{message.timestamp}</p>
           <p>{message.body}</p>
           <hr />
         </Container>
@@ -605,13 +605,14 @@ function MessageContainer(props) {
       <form onSubmit={handleSubmit}>
 
         <div className="form-group p-2">
-          <label>Message</label>
+          <label>Write a Message</label>
           <textarea className="form-control"  name="body" 
             placeholder={`Hi ${props.user.username}`} onChange={handleChange} required>
           </textarea>
         </div>
-
-        <Button variant="primary" type="submit">Send Message</Button>
+        <div className="d-flex justify-content-end">
+          <Button variant="primary" type="submit">Send Message</Button>
+        </div>
       </form>
     </Container>
   )

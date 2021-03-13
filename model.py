@@ -185,11 +185,9 @@ class Meetup(db.Model):
     capacity = db.Column(db.Integer)
     attendees_count = db.Column(db.Integer)
     description = db.Column(db.Text)
-    image_url = db.Column(db.String, default='/v1615407752/gn4vjpy16debw6sghogu.jpg')
-
+    image_url = db.Column(db.String, default='/v1615521225/avocadopattern_ddagxx.jpg')
     # 'CANCELLED' 'ACTIVE'
     status = db.Column(db.String(10), default='ACTIVE')
-
     restaurant_id = db.Column(db.String, 
                     db.ForeignKey('restaurants.id'))
     host_id = db.Column(db.Integer, 
@@ -200,6 +198,9 @@ class Meetup(db.Model):
     restaurant = db.relationship('Restaurant', backref="meetups")
 
     # attendees = list of User objects attending
+
+    comments = db.relationship('Comment', backref='meetup', 
+                                order_by='Comment.timestamp')
 
     def __repr__(self):
         return f'<Meetup {self.name} at {self.restaurant.name}>'
@@ -222,6 +223,34 @@ class Meetup(db.Model):
         }
         return data
         
+class Comment(db.Model):    
+    """A meetup comment."""
+
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer, autoincrement=True, 
+                    primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    meetup_id = db.Column(db.Integer, db.ForeignKey('meetups.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    text = db.Column(db.Text)
+
+    writer = db.relationship('User') 
+
+    # meetup = Meetup this comment is for
+
+    def __repr__(self):
+            return f'<Comment on Meetup {self.meetup_id} by User {self.user_id}>'
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'text': self.text,
+            'timestamp': self.timestamp,
+            'user': self.writer.to_dict(),
+            'meetup_id': self.meetup_id
+        }
+        return data
 
 def connect_to_db(flask_app, db_uri='postgresql:///restaurants', echo=True):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = db_uri

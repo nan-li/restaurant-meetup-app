@@ -204,13 +204,10 @@ function MeetupDetails(props) {
   console.log("You're hosting:", hosting);
   console.log('reload', reload);
 
-
   let {meetupID} = useParams();
   
-
   React.useEffect(() => {
-    
-    fetch(`/api/meetups/${meetupID}.json`)
+    fetch(`/api/meetups/${meetupID}`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -221,8 +218,6 @@ function MeetupDetails(props) {
           setError(error);
         }
       )
-
-      
   }, [reload])
 
   if (error) {
@@ -240,42 +235,42 @@ function MeetupDetails(props) {
 
         {(meetup.status == 'ACTIVE') && (meetup.attendees_count === meetup.capacity) && 
           <Alert variant='warning'>This event is full.</Alert>}
-
-        {!hosting && (meetup.status == 'ACTIVE') && 
-          <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
-            setMeetup={setMeetup} meetup={meetup} user={props.user}
-            setAlert={props.setAlert} />}
-
-        
-
-        
+        <Row>
+          <h1>{meetup.name} at {meetup.restaurant.name}</h1>
+          {!hosting && (meetup.status == 'ACTIVE') && 
+              <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
+                setMeetup={setMeetup} meetup={meetup} user={props.user}
+                setAlert={props.setAlert} />}
+        </Row>
         <Row>
           <Col>
             <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
               width={400}/>
           </Col>
           <Col>
-            <h1>Meetup Details</h1>
+            
             {hosting && (meetup.status == 'ACTIVE') &&
               <EditMeetupButton meetup={meetup} 
                 meetupID={meetupID} setReload={setReload} reload={reload}
                 setAlert={props.setAlert} />}
+ 
             {meetup.host.id === props.user.id ? "YOU'RE HOSTING!" : 
               <UserTile host={true} user={meetup.host} currentUser={props.user} />}
 
             <Link to={`/restaurant/${meetup.restaurant.id}`}>
-              <p>{meetup.restaurant.name}</p>
+              <Button>{meetup.restaurant.name}</Button>
             </Link>
-            <p>Event Name: {meetup.name}</p>
-            <p>Event Date: {meetup.date}</p>
-            <p>Event Capacity: {meetup.capacity}</p>
-            <p>Event Description: {meetup.description}</p>
+            <p><strong>Event Date: </strong>{meetup.date}</p>
+            <p><strong>Event Capacity: </strong>{meetup.capacity}</p>
+            <p><strong>Event Description: </strong>{meetup.description}</p>
           </Col>
         </Row>
 
         
         <MeetupAttendees meetup_id={meetupID} attending={attending}
           setAttending={setAttending} user={props.user}/>
+        
+        <MeetupComments meetup_id={meetupID} />
       </Container>
     );
   }
@@ -288,7 +283,7 @@ function MyHostedMeetups(props) {
   const [showUpcoming, setShowUpcoming] = React.useState(true);
 
   React.useEffect(() => {
-    fetch(`/api/users/${props.user.id}/hosting.json`)
+    fetch(`/api/users/${props.user.id}/hosting`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -349,7 +344,7 @@ function MyAttendingMeetups(props) {
   const [showUpcoming, setShowUpcoming] = React.useState(true);
 
   React.useEffect(() => {
-    fetch(`/api/users/${props.user.id}/meetups.json`)
+    fetch(`/api/users/${props.user.id}/meetups`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -406,7 +401,7 @@ function MeetupAttendees(props) {
   //console.log("MeetupAttendees attendees: ", attendees);
   // get the users attending the Meetup
   React.useEffect(() => {
-    fetch(`/api/meetups/${props.meetup_id}/attendees.json`)
+    fetch(`/api/meetups/${props.meetup_id}/attendees`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -421,20 +416,93 @@ function MeetupAttendees(props) {
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (attendees.length === 0) {
-    return <div>No Attendees Yet</div>;
   } else {
     return (
     <Container>
 
       <h1>Attendees</h1>
-      <div className="list-group">
-        {attendees.map(user => (
-          <UserTile currentUser={props.user} user={user} key={user.id} />
-        ))}
-      </div>
-
+      {attendees.length === 0 ? 
+        <Alert variant='warning'>No Attendees Yet</Alert> : 
+        <div className="list-group">
+          {attendees.map(user => (
+            <UserTile currentUser={props.user} user={user} key={user.id} />
+          ))}
+        </div>
+      } 
     </Container>
     );
   }
 }
+
+function CommentTile(props) {
+  return (
+    
+      <p>{props.comment.text}</p>
+    
+  )
+}
+
+const initialCommentData = Object.freeze({
+  text: ""
+});
+
+function MeetupComments(props) {
+  const [comments, setComments] = React.useState([]);
+  const [formData, setFormData] = React.useState(initialCommentData);
+  console.log('comments', comments);
+
+  const handleChange = (evt) => {
+    setFormData({
+      ...formData, [evt.target.name]: evt.target.value.trim()
+    });
+  };
+
+  React.useEffect(() => {
+    fetch(`/api/meetups/${props.meetup_id}/comments`)
+    .then(res => res.json())
+    .then((result) => {
+      setComments(result);
+    })
+  }, [])
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    fetch(`/api/meetups/${props.meetup_id}/comments`, {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then((result) => {
+      // append comment returned to list of comments
+      setComments(prev => [...prev, result.comment]);
+      setFormData(initialCommentData);
+      document.getElementById('comment-area').value='';
+      console.log(result);
+    })
+  } 
+
+  return (
+    <Container>
+      <h1>Comments</h1>
+      {comments.map(comment => (
+        <CommentTile key={comment.id} comment={comment}/>
+      ))}      
+
+      <form onSubmit={handleSubmit}>
+        <div className="form-group p-2">
+          <label>Write a Comment</label>
+          <textarea className="form-control"  name="text" id="comment-area"
+            placeholder='Write a comment for this meetup...' onChange={handleChange} required>
+          </textarea>
+        </div>
+        <div className="d-flex justify-content-end">
+          <Button variant="primary" type="submit">Submit Comment</Button>
+        </div>
+      </form>
+    </Container>
+  );
+}
+

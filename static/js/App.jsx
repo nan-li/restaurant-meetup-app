@@ -105,13 +105,9 @@ function SiteNavbar(props) {
             <Link className="navbar-brand" to="/">Home</Link>
             <Link className="navbar-brand mr-0" to="/restaurants">Restaurants</Link>
               <NavDropdown>
-              <NavDropdown.Item>
-                <Link className="navbar-brand" to="/restaurants">Restaurants</Link>
-              </NavDropdown.Item>
+                <Link role='button' className="navbar-brand dropdown-item" to="/restaurants">Restaurants</Link>
               <NavDropdown.Divider />
-              <NavDropdown.Item>
-                <Link className="navbar-brand" to="/restaurants/favorites">Favorites</Link>
-              </NavDropdown.Item>
+                <Link role='button' className="navbar-brand dropdown-item" to="/restaurants/favorites">Favorites</Link>
               </NavDropdown>
             <Link className="navbar-brand ml-3" to="/meetups">Meetups</Link>
             <Link className="navbar-brand" to="/myprofile">My Profile</Link>

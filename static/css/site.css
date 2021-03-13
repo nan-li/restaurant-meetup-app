@@ -76,10 +76,14 @@ hr {
     border-color: #475e10;
 }
 
-.btn-primary:hover, .btn-primary:focus  {
+.btn-primary:hover, .btn-primary:focus, .btn-primary:focus {
     background-color: #728c36;
 }
 
+.btn-primary.focus, .btn-primary:focus {
+    background-color: #728c36;
+    box-shadow: 0 0 0 0.2rem rgb(143, 182, 53 / 50%);
+}
 .unread-toast {
     background-color: #dae4ba;
 }

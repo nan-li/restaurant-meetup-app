@@ -188,7 +188,7 @@ function FavoriteUnfavoriteRestaurantButton(props) {
 
   const createUserRestaurantRelationship = () => {
     // POST to server
-    fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}.json`, {
+    fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}`, {
       method: 'POST',
       body: JSON.stringify(props.restaurant),
       headers: {
@@ -216,7 +216,7 @@ function FavoriteUnfavoriteRestaurantButton(props) {
       alert('You are attending a meetup here. Cannot unfavorite this restaurant');
     } else {
       // Make request to backend
-      fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}.json`, {
+      fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -317,7 +317,7 @@ function RestaurantDetails(props) {
   
   React.useEffect(() => {
     // get the restaurant data from own database with restaurantID
-    fetch(`/api/users/${props.user.id}/restaurants/${restaurantID}.json`)
+    fetch(`/api/users/${props.user.id}/restaurants/${restaurantID}`)
     .then(res => res.json())
     .then(
       (data) => {
@@ -461,7 +461,7 @@ function MyFavoriteRestaurants(props) {
 
   console.log('faves', favoriteRestaurants);
   React.useEffect(() => {
-    fetch(`/api/users/${props.user.id}/restaurants.json`)
+    fetch(`/api/users/${props.user.id}/restaurants`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -510,12 +510,12 @@ function MyFavoriteRestaurants(props) {
 }
 
 function RestaurantMeetups (props) {
-  const [meetups, setMeetups] = React.useState([]);
+  const [meetups, setMeetups] = React.useState(null);
   const [showPast, setShowPast] = React.useState(false);
   const [showUpcoming, setShowUpcoming] = React.useState(true);
 
   React.useEffect(() => {
-    fetch(`/api/restaurants/${props.restaurantID}/meetups.json`)
+    fetch(`/api/restaurants/${props.restaurantID}/meetups`)
       .then(res => res.json())
       .then((result) => {
         if (result.status != 'error') {
@@ -531,7 +531,7 @@ function RestaurantMeetups (props) {
       })
   }, [props.show])
 
-  if (meetups.length === 0) return null;
+  if (!meetups) return null;
 
   return (
     <Container>
@@ -577,7 +577,7 @@ function RestaurantFans (props) {
   const [fans, setFans] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`/api/restaurants/${props.restaurantID}/fans.json`)
+    fetch(`/api/restaurants/${props.restaurantID}/fans`)
       .then(res => res.json())
       .then((result) => {
         if (result.status != 'error') {
