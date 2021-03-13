@@ -247,7 +247,7 @@ class Comment(db.Model):
             'id': self.id,
             'text': self.text,
             'timestamp': self.timestamp,
-            'user': self.writer.to_dict(),
+            'writer': self.writer.to_dict(),
             'meetup_id': self.meetup_id
         }
         return data

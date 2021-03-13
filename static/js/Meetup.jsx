@@ -1,4 +1,5 @@
 
+
 function MeetupTile(props) {
 
   return (
@@ -187,10 +188,7 @@ function EditMeetupButton(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </Container>
-
-
   );
 }
 
@@ -265,12 +263,19 @@ function MeetupDetails(props) {
             <p><strong>Event Description: </strong>{meetup.description}</p>
           </Col>
         </Row>
-
-        
-        <MeetupAttendees meetup_id={meetupID} attending={attending}
-          setAttending={setAttending} user={props.user}/>
-        
-        <MeetupComments meetup_id={meetupID} />
+        <hr />
+        <Row>
+          <Col>
+            <MeetupAttendees meetup_id={meetupID} attending={attending}
+              setAttending={setAttending} user={props.user}/>
+                    
+          </Col>
+          <Col>
+            <MeetupComments meetup_id={meetupID} disabled={!attending && !hosting}/>    
+          </Col>
+ 
+                
+        </Row>
       </Container>
     );
   }
@@ -434,13 +439,7 @@ function MeetupAttendees(props) {
   }
 }
 
-function CommentTile(props) {
-  return (
-    
-      <p>{props.comment.text}</p>
-    
-  )
-}
+
 
 const initialCommentData = Object.freeze({
   text: ""
@@ -487,22 +486,43 @@ function MeetupComments(props) {
   return (
     <Container>
       <h1>Comments</h1>
-      {comments.map(comment => (
-        <CommentTile key={comment.id} comment={comment}/>
-      ))}      
+      <ul className='list-unstyled'>
+        {comments.map(comment => (
+          <CommentTile key={comment.id} comment={comment}/>
+        ))}              
+      </ul>
+
 
       <form onSubmit={handleSubmit}>
-        <div className="form-group p-2">
-          <label>Write a Comment</label>
-          <textarea className="form-control"  name="text" id="comment-area"
-            placeholder='Write a comment for this meetup...' onChange={handleChange} required>
-          </textarea>
-        </div>
-        <div className="d-flex justify-content-end">
-          <Button variant="primary" type="submit">Submit Comment</Button>
-        </div>
+        <fieldset disabled={props.disabled}>
+          <div className="form-group p-2">
+            <textarea className="form-control"  name="text" id="comment-area"
+              placeholder='Write a comment for this meetup...' onChange={handleChange} required>
+            </textarea>
+          </div>
+          <div className="d-flex justify-content-end">
+            <Button variant="primary" type="submit">Submit Comment</Button>
+          </div>          
+        </fieldset>
+
       </form>
     </Container>
   );
 }
 
+function CommentTile(props) {
+  return (
+    
+      <li className='mb-1 media border border-light rounded'>
+        <Link className='align-self-center ml-3' to={`/user/${props.comment.user.id}`}>
+          <img  width={40} 
+            src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_face' + props.comment.user.image_url} />
+        </Link>
+        <div className='media-body align-middle pt-1 pb-1'>
+          <h5>{props.comment.user.username}</h5>
+          <p className='mb-0'>{props.comment.text}</p>   
+        </div>
+      </li>      
+    
+  );
+}

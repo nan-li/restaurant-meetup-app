@@ -79,7 +79,7 @@ function RestaurantSearch(props) {
       lng: position.coords.longitude
     });
 
-    let url = (`/api/restaurants/search.json?term=${searchTerms.term}&latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
+    let url = (`/api/restaurants/search?term=${searchTerms.term}&latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
     console.log("url", url);
     fetch(url)
     .then(res => res.json()) 
@@ -104,7 +104,7 @@ function RestaurantSearch(props) {
     evt.preventDefault();
     props.setDisplaySearchResults(true);
 
-    let url = `/api/restaurants/search.json?term=${searchTerms.term}&location=${searchTerms.location}`;
+    let url = `/api/restaurants/search?term=${searchTerms.term}&location=${searchTerms.location}`;
     console.log("URL: ", url);
     fetch(url)
       .then(res => res.json()) 

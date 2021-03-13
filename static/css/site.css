@@ -71,7 +71,7 @@ hr {
     margin-right: 0.5rem;
 }
 
-.btn-primary {
+.btn-primary, .btn-primary:disabled, .btn-primary.disabled{
     background-color: #597813;
     border-color: #475e10;
 }
@@ -80,10 +80,6 @@ hr {
     background-color: #728c36;
 }
 
-.btn-primary.focus, .btn-primary:focus {
-    background-color: #728c36;
-    box-shadow: 0 0 0 0.2rem rgb(143, 182, 53 / 50%);
-}
 .unread-toast {
     background-color: #dae4ba;
 }
