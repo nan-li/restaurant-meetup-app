@@ -19,7 +19,7 @@ function App() {
   // no one is logged in
   if (!user) {
     return (
-        <Homepage setUser={setUser} setAlert={setAlert} />  
+        <GeneralHomepage setUser={setUser} setAlert={setAlert} />  
     )
   // user is logged in
   } else {
@@ -55,8 +55,7 @@ function App() {
               </Route>
 
               <Route exact path="/">
-                <h1>Todo</h1>
-                <p>Your Next Meetup</p>
+                <Homepage user={user} />
               </Route>
 
               <Route exact path="/meetups">
@@ -105,9 +104,13 @@ function SiteNavbar(props) {
             <Link className="navbar-brand" to="/">Home</Link>
             <Link className="navbar-brand mr-0" to="/restaurants">Restaurants</Link>
               <NavDropdown>
-                <Link role='button' className="dropdown-item" to="/restaurants">Restaurants</Link>
+                <NavDropdown.Item>
+                  <Link role='button' className="navbar-brand" to="/restaurants">Restaurants</Link>
+                </NavDropdown.Item>
               <NavDropdown.Divider />
-                <Link role='button' className="dropdown-item" to="/restaurants/favorites">Favorites</Link>
+                <NavDropdown.Item>
+                  <Link role='button' className="navbar-brand" to="/restaurants/favorites">Favorites</Link>
+                </NavDropdown.Item>
               </NavDropdown>
             <Link className="navbar-brand ml-3" to="/meetups">Meetups</Link>
             <Link className="navbar-brand" to="/myprofile">My Profile</Link>
@@ -125,11 +128,11 @@ function SiteNavbar(props) {
 }
 
 /* 
-  Homepage component displays Navbar
+  GeneralHomepage component displays Navbar
   Displays welcome banner
   Routes users to /login or /signup
 */
-function Homepage(props) {
+function GeneralHomepage(props) {
   return (
     // <Router>
       <React.Fragment>

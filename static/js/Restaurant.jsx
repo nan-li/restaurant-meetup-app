@@ -162,7 +162,7 @@ function RestaurantSearchResults(props) {
 function RestaurantTile(props) {
 
   return (
-    <Card style={{ width: '24rem' }}>
+    <Card className='bg-light' style={{ width: '20rem' }}>
       <Link to={`/restaurant/${props.restaurant.id}`}>
           <Card.Img variant="top" src={props.restaurant.image_url}  />
         </Link>

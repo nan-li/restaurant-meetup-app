@@ -1,17 +1,13 @@
-/* body {
-    background-color: #fdfdf4;
-} */
+body {
+    color: #434d15;
+} 
 
-/* 
-.navbar {
-    position: fixed;
-    z-index: 99;
-} */
+
 body {
     font-family: 'Open Sans', sans-serif;
 
 }
-h1, h2, h3, h4, h5, h6, strong {
+h1, h2, h3, h4, h5, h6, strong, .card-title {
     font-family: 'Arvo', serif;    
 }
 
@@ -71,23 +67,27 @@ hr {
     margin-right: 0.5rem;
 }
 
-.btn-primary, .btn-primary:disabled, .btn-primary.disabled{
+/* BUTTON stuff */
+
+/* .btn-primary, .btn-primary:disabled, .btn-primary.disabled{
     background-color: #597813;
     border-color: #475e10;
-}
+} */
 
-.btn-primary:hover, .btn-primary:focus, .btn-primary:focus {
+/* .btn-primary:hover, .btn-primary.hover, .btn-primary:focus, .btn-primary:focus {
     background-color: #728c36;
+} */
+
+.btn-static {
+    background-color: #6a9603;
+    border: 1px solid #4a6804;
 }
 
 .unread-toast {
     background-color: #dae4ba;
 }
 
-.btn-static {
-    background-color: #6a9603;
-    border: 1px solid #4a6804;
-}
+
 .google-maps-img {
     width: 100px;
     height: auto;
@@ -103,5 +103,13 @@ hr {
 }
 
 .dropdown-item:active {
-    background-color: #eef1e1;
+    background-color: #edf3d0;
+}
+
+.alert-warning {
+    color: #794e08;
+}
+
+.bg-none {
+    background-color: #fff;
 }

@@ -3,7 +3,7 @@
 function MeetupTile(props) {
 
   return (
-    <Card style={{ width: '24rem' }}>
+    <Card className='bg-light' style={{ width: '24rem' }}>
       <Link to={`/meetup/${props.meetup.id}`}>
         <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.meetup.image_url} />
       </Link>
@@ -486,26 +486,27 @@ function MeetupComments(props) {
   return (
     <Container>
       <h1>Comments</h1>
-      <ul className='list-unstyled'>
-        {comments.map(comment => (
-          <CommentTile key={comment.id} comment={comment}/>
-        ))}              
-      </ul>
+      <Container className='bg-light pl-4 pt-4 pb-4 pr-4'>
+        <ul className='list-unstyled'>
+          {comments.map(comment => (
+            <CommentTile key={comment.id} comment={comment}/>
+          ))}              
+        </ul>        
 
+        <form onSubmit={handleSubmit}>
+          <fieldset disabled={props.disabled}>
+            <div className="form-group p-2">
+              <textarea className="form-control"  name="text" id="comment-area"
+                placeholder='Write a comment for this meetup...' onChange={handleChange} required>
+              </textarea>
+            </div>
+            <div className="d-flex justify-content-end">
+              <Button variant="primary" type="submit">Submit Comment</Button>
+            </div>          
+          </fieldset>
 
-      <form onSubmit={handleSubmit}>
-        <fieldset disabled={props.disabled}>
-          <div className="form-group p-2">
-            <textarea className="form-control"  name="text" id="comment-area"
-              placeholder='Write a comment for this meetup...' onChange={handleChange} required>
-            </textarea>
-          </div>
-          <div className="d-flex justify-content-end">
-            <Button variant="primary" type="submit">Submit Comment</Button>
-          </div>          
-        </fieldset>
-
-      </form>
+        </form>        
+      </Container>
     </Container>
   );
 }
@@ -513,7 +514,7 @@ function MeetupComments(props) {
 function CommentTile(props) {
   return (
     
-      <li className='mb-1 media border border-light rounded'>
+      <li className='mb-2 media border bg-none border-light rounded'>
         <Link className='align-self-center ml-3' to={`/user/${props.comment.user.id}`}>
           <img  width={40} 
             src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_face' + props.comment.user.image_url} />

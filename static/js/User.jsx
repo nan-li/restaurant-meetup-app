@@ -1,3 +1,54 @@
+function Homepage(props) {
+  const [hostedMeetups, setHostedMeetups] = React.useState([]);
+  const [meetups, setMeetups] = React.useState([]);
+  
+  React.useEffect(() => {
+    fetch(`/api/users/${props.user.id}/hosting`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setHostedMeetups(result);
+        }
+      )
+  }, [])
+
+  React.useEffect(() => {
+    fetch(`/api/users/${props.user.id}/meetups`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setMeetups(result);
+        }
+      )
+  }, [])
+  if (hostedMeetups.length === 0 || meetups.length === 0) return <p>Loading...</p>;
+
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <h3>Your Next Hosted Meetup</h3>
+          {hostedMeetups.future.length != 0 ? 
+            <MeetupTile meetup={hostedMeetups.future[0]} dontDisplayHost={props.dontDisplayHost} 
+              user={props.user} key={hostedMeetups.future[0].id} /> : 
+              <Alert variant='warning'>
+                <p>No upcoming meetups.</p>
+                <p>Perhaps you'd like to host a new meetup?</p>
+              </Alert>}        
+        </Col>
+        <Col>
+          <h3>Next Attending Meetup</h3>
+          {meetups.future.length != 0 ? 
+            <MeetupTile meetup={meetups.future[0]} user={props.user} key={meetups.future[0].id} /> : 
+              <Alert variant='warning'>
+                <p>No upcoming meetups.</p>
+                <p>Feel free to look around and find one to join.</p>
+              </Alert>}                
+        </Col>
+      </Row>
+    </Container>
+  );  
+}
 
 // Following this: 
 // https://linguinecode.com/post/how-to-get-form-data-on-submit-in-reactjs
@@ -492,7 +543,7 @@ function UserTile(props) {
   //   return null;
   // }
   return (
-    <Card style={{ width: '16rem' }}>
+    <Card className='bg-light' style={{ width: '16rem' }}>
       <Link to={`/user/${props.user.id}`}>
         <Card.Img variant="top" alt='Profile photo.' src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + props.user.image_url} />
       </Link>
