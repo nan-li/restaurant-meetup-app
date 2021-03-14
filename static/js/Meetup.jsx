@@ -5,15 +5,15 @@ function MeetupTile(props) {
   return (
     <Card className='bg-light' style={{ width: '24rem' }}>
       <Link to={`/meetup/${props.meetup.id}`}>
-        <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.meetup.image_url} />
+        <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_300,w_600,c_fill,g_auto' + props.meetup.image_url} />
       </Link>
       <Card.Body>
-        <Card.Title>{props.meetup.name}</Card.Title>
+        <Card.Title>{props.meetup.name} at {props.meetup.restaurant.name}</Card.Title>
         <Card.Text>
-          Date: {props.meetup.date}
+          <strong>Date: </strong>{props.meetup.date}
         </Card.Text>  
         {!props.dontDisplayHost &&
-          <Card.Text>Hosted by: {props.meetup.host.id === props.user.id ? 
+          <Card.Text><strong>Hosted by: </strong>{props.meetup.host.id === props.user.id ? 
             "You!" : props.meetup.host.username}</Card.Text>
           }
         {props.past &&
@@ -68,9 +68,11 @@ function JoinUnjoinMeetupButton(props) {
     <React.Fragment>
       
       {!props.attending && (props.meetup.attendees_count < props.meetup.capacity) &&  
-        <Button variant='warning' onClick={createUserMeetupRelationship}>Join Meetup</Button>}
+        <Button variant='warning' className='mb-3' onClick={createUserMeetupRelationship}>
+          Join Meetup</Button>}
       {props.attending &&
-        <Button variant='warning' onClick={deleteUserMeetupRelationship}>Leave Meetup</Button> }
+        <Button variant='warning' className='mb-3' onClick={deleteUserMeetupRelationship}>
+          Leave Meetup</Button> }
     </React.Fragment>
   );
 }
@@ -140,8 +142,8 @@ function EditMeetupButton(props) {
     });
   }  
   return (
-    <Container>
-      <Button onClick={handleShow}>Edit Meetup</Button>
+    <React.Fragment>
+      <Button className='mb-3' variant='warning' onClick={handleShow}>Edit Meetup</Button>
 
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
@@ -176,11 +178,11 @@ function EditMeetupButton(props) {
                 onChange={handleChange} >
               </textarea>
             </div>
-            <Button variant="primary" type="submit">Save Changes</Button>
-            <Button variant="danger" onClick={cancelMeetup}>Cancel Meetup</Button>
-
+            <div className="d-flex justify-content-between">
+              <Button variant="primary" type="submit">Save Changes</Button>
+              <Button variant="danger" onClick={cancelMeetup}>Cancel Meetup</Button>              
+            </div>
           </form>
-
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -188,7 +190,7 @@ function EditMeetupButton(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-    </Container>
+    </React.Fragment>
   );
 }
 
@@ -224,62 +226,66 @@ function MeetupDetails(props) {
     return <div>Loading...</div>;
   } else {
     return (
-      <Container>
-        {(meetup.status == 'CANCELLED') && 
-          <Alert variant='danger'>This event is cancelled.</Alert>}
+      <React.Fragment>
+        <Container>
+          {(meetup.status == 'CANCELLED') && 
+            <Alert variant='danger'>This event is cancelled.</Alert>}
 
-        {(meetup.status == 'PAST') && 
-          <Alert variant='warning'>This event has passed.</Alert>}
+          {(meetup.status == 'PAST') && 
+            <Alert variant='warning'>This event has passed.</Alert>}
 
-        {(meetup.status == 'ACTIVE') && (meetup.attendees_count === meetup.capacity) && 
-          <Alert variant='warning'>This event is full.</Alert>}
-        <Row className='mb-2'>
-          <h1>{meetup.name} at {meetup.restaurant.name}</h1>
-        </Row>
-        <Row>
-          <Col>
-            <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
-              width={400}/>
-          </Col>
-          <Col>            
-            <Link to={`/restaurant/${meetup.restaurant.id}`}>
-              <Button className='mr-1'>Go To Restaurant</Button>
-            </Link>
-            {!hosting && (meetup.status == 'ACTIVE') && 
-              <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
-                setMeetup={setMeetup} meetup={meetup} user={props.user}
-                setAlert={props.setAlert} />}
+          {(meetup.status == 'ACTIVE') && (meetup.attendees_count === meetup.capacity) && 
+            <Alert variant='warning'>This event is full.</Alert>}
+          <Row className='mb-2'>
+            <h1>{meetup.name} at {meetup.restaurant.name}</h1>
+          </Row>
+          <Row>
+            <Col>
+              <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
+                width={400}/>
+            </Col>
+            <Col>            
+              {meetup.host.id === props.user.id &&
+                <Alert variant='info'>You're hosting</Alert>}  
 
-            {hosting && (meetup.status == 'ACTIVE') &&
-              <EditMeetupButton meetup={meetup} 
-                meetupID={meetupID} setReload={setReload} reload={reload}
-                setAlert={props.setAlert} />}
- 
-            {meetup.host.id === props.user.id ? 
-              <Alert variant='info'>You're hosting</Alert>: 
-              <UserTile host={true} user={meetup.host} currentUser={props.user} />}
+              <Link to={`/restaurant/${meetup.restaurant.id}`}>
+                <Button className='mr-1 mb-3'>Go To Restaurant</Button>
+              </Link>
+              {!hosting && (meetup.status == 'ACTIVE') && 
+                <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
+                  setMeetup={setMeetup} meetup={meetup} user={props.user}
+                  setAlert={props.setAlert} />}
 
+              {hosting && (meetup.status == 'ACTIVE') &&
+                <EditMeetupButton meetup={meetup} 
+                  meetupID={meetupID} setReload={setReload} reload={reload}
+                  setAlert={props.setAlert} />}
+  
 
-          
-            <p className='mt-3'><strong>Event Date: </strong>{meetup.date}</p>
-            <p><strong>Event Capacity: </strong>{meetup.capacity}</p>
-            <p><strong>Event Description: </strong>{meetup.description}</p>
-          </Col>
-        </Row>
+              {meetup.host.id !== props.user.id &&
+                <UserTile host={true} user={meetup.host} currentUser={props.user} />}  
+
+            
+              <p className='mt-3'><strong>Event Date: </strong>{meetup.date}</p>
+              <p><strong>Event Capacity: </strong>{meetup.capacity}</p>
+              <p><strong>Event Description: </strong>{meetup.description}</p>
+            </Col>
+          </Row>
+        </Container>
+
         <hr />
-        <Row>
-          <Col>
-            <MeetupAttendees meetup_id={meetupID} attending={attending}
-              setAttending={setAttending} user={props.user}/>
-                    
-          </Col>
-          <Col>
-            <MeetupComments meetup_id={meetupID} disabled={!attending && !hosting}/>    
-          </Col>
- 
-                
-        </Row>
-      </Container>
+          <Container>
+            <Row>
+              <Col>
+                <MeetupAttendees meetup_id={meetupID} attending={attending}
+                  setAttending={setAttending} user={props.user}/>     
+              </Col>
+              <Col>
+                <MeetupComments meetup_id={meetupID} disabled={!attending && !hosting}/>    
+              </Col>
+            </Row>          
+          </Container>
+      </React.Fragment>
     );
   }
 }
@@ -302,7 +308,7 @@ function MyHostedMeetups(props) {
   if (hostedMeetups.length === 0) return <p>Loading...</p>;
 
   return (
-    <Container fluid>
+    <Container>
       <h2 className='mb-3'>Meetups I'm Hosting</h2>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
@@ -314,7 +320,7 @@ function MyHostedMeetups(props) {
       </ButtonGroup>
       
       {showPast &&
-        <Container>
+        <div>
           <h3 className='mb-3'>Past Meetups</h3>
           {hostedMeetups.past.length != 0 ? 
             <div className="list-group">
@@ -326,10 +332,10 @@ function MyHostedMeetups(props) {
                             key={meetup.id} />
               ))} 
             </div> : <Alert variant='warning'>No Meetups</Alert>}
-        </Container>}
+        </div>}
       
       {showUpcoming &&
-      <Container>
+      <div>
       <h3>Upcoming Meetups</h3>
         {hostedMeetups.future.length != 0 ? 
         <div className="list-group">
@@ -340,7 +346,7 @@ function MyHostedMeetups(props) {
         </div> : <Alert variant='warning'>
           <p>No upcoming meetups.</p>
           <p>Perhaps you'd like to host a new meetup?</p></Alert>}
-      </Container>}
+      </div>}
 
     </Container>
   );
@@ -364,7 +370,7 @@ function MyAttendingMeetups(props) {
   if (meetups.length === 0) return <p>Loading...</p>;
 
   return (
-    <Container fluid>
+    <Container>
       <h2>Meetups I'm Attending</h2>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
@@ -376,7 +382,7 @@ function MyAttendingMeetups(props) {
       </ButtonGroup>
 
       {showPast &&
-        <Container>
+        <div>
           <h3 className='mb-3'>Past Meetups</h3>
           {meetups.past.length != 0 ? 
             <div className="list-group">
@@ -384,10 +390,10 @@ function MyAttendingMeetups(props) {
                 <MeetupTile past={true} user={props.user} meetup={meetup} key={meetup.id} />
               ))} 
             </div> : <Alert variant='warning'>No Meetups</Alert>}
-        </Container>}
+        </div>}
 
         {showUpcoming &&
-        <Container>
+        <div>
           <h3 className='mb-3'>Upcoming Meetups</h3>
           {meetups.future.length != 0 ? 
             <div className="list-group">
@@ -397,7 +403,7 @@ function MyAttendingMeetups(props) {
             </div> : <Alert variant='warning'>
               <p>No upcoming meetups.</p>
               <p>Feel free to look around and find one to join.</p></Alert>}
-        </Container>}      
+        </div>}      
     </Container>
   );
 }
@@ -464,6 +470,7 @@ function MeetupComments(props) {
     .then(res => res.json())
     .then((result) => {
       setComments(result);
+      console.log('commnets', result);
     })
   }, [])
 
@@ -518,12 +525,12 @@ function CommentTile(props) {
   return (
     
       <li className='mb-2 media border bg-none border-light rounded'>
-        <Link className='align-self-center ml-3' to={`/user/${props.comment.user.id}`}>
+        <Link className='align-self-center ml-3' to={`/user/${props.comment.writer.id}`}>
           <img  width={40} 
-            src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_face' + props.comment.user.image_url} />
+            src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.comment.writer.image_url} />
         </Link>
         <div className='media-body align-middle pt-1 pb-1'>
-          <h5>{props.comment.user.username}</h5>
+          <h5>{props.comment.writer.username}</h5>
           <p className='mb-0'>{props.comment.text}</p>   
         </div>
       </li>      

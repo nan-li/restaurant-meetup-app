@@ -5,4 +5,3 @@ __pycache__/
 static/.DS_Store
 static/img/.DS_Store
 static/js/Play.jsx
-static/css/bootstrap.min.css

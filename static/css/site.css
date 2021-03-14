@@ -11,7 +11,9 @@ h1, h2, h3, h4, h5, h6, strong, .card-title {
     font-family: 'Arvo', serif;    
 }
 
-
+#root {
+    min-height: 100%;
+}
 a {
     color: #91091e;
 }
@@ -62,9 +64,8 @@ hr {
     overflow: hidden;
 }
 .card {
-    margin-top: 2rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
 }
 
 
@@ -83,6 +84,7 @@ hr {
 }
 
 
+
 .google-maps-img {
     width: 100px;
     height: auto;
@@ -93,7 +95,7 @@ hr {
     top: 0;
 }
 
-.navbar {
+.navbar, .bg-green {
     background-color: #eef1e1;
 }
 
@@ -106,7 +108,7 @@ hr {
 }
 
 .btn-primary{color:#fff;background-color:#728c36;border-color:#5f7628}
-.btn-primary:hover{color:#fff;background-color:#728c36;border-color:#1a252f}
+.btn-primary:hover{color:#fff;background-color:#637b2d;border-color:#1a252f}
 .btn-primary.focus,.btn-primary:focus{color:#fff;background-color:#728c36;border-color:#5d7523;box-shadow:0 0 0 .2rem rgba(119, 148, 74, 0.5)}
 .btn-primary.disabled,.btn-primary:disabled{color:#fff;background-color:#b0c18a;border-color:#728c36}
 .btn-primary:not(:disabled):not(.disabled).active,.btn-primary:not(:disabled):not(.disabled):active,.show>.btn-primary.dropdown-toggle{color:#fff;background-color:#1a252f;border-color:#95a177}
@@ -118,6 +120,9 @@ hr {
     color:#fff;background-color:#d4860b;border-color:#c87f0a;
     box-shadow:0 0 0 .2rem rgba(245,171,54,.5)
 }
+
+.form-control:focus, form-control:valid:focus{
+    border-color:#97cf27;box-shadow:0 0 0 .2rem rgba(100, 135, 61, 0.25)}
 
 /* .bg-light{background-color:#fefff8!important}
 a.bg-light:focus,a.bg-light:hover,button.bg-light:focus,button.bg-light:hover{background-color:#cfd9db!important} */

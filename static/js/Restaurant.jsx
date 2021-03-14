@@ -13,24 +13,29 @@ function Restaurants(props) {
       <React.Fragment>
         <Switch>
           <Route exact path='/restaurants'>
-            <Row>
-                {!displaySearchResults && <Col>
-                  <MyFavoriteRestaurants user={props.user} 
-                    favoriteRestaurants={favoriteRestaurants}
-                    setFavoriteRestaurants={setFavoriteRestaurants} /> </Col>}
-                {displaySearchResults && <Col>
-                  <MapContainer searchResults={searchResults}
-                    coordinates={coordinates} /> </Col>}
-              <Col>
-                <RestaurantSearch 
-                  setDisplaySearchResults={setDisplaySearchResults} 
-                  setSearchResults={setSearchResults} 
-                  setCoordinates={setCoordinates} />
-             
-                {displaySearchResults && 
-                  <RestaurantSearchResults user={props.user} restaurants={searchResults} />}
-              </Col>
-            </Row>
+            <Container>
+              <Row>
+                  {!displaySearchResults && <Col>
+                    <MyFavoriteRestaurants user={props.user} 
+                      favoriteRestaurants={favoriteRestaurants}
+                      setFavoriteRestaurants={setFavoriteRestaurants} /> </Col>}
+                  {displaySearchResults && <Col>
+                    <MapContainer searchResults={searchResults}
+                      coordinates={coordinates} /> </Col>}
+                <Col>
+                  <RestaurantSearch 
+                    setDisplaySearchResults={setDisplaySearchResults} 
+                    setSearchResults={setSearchResults} 
+                    setCoordinates={setCoordinates} />
+              
+                  {displaySearchResults && 
+                    <RestaurantSearchResults user={props.user} restaurants={searchResults} />}
+                </Col>
+              </Row>
+
+            </Container>
+
+
           </Route>
           <Route exact path='/restaurants/favorites'>
             <MyFavoriteRestaurants user={props.user} displayGrid
@@ -124,7 +129,8 @@ function RestaurantSearch(props) {
     return (
       <div>
         <h2>Search</h2>
-        <form onSubmit={handleSubmit}>
+
+        {/* <form onSubmit={handleSubmit}>
           <input type="text" name="term" placeholder="sushi, salad, korean..."
             required onChange={handleChange}/>
           < hr />
@@ -137,7 +143,40 @@ function RestaurantSearch(props) {
           </Row>
           <p className='mt-1'> - or - </p>
           <Button onClick={getLocation}>Use Current Location</Button>
+        </form> */}
+
+        <form onSubmit={handleSubmit}>
+          <div className='input-group mb-3'>
+            <div className='input-group-prepend'>
+              <span className='input-group-text'>Find</span>
+            </div>
+            <input type="text" className='form-control' name="term" 
+              placeholder="sushi, salad, korean..."
+              required onChange={handleChange}/>
+          </div>
+
+          <div className="input-group mb-3">
+            <div className="input-group-prepend">
+              <span className="input-group-text">Near*</span>
+            </div>
+              <input type="text" className='form-control' name="location" 
+                placeholder="San Francisco" 
+                onChange={handleChange} required
+              />
+
+            <Button className="btn btn-secondary" onClick={getLocation}>
+              <img
+                src="/static/img/locator-icon.svg"
+                alt="Icon for getting current location."
+                width="20"
+                height="20"
+              />
+            </Button>
+          </div>
+          <Button type="submit">Search</Button>
         </form>
+
+
       </div>
     );
 }
@@ -477,7 +516,7 @@ function MyFavoriteRestaurants(props) {
   if (props.displayGrid) {
     return (
       <React.Fragment>
-        <h2>Favorites</h2>
+        {/* <h2 className='text-center mb-5'>Favorites</h2> */}
         {favoriteRestaurants.length !== 0 ? 
           <div className="d-flex flex-wrap justify-content-center">
             {favoriteRestaurants.map(rest => (       

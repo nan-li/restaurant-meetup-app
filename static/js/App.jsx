@@ -59,7 +59,7 @@ function App() {
               </Route>
 
               <Route exact path="/meetups">
-                <Container fluid>
+                <Container>
                   <Row>
                     <Col><MyHostedMeetups user={user} /></Col>
                     <Col><MyAttendingMeetups user={user} /></Col>
