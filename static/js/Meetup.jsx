@@ -68,9 +68,9 @@ function JoinUnjoinMeetupButton(props) {
     <React.Fragment>
       
       {!props.attending && (props.meetup.attendees_count < props.meetup.capacity) &&  
-        <Button onClick={createUserMeetupRelationship}>Join Meetup</Button>}
+        <Button variant='warning' onClick={createUserMeetupRelationship}>Join Meetup</Button>}
       {props.attending &&
-        <Button onClick={deleteUserMeetupRelationship}>Leave Meetup</Button> }
+        <Button variant='warning' onClick={deleteUserMeetupRelationship}>Leave Meetup</Button> }
     </React.Fragment>
   );
 }
@@ -233,32 +233,35 @@ function MeetupDetails(props) {
 
         {(meetup.status == 'ACTIVE') && (meetup.attendees_count === meetup.capacity) && 
           <Alert variant='warning'>This event is full.</Alert>}
-        <Row>
+        <Row className='mb-2'>
           <h1>{meetup.name} at {meetup.restaurant.name}</h1>
-          {!hosting && (meetup.status == 'ACTIVE') && 
-              <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
-                setMeetup={setMeetup} meetup={meetup} user={props.user}
-                setAlert={props.setAlert} />}
         </Row>
         <Row>
           <Col>
             <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
               width={400}/>
           </Col>
-          <Col>
-            
+          <Col>            
+            <Link to={`/restaurant/${meetup.restaurant.id}`}>
+              <Button className='mr-1'>Go To Restaurant</Button>
+            </Link>
+            {!hosting && (meetup.status == 'ACTIVE') && 
+              <JoinUnjoinMeetupButton setAttending={setAttending} attending={attending}
+                setMeetup={setMeetup} meetup={meetup} user={props.user}
+                setAlert={props.setAlert} />}
+
             {hosting && (meetup.status == 'ACTIVE') &&
               <EditMeetupButton meetup={meetup} 
                 meetupID={meetupID} setReload={setReload} reload={reload}
                 setAlert={props.setAlert} />}
  
-            {meetup.host.id === props.user.id ? "YOU'RE HOSTING!" : 
+            {meetup.host.id === props.user.id ? 
+              <Alert variant='info'>You're hosting</Alert>: 
               <UserTile host={true} user={meetup.host} currentUser={props.user} />}
 
-            <Link to={`/restaurant/${meetup.restaurant.id}`}>
-              <Button>{meetup.restaurant.name}</Button>
-            </Link>
-            <p><strong>Event Date: </strong>{meetup.date}</p>
+
+          
+            <p className='mt-3'><strong>Event Date: </strong>{meetup.date}</p>
             <p><strong>Event Capacity: </strong>{meetup.capacity}</p>
             <p><strong>Event Description: </strong>{meetup.description}</p>
           </Col>
@@ -300,7 +303,7 @@ function MyHostedMeetups(props) {
 
   return (
     <Container fluid>
-      <h1 className='mb-3'>Meetups I'm Hosting</h1>
+      <h2 className='mb-3'>Meetups I'm Hosting</h2>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
                                 setShowUpcoming(false);}}>Show Past</Button>
@@ -362,7 +365,7 @@ function MyAttendingMeetups(props) {
 
   return (
     <Container fluid>
-      <h1>Meetups I'm Attending</h1>
+      <h2>Meetups I'm Attending</h2>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
                                 setShowUpcoming(false);}}>Show Past</Button>

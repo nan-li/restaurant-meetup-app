@@ -62,21 +62,16 @@ hr {
     overflow: hidden;
 }
 .card {
-    margin-top: 1rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    margin-top: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
-/* BUTTON stuff */
 
-/* .btn-primary, .btn-primary:disabled, .btn-primary.disabled{
-    background-color: #597813;
-    border-color: #475e10;
-} */
-
-/* .btn-primary:hover, .btn-primary.hover, .btn-primary:focus, .btn-primary:focus {
-    background-color: #728c36;
-} */
+.btn-link:focus,.btn-link:active {
+    outline: none !important;
+    box-shadow: none;
+ }
 
 .btn-static {
     background-color: #6a9603;
@@ -106,10 +101,23 @@ hr {
     background-color: #edf3d0;
 }
 
-.alert-warning {
-    color: #794e08;
-}
-
 .bg-none {
     background-color: #fff;
 }
+
+.btn-primary{color:#fff;background-color:#728c36;border-color:#5f7628}
+.btn-primary:hover{color:#fff;background-color:#728c36;border-color:#1a252f}
+.btn-primary.focus,.btn-primary:focus{color:#fff;background-color:#728c36;border-color:#5d7523;box-shadow:0 0 0 .2rem rgba(119, 148, 74, 0.5)}
+.btn-primary.disabled,.btn-primary:disabled{color:#fff;background-color:#b0c18a;border-color:#728c36}
+.btn-primary:not(:disabled):not(.disabled).active,.btn-primary:not(:disabled):not(.disabled):active,.show>.btn-primary.dropdown-toggle{color:#fff;background-color:#1a252f;border-color:#95a177}
+.btn-primary:not(:disabled):not(.disabled).active:focus,.btn-primary:not(:disabled):not(.disabled):active:focus,.show>.btn-primary.dropdown-toggle:focus{box-shadow:0 0 0 .2rem rgba(152, 191, 118, 0.5)}
+
+.btn-warning{color:#fff;background-color:#f39c12;border-color:#f39c12}
+.btn-warning:hover{color:#fff;background-color:#d4860b;border-color:#c87f0a}
+.btn-warning.focus,.btn-warning:focus{
+    color:#fff;background-color:#d4860b;border-color:#c87f0a;
+    box-shadow:0 0 0 .2rem rgba(245,171,54,.5)
+}
+
+/* .bg-light{background-color:#fefff8!important}
+a.bg-light:focus,a.bg-light:hover,button.bg-light:focus,button.bg-light:hover{background-color:#cfd9db!important} */

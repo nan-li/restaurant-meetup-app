@@ -123,7 +123,7 @@ function RestaurantSearch(props) {
     }
     return (
       <div>
-        <h1>Search</h1>
+        <h2>Search</h2>
         <form onSubmit={handleSubmit}>
           <input type="text" name="term" placeholder="sushi, salad, korean..."
             required onChange={handleChange}/>
@@ -477,7 +477,7 @@ function MyFavoriteRestaurants(props) {
   if (props.displayGrid) {
     return (
       <React.Fragment>
-        <h1>My Favorite Restaurants</h1>
+        <h2>Favorites</h2>
         {favoriteRestaurants.length !== 0 ? 
           <div className="d-flex flex-wrap justify-content-center">
             {favoriteRestaurants.map(rest => (       
@@ -493,7 +493,7 @@ function MyFavoriteRestaurants(props) {
   } else {
     return (
       <Container>
-        <h1>My Favorite Restaurants</h1>
+        <h2>Favorites</h2>
         {favoriteRestaurants.length !== 0 ? 
           <div className="list-group">
             {favoriteRestaurants.map(rest => (       
@@ -535,8 +535,8 @@ function RestaurantMeetups (props) {
 
   return (
     <Container>
-      <h1>Meetups at this Restaurant</h1>
-      <ButtonGroup aria-label="Show Meetups">
+      <h1 className='mb-4'>Meetups Here</h1>
+      <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
                                 setShowUpcoming(false);}}>Show Past</Button>
         <Button onClick={() => {setShowPast(false);
@@ -590,7 +590,7 @@ function RestaurantFans (props) {
 
   return (
     <Container>
-      <h1>Fans of this Restaurant</h1>
+      <h1>Fans</h1>
       <div className="list-group">
         {fans.map(user => (
           <UserTile currentUser={props.user} user={user} key={user.id} />

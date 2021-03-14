@@ -182,30 +182,30 @@ function SignupForm(props) {
       <h1>Sign Up</h1>
 
       <Form onSubmit={handleSubmit}>
-        <Form.Row>
-          <Form.Group as={Col} controlId="fname">
+        <div className="form-row">
+          <Form.Group className='form-group' as={Col} controlId="fname">
             <Form.Label>First Name</Form.Label>
             <Form.Control placeholder="First Name" required onChange={handleChange}/>
           </Form.Group>
 
-          <Form.Group as={Col} controlId="lname">
+          <Form.Group className='form-group' as={Col} controlId="lname">
             <Form.Label>Last Name</Form.Label>
             <Form.Control placeholder="Last Name " required onChange={handleChange}/>
           </Form.Group>
-        </Form.Row>
+        </div>
 
-        <Form.Group controlId="email">
+        <Form.Group className='form-group' controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control type="email" placeholder="Email" required onChange={handleChange}/>
         </Form.Group>
 
-        <Form.Group controlId="username">
+        <Form.Group className='form-group' controlId="username">
           <Form.Label>Username</Form.Label>
           <Form.Control placeholder="Username" required onChange={handleChange}/>
         </Form.Group>
 
-        <Form.Row>
-          <Form.Group as={Col} controlId="password">
+        <div className="form-row">
+          <Form.Group className='form-group' as={Col} controlId="password">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Password" required onChange={handleChange} />
             <small id="passwordHelpInline" className="text-muted">
@@ -213,19 +213,21 @@ function SignupForm(props) {
             </small>
           </Form.Group>
 
-          <Form.Group as={Col} controlId="confirm">
+          <Form.Group className='form-group' as={Col} controlId="confirm">
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control type="password" placeholder="Confirm Password" required onChange={handleChange} />
           </Form.Group>
-        </Form.Row>
+        </div>
 
-        <Form.Group controlId="about">
+        <Form.Group className='form-group' controlId="about">
           <Form.Label>About Me</Form.Label>
           <Form.Control as="textarea" rows={3} placeholder="About Me" onChange={handleChange}/>
         </Form.Group>
-        <Form.Group>
-          <Form.File id="image" label="Upload a Profile Picture." />
-        </Form.Group> 
+
+        <div className="form-group">
+          <label htmlFor="exampleFormControlFile1">Upload a Profile Picture</label>
+          <input type="file" className="form-control-file" id="image" />
+        </div>
 
         <button type="submit" className="btn btn-primary">Create Account</button>
       </Form>
@@ -455,45 +457,51 @@ function MyProfile(props) {
         <Modal.Body>
           <p>Fill in the fields that you would like to update.</p>
           <form onSubmit={handleSubmit}>
-            <div className="form-group p-2">
-              <label>First Name</label>
-              <input type="text" className="form-control" name="fname" placeholder={props.user.fname} onChange={handleChange} />
+
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label>First Name</label>
+                <input type="text" className="form-control" name="fname" placeholder={props.user.fname} onChange={handleChange} />
+              </div>
+
+              <div className="form-group col-md-6">
+                <label>Last Name</label>
+                <input type="text" className="form-control" name="lname" placeholder={props.user.lname} onChange={handleChange} />
+              </div>              
             </div>
 
-            <div className="form-group p-2">
-              <label>Last Name</label>
-              <input type="text" className="form-control" name="lname" placeholder={props.user.lname} onChange={handleChange} />
-            </div>
 
-            <div className="form-group p-2">
+            <div className="form-group">
               <label>Email</label>
               <input type="email" className="form-control" name="email" placeholder={props.user.email} onChange={handleChange} />
             </div>
 
-            <div className="form-group p-2">
+            <div className="form-group">
               <label>Old Password</label>    
               <input type="password" className="form-control" name="old_password" placeholder="Old Password" onChange={handleChange} />
             </div>
+            
+            <div className="form-row">
+              <div className="form-group col-md-6"> 
+                <label>New Password</label>
+                <input type="password" className="form-control" name="new_password" placeholder="New Password" onChange={handleChange} />
+                <small id="passwordHelpInline" className="text-muted">
+                  Must be 8-20 characters long.
+                </small>
+              </div>
 
-            <div className="form-group p-2"> 
-              <label>New Password</label>
-              <input type="password" className="form-control" name="new_password" placeholder="New Password" onChange={handleChange} />
-              <small id="passwordHelpInline" className="text-muted">
-                Must be 8-20 characters long.
-              </small>
+              <div className="form-group col-md-6">
+                <label>Confirm New Password</label>
+                <input type="password" className="form-control" name="confirm" placeholder="Confirm Password" onChange={handleChange} />
+              </div>  
             </div>
-
-            <div className="form-group p-2">
-              <label>Confirm New Password</label>
-              <input type="password" className="form-control" name="confirm" placeholder="Confirm Password" onChange={handleChange} />
-            </div>  
               
-            <div className="form-group p-2">
+            <div className="form-group">
               <label>About Me</label>
               <textarea className="form-control"  name="about" placeholder={props.user.about} onChange={handleChange} ></textarea>
             </div>
 
-            <div className="form-group p-2">
+            <div className="form-group">
               <label>Upload a Profile Picture</label>
               <input type="file" className="form-control-file" name="image" onChange={handleChange} />
             </div>
@@ -518,9 +526,8 @@ function MyProfile(props) {
       </Modal>
       <Row className='mb-3'>
         <Col>
-          <h1>My Profile <span><Button onClick={handleShow}>Edit Profile</Button></span></h1>
+          <h2>My Profile <span><Button onClick={handleShow}>Edit Profile</Button></span></h2>
         </Col>
-        
       </Row>
       <Row>
         <Col>      
@@ -593,7 +600,7 @@ function Messages (props) {
   console.log("messages is", messages);
     return (
     <Container>
-      <h1>Messages</h1>
+      <h2>Messages</h2>
       <Row>
         <Col>
           {users.map(user => (
