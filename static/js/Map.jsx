@@ -1,4 +1,4 @@
-const GOOGLE_MAPS_API_KEY = '';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyCwT1G_fU-RCcwYZo1_emmrdSKbSk3EojA';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);
@@ -103,21 +103,22 @@ function MapComponent(props) {
         // add all the restaurant markers to the map
         const restaurantInfoContent = (`
         <div class="container">
+          <h5>${loc.name}</h5> 
+          <hr/>
           <div class="row">
             <div class="col">
               <img class="google-maps-img" src=${loc.image_url} />
             </div>
             <div class="col">
               <a href="/restaurant/${loc.id}">
-                <button class="btn btn-primary">
+                <button class="btn btn-primary btn-sm">
                   Visit Restaurant
                 </button>
               </a>
+              <p class="mt-3">${addr}</p>
             </div>
           </div>
-          <hr/>
-          <h3>${loc.name}</h3> 
-          <h5>${addr}</h5>
+          
         </div>        
         `);
 

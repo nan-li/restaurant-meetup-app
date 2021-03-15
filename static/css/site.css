@@ -86,8 +86,9 @@ hr {
 
 
 .google-maps-img {
-    width: 100px;
-    height: auto;
+    height: 100px;
+    width: auto;
+    margin-bottom: 1rem;
 }
 
 #map-div {
