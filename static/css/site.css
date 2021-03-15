@@ -1,7 +1,11 @@
 body {
     color: #434d15;
-} 
-
+    /* background-color: #fafafa; */
+    /* background-image: url("https://www.transparenttextures.com/patterns/arches.png"); */
+    /* background-image: url(/static/img/background4.png);
+    background-repeat: no-repeat;
+    background-size: 100% auto; */
+}
 
 body {
     font-family: 'Open Sans', sans-serif;

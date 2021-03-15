@@ -1,4 +1,4 @@
-const GOOGLE_MAPS_API_KEY = 'AIzaSyCwT1G_fU-RCcwYZo1_emmrdSKbSk3EojA';
+const GOOGLE_MAPS_API_KEY = '';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);

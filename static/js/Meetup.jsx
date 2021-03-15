@@ -268,7 +268,8 @@ function MeetupDetails(props) {
             
               <p className='mt-3'><strong>Event Date: </strong>{meetup.date}</p>
               <p><strong>Event Capacity: </strong>{meetup.capacity}</p>
-              <p><strong>Event Description: </strong>{meetup.description}</p>
+              <p><strong>Event Description: </strong></p>
+              <p>{meetup.description}</p>
             </Col>
           </Row>
         </Container>

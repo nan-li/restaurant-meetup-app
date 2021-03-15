@@ -101,7 +101,6 @@ function SiteNavbar(props) {
         </Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
           <Nav>
-            <Link className="navbar-brand" to="/">Home</Link>
             <Link className="navbar-brand mr-0" to="/restaurants">Restaurants</Link>
               <NavDropdown>
                 <NavDropdown.Item>
