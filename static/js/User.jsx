@@ -310,13 +310,13 @@ function UserProfile(props) {
           <Modal.Body className='bg-light pl-4 pt-4 pb-4 pr-4'>
             <ul className='list-unstyled'>
               {messages && messages.map(message => (
-                <MessageTile key={message.id} message={message} />
+                <MessageTile key={message.id} message={message} currentUser={props.user}/>
               ))}
             </ul>
             <form onSubmit={handleSubmit}>
 
               <div className="form-group p-2">
-                <label>Message</label>
+                <label>Write a Message</label>
                 <textarea className="form-control"  name="body" 
                   placeholder={`Hi ${user.username}`} onChange={handleChange} required>
                 </textarea>
@@ -672,6 +672,8 @@ function Messages (props) {
 }
 
 function MessageContainer(props) {
+  console.log('currentuser top', props.currentUser);
+
   const [formData, setFormData] = React.useState(initialMessageData);
 
   const handleChange = (evt) => {
@@ -700,7 +702,11 @@ function MessageContainer(props) {
     <Container className='bg-light pl-4 pt-4 pb-4 pr-4'>
       <ul className='list-unstyled'>
         {props.messages.map(message => (
-          <MessageTile key={message.id} message={message} />
+          <MessageTile 
+            key={message.id} 
+            message={message} 
+            currentUser={props.currentUser} 
+          />
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
@@ -720,16 +726,15 @@ function MessageContainer(props) {
 
 
 
-
-
 function MessageTile(props) {
+  console.log('currentuser', props.currentUser);
   return (
-    <li className='mb-2 pb-1 pt-1 media border bg-none border-light rounded'>
+    <li className='d-flex flex-nowrap pl-3 pr-3 mb-2 pb-2 pt-2 media border bg-none border-light rounded'>
       
-      <img  width={40} className='align-self-center ml-3'  
+      <img  width={40} className={`align-self-center ${props.message.sender.id === props.currentUser.id ? 'order-2' : 'order-1'}`}  
         src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.message.sender.image_url} />
   
-      <div className='media-body align-middle pt-1 pb-1'>
+      <div className={`media-body align-middle ${props.message.sender.id === props.currentUser.id ? 'order-1' : 'order-2'}`}>
         <h5>{props.message.sender.username}</h5>
         <p><strong>Sent on: </strong>{props.message.timestamp}</p>
         <p className='mb-0'>{props.message.body}</p>   
