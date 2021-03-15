@@ -9,19 +9,33 @@ function Restaurants(props) {
   const [coordinates, setCoordinates] = React.useState(null);
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);
 
+  const mapDimensions = {
+    height: 500,
+    width: 500
+  }
   return (
       <React.Fragment>
         <Switch>
           <Route exact path='/restaurants'>
             <Container>
               <Row>
-                  {!displaySearchResults && <Col>
-                    <MyFavoriteRestaurants user={props.user} 
+                {!displaySearchResults && 
+                  <Col>
+                    <MyFavoriteRestaurants 
+                      user={props.user} 
                       favoriteRestaurants={favoriteRestaurants}
-                      setFavoriteRestaurants={setFavoriteRestaurants} /> </Col>}
-                  {displaySearchResults && <Col>
-                    <MapContainer searchResults={searchResults}
-                      coordinates={coordinates} /> </Col>}
+                      setFavoriteRestaurants={setFavoriteRestaurants} />
+                  </Col>
+                }
+                {displaySearchResults && 
+                  <Col>
+                    <MapContainer 
+                      mapDimensions={mapDimensions}
+                      restaurants={searchResults}
+                      coordinates={coordinates} 
+                    /> 
+                  </Col>
+                }
                 <Col>
                   <RestaurantSearch 
                     setDisplaySearchResults={setDisplaySearchResults} 
@@ -29,18 +43,23 @@ function Restaurants(props) {
                     setCoordinates={setCoordinates} />
               
                   {displaySearchResults && 
-                    <RestaurantSearchResults user={props.user} restaurants={searchResults} />}
+                    <RestaurantSearchResults 
+                      user={props.user} 
+                      restaurants={searchResults} 
+                    />
+                  }
                 </Col>
               </Row>
-
             </Container>
-
 
           </Route>
           <Route exact path='/restaurants/favorites'>
-            <MyFavoriteRestaurants user={props.user} displayGrid
-                    favoriteRestaurants={favoriteRestaurants}
-                    setFavoriteRestaurants={setFavoriteRestaurants} />
+            <MyFavoriteRestaurants 
+              user={props.user}
+              displayGrid
+              favoriteRestaurants={favoriteRestaurants}
+              setFavoriteRestaurants={setFavoriteRestaurants} 
+            />
           </Route>
           <Route path='/restaurant/:restaurantID'>
             <RestaurantDetails user={props.user} 
@@ -98,7 +117,6 @@ function RestaurantSearch(props) {
         console.log("*******", JSON.parse(localStorage.getItem('searchResults')));
         // props.setDisplaySearchResults(true);
         }
-        
       },
       (error) => {
         setError(error);
@@ -129,22 +147,6 @@ function RestaurantSearch(props) {
     return (
       <div>
         <h2>Search</h2>
-
-        {/* <form onSubmit={handleSubmit}>
-          <input type="text" name="term" placeholder="sushi, salad, korean..."
-            required onChange={handleChange}/>
-          < hr />
-          <Row>
-            <Col>
-            <input type="text" name="location" placeholder="San Francisco" 
-              onChange={handleChange} required/>
-            <button type="submit">Search</button>
-            </Col>
-          </Row>
-          <p className='mt-1'> - or - </p>
-          <Button onClick={getLocation}>Use Current Location</Button>
-        </form> */}
-
         <form onSubmit={handleSubmit}>
           <div className='input-group mb-3'>
             <div className='input-group-prepend'>
@@ -159,11 +161,10 @@ function RestaurantSearch(props) {
             <div className="input-group-prepend">
               <span className="input-group-text">Near*</span>
             </div>
-              <input type="text" className='form-control' name="location" 
-                placeholder="San Francisco" 
-                onChange={handleChange} required
-              />
-
+            <input type="text" className='form-control' name="location" 
+              placeholder="San Francisco" 
+              onChange={handleChange} required
+            />
             <Button className="btn btn-secondary" onClick={getLocation}>
               <img
                 src="/static/img/locator-icon.svg"
@@ -175,8 +176,6 @@ function RestaurantSearch(props) {
           </div>
           <Button type="submit">Search</Button>
         </form>
-
-
       </div>
     );
 }
@@ -185,7 +184,6 @@ function RestaurantSearch(props) {
 function RestaurantSearchResults(props) {
   if (!props.restaurants) return <Spinner animation="border" variant="success" />;
     
-  
   return (
       <Container>
         <h1>Search Results</h1>
@@ -203,18 +201,25 @@ function RestaurantTile(props) {
   return (
     <Card className='bg-light' style={{ width: '20rem' }}>
       <Link to={`/restaurant/${props.restaurant.id}`}>
-          <Card.Img variant="top" src={props.restaurant.image_url}  />
-        </Link>
+        <Card.Img variant="top" src={props.restaurant.image_url}  />
+      </Link>
       
       <Card.Body>
-        <Card.Title>{props.restaurant.name}</Card.Title> 
+        <Card.Title>
+          {props.restaurant.name}
+        </Card.Title> 
         <Card.Text>
-          {props.isFavorite ? props.restaurant.address : props.restaurant.location.display_address}
+          {props.isFavorite ? 
+            props.restaurant.address : 
+            props.restaurant.location.display_address
+          }
         </Card.Text>
         <Card.Text>
-          {props.isFavorite ? props.restaurant.cuisine : props.restaurant.categories[0].title}
+          {props.isFavorite ? 
+            props.restaurant.cuisine :
+            props.restaurant.categories[0].title
+          }
         </Card.Text>
-
       </Card.Body>
     </Card> 
   )
@@ -222,7 +227,6 @@ function RestaurantTile(props) {
 
 
 function FavoriteUnfavoriteRestaurantButton(props) {
-
   let history = useHistory();
 
   const createUserRestaurantRelationship = () => {
@@ -495,10 +499,9 @@ function RestaurantDetails(props) {
   Shows favorite restaurants for a logged in user using user state
 */
 function MyFavoriteRestaurants(props) {  
-  
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState(null);
+  const [showMap, setShowMap] = React.useState(false);
 
-  console.log('faves', favoriteRestaurants);
   React.useEffect(() => {
     fetch(`/api/users/${props.user.id}/restaurants`)
       .then(res => res.json())
@@ -511,21 +514,51 @@ function MyFavoriteRestaurants(props) {
         }
       )
   }, [])
+  
+  const mapDimensions = {
+    height: 600,
+    width: 1000
+  }
+
+  const handleShowMap = () => {
+    setShowMap(!showMap);
+  }
+
   if (!favoriteRestaurants) return <Spinner animation="border" variant="success" />;
+  
   // display the restaurants in a grid
   if (props.displayGrid) {
     return (
       <React.Fragment>
-        {/* <h2 className='text-center mb-5'>Favorites</h2> */}
-        {favoriteRestaurants.length !== 0 ? 
-          <div className="d-flex flex-wrap justify-content-center">
-            {favoriteRestaurants.map(rest => (       
-              <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
-            ))}
-          </div> : <Alert variant='warning'>
+        {favoriteRestaurants.length === 0 &&
+          <Alert variant='warning'>
             <p>You have no favorite restaurants yet.</p>
             <p>Why not search for some new restaurants to visit?</p>
           </Alert>
+        }
+          <Button className='mb-3' onClick={handleShowMap}>
+            {showMap? <span>Hide Map</span> : <span>Show Map</span>}
+          </Button>
+
+        {showMap && favoriteRestaurants.length !== 0 &&
+          <MapContainer 
+            favorites 
+            restaurants={favoriteRestaurants} 
+            mapDimensions={mapDimensions}
+          />
+        }
+
+        {!showMap && favoriteRestaurants.length !== 0 && 
+          <div className="d-flex flex-wrap justify-content-center">
+            {favoriteRestaurants.map(rest => (       
+              <RestaurantTile 
+                isFavorite 
+                restaurant={rest} 
+                user={props.user} 
+                key={rest.id} 
+              />
+            ))}
+          </div> 
         }
       </React.Fragment>
     )
@@ -536,9 +569,14 @@ function MyFavoriteRestaurants(props) {
         {favoriteRestaurants.length !== 0 ? 
           <div className="list-group">
             {favoriteRestaurants.map(rest => (       
-              <RestaurantTile isFavorite restaurant={rest} user={props.user} key={rest.id} />
+              <RestaurantTile 
+                isFavorite 
+                restaurant={rest} 
+                user={props.user} 
+                key={rest.id} />
             ))}
-          </div> : <Alert variant='warning'>
+          </div> : 
+          <Alert variant='warning'>
             <p>You have no favorite restaurants yet.</p>
             <p>Why not search for some new restaurants to visit?</p>
           </Alert>
@@ -603,10 +641,11 @@ function RestaurantMeetups (props) {
               {meetups.future.map(meetup => (
                 <MeetupTile meetup={meetup} user={props.user} key={meetup.id} />
               ))}
-            </div> : <Alert variant='warning'>
+            </div> : 
+            <Alert variant='warning'>
               <p>No upcoming meetups.</p>
-              <p>Perhaps you'd like to host one here?</p></Alert>}
-          
+              <p>Perhaps you'd like to host one here?</p>
+            </Alert>}
         </Container>}
     </Container>
   )

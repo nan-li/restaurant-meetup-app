@@ -1,8 +1,7 @@
-const GOOGLE_MAPS_API_KEY = 'AIzaSyBgIQ62Dvh9U6AWJAKXFEvxX-hyGqCnxNc';
+const GOOGLE_MAPS_API_KEY = '';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);
-  const locs = props.searchResults;
   let center;
 
   // Center on user's location if they did a search by current location
@@ -24,34 +23,31 @@ function MapContainer(props) {
 
   }
 
-  const mapDimensions = {
-    height: 500,
-    width: 500
-  }
+
 
   return (
-    <MapComponent options={options} map={map} setMap={setMap} 
-      searchResults={props.searchResults} mapDimensions={mapDimensions}
+    <MapComponent options={options} map={map} setMap={setMap} favorites={props.favorites}
+      restaurants={props.restaurants} mapDimensions={props.mapDimensions}
       coordinates={props.coordinates} />
   );
 }
-  
-function goToRestaurant() {
-    // console.log(id);
-    let history = useHistory();
-    history.push(`/restaurant/VPXezwmTETrwitrzj9BZPA`);
-}
+
+
+// function goToRestaurant() {
+//     let history = useHistory();
+//     history.push(`/restaurant/VPXezwmTETrwitrzj9BZPA`);
+// }
 
 /* From Andrew */
 function MapComponent(props) {
   console.log('rendering the map')
   const options = props.options;
-  const locs = props.searchResults;
+  const locs = props.restaurants;
   const ref = React.useRef();
   const markers = [];
   let history = useHistory();
 
-  
+  console.log('1 locs: ', locs);
 
   React.useEffect(() => {
     const createMap = () => props.setMap(new window.google.maps.Map(ref.current, options));
@@ -97,9 +93,13 @@ function MapComponent(props) {
 
     
     for (const loc of locs) {
-      console.log("const is", loc);
+      console.log("const in map is", loc);
 
-      if (loc.coordinates.latitude && loc.coordinates.longitude) {
+      const latitude = (props.favorites) ? loc.lat : loc.coordinates.latitude;
+      const longitude = (props.favorites) ? loc.long : loc.coordinates.longitude;
+      const addr = (props.favorites) ? loc.address : loc.location.display_address;
+
+      if (latitude && longitude) {
         // add all the restaurant markers to the map
         const restaurantInfoContent = (`
         <div class="container">
@@ -109,7 +109,7 @@ function MapComponent(props) {
             </div>
             <div class="col">
               <a href="/restaurant/${loc.id}">
-                <button class="btn btn-primary" onClick="goToRestaurant()">
+                <button class="btn btn-primary">
                   Visit Restaurant
                 </button>
               </a>
@@ -117,13 +117,13 @@ function MapComponent(props) {
           </div>
           <hr/>
           <h3>${loc.name}</h3> 
-          <h5>${loc.location.display_address}</h5>
+          <h5>${addr}</h5>
         </div>        
         `);
 
         const restaurantMarker = new google.maps.Marker({
-          position: {lat: loc.coordinates.latitude,
-                      lng: loc.coordinates.longitude},
+          position: {lat: latitude,
+                      lng: longitude},
           title: loc.name,
           map: props.map 
         });
@@ -140,8 +140,8 @@ function MapComponent(props) {
         // fit the map to the markers
         if (!props.coordinates) {
           bounds.extend(new google.maps.LatLng(
-            loc.coordinates.latitude,
-            loc.coordinates.longitude
+            latitude,
+            longitude
           ));
         } 
       } // end outer if statement
@@ -163,7 +163,7 @@ function MapComponent(props) {
   return (
     <div id="map-div" className='position-fixed'
       style={{ height: props.mapDimensions.height, 
-        margin: `1em 0`, borderRadius: `0.5em`, 
+        borderRadius: `0.5em`, 
         width: props.mapDimensions.width}}
       ref={ref}
     ></div>

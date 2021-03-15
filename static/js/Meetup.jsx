@@ -325,11 +325,13 @@ function MyHostedMeetups(props) {
           {hostedMeetups.past.length != 0 ? 
             <div className="list-group">
               {hostedMeetups.past.map(meetup => (
-                <MeetupTile meetup={meetup} 
-                            past={true}
-                            dontDisplayHost={props.dontDisplayHost} 
-                            user={props.user} 
-                            key={meetup.id} />
+                <MeetupTile 
+                  meetup={meetup} 
+                  past={true}
+                  dontDisplayHost={props.dontDisplayHost} 
+                  user={props.user} 
+                  key={meetup.id}
+                />
               ))} 
             </div> : <Alert variant='warning'>No Meetups</Alert>}
         </div>}
@@ -340,8 +342,12 @@ function MyHostedMeetups(props) {
         {hostedMeetups.future.length != 0 ? 
         <div className="list-group">
           {hostedMeetups.future.map(meetup => (
-            <MeetupTile meetup={meetup} dontDisplayHost={props.dontDisplayHost} 
-              user={props.user} key={meetup.id} />
+            <MeetupTile 
+              meetup={meetup} 
+              dontDisplayHost={props.dontDisplayHost} 
+              user={props.user} 
+              key={meetup.id}
+            />
           ))} 
         </div> : <Alert variant='warning'>
           <p>No upcoming meetups.</p>

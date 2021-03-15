@@ -50,8 +50,6 @@ function Homepage(props) {
   );  
 }
 
-// Following this: 
-// https://linguinecode.com/post/how-to-get-form-data-on-submit-in-reactjs
 const initialLoginFormData = Object.freeze({
   username: "",
   password: ""
@@ -69,11 +67,8 @@ function LoginForm(props) {
   };
 
   const handleSubmit = (evt) => {
-    // handle the Login form submission
     evt.preventDefault();
-    // console.log("formData from <Login>", formData);
     
-    // Submit to API
     fetch('/api/users/login', {
       method: 'POST',
       body: JSON.stringify(formData),
@@ -84,7 +79,6 @@ function LoginForm(props) {
     .then(res => res.json())
     .then(
       (data) => {
-      // console.log('Success:', data)
       if (data.status != 'error') {
         props.setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user));
@@ -138,8 +132,9 @@ function SignupForm(props) {
     });
   };
 
+  //handle the Signup form submission
   const handleSubmit = (evt) => {
-    //handle the Signup form submission
+    
     evt.preventDefault();
     console.log("formData from <Signup>:", formData);
     
@@ -154,7 +149,7 @@ function SignupForm(props) {
     } else if (formData.password.length < 8 || formData.password.length > 20) {
       alert("Password must be 8-20 characters long.");
     } else {
-      // Submit to API
+      // Submit to backend
       fetch ('/api/users/signup', {
         method: 'POST',
         body: data
@@ -461,30 +456,60 @@ function MyProfile(props) {
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label>First Name</label>
-                <input type="text" className="form-control" name="fname" placeholder={props.user.fname} onChange={handleChange} />
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  name="fname" 
+                  placeholder={props.user.fname} 
+                  onChange={handleChange} 
+                />
               </div>
 
               <div className="form-group col-md-6">
                 <label>Last Name</label>
-                <input type="text" className="form-control" name="lname" placeholder={props.user.lname} onChange={handleChange} />
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  name="lname" 
+                  placeholder={props.user.lname} 
+                  onChange={handleChange} 
+                />
               </div>              
             </div>
 
 
             <div className="form-group">
               <label>Email</label>
-              <input type="email" className="form-control" name="email" placeholder={props.user.email} onChange={handleChange} />
+              <input 
+                type="email" 
+                className="form-control" 
+                name="email" 
+                placeholder={props.user.email} 
+                onChange={handleChange} 
+              />
             </div>
 
             <div className="form-group">
               <label>Old Password</label>    
-              <input type="password" className="form-control" name="old_password" placeholder="Old Password" onChange={handleChange} />
+              <input 
+                type="password" 
+                className="form-control" 
+                name="old_password" 
+                placeholder="Old Password" 
+                onChange={handleChange} 
+              />
             </div>
             
             <div className="form-row">
               <div className="form-group col-md-6"> 
                 <label>New Password</label>
-                <input type="password" className="form-control" name="new_password" placeholder="New Password" onChange={handleChange} />
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  name="new_password" 
+                  placeholder="New Password" 
+                  onChange={handleChange} 
+                />
                 <small id="passwordHelpInline" className="text-muted">
                   Must be 8-20 characters long.
                 </small>
@@ -492,13 +517,24 @@ function MyProfile(props) {
 
               <div className="form-group col-md-6">
                 <label>Confirm New Password</label>
-                <input type="password" className="form-control" name="confirm" placeholder="Confirm Password" onChange={handleChange} />
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  name="confirm" 
+                  placeholder="Confirm Password" 
+                  onChange={handleChange} 
+                />
               </div>  
             </div>
               
             <div className="form-group">
               <label>About Me</label>
-              <textarea className="form-control"  name="about" placeholder={props.user.about} onChange={handleChange} ></textarea>
+              <textarea 
+                className="form-control"  
+                name="about" 
+                placeholder={props.user.about} 
+                onChange={handleChange}>
+              </textarea>
             </div>
 
             <div className="form-group">
@@ -552,16 +588,24 @@ function UserTile(props) {
   return (
     <Card className='bg-light' style={{ width: '16rem' }}>
       <Link to={`/user/${props.user.id}`}>
-        <Card.Img variant="top" alt='Profile photo.' src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + props.user.image_url} />
+        <Card.Img 
+          variant="top" 
+          alt='Profile photo.' 
+          src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + props.user.image_url} 
+        />
       </Link>
       <Card.Body>
         <Card.Title>
           {props.user.username}
           {props.setSelectedUser && 
-            <Button variant='link' onClick={() => {
-              props.setSelectedUser(props.user);
-              window.scrollTo({top: 0, behavior: 'auto'});
-              }}><Img alt='A message icon.' width={50} src='/static/img/message-icon.png'/></Button>}
+            <Button variant='link' 
+              onClick={() => {
+                props.setSelectedUser(props.user);
+                window.scrollTo({top: 0, behavior: 'auto'});
+            }}>
+              <Img alt='A message icon.' width={50} src='/static/img/message-icon.png'/>
+            </Button>
+          }
           {props.currentUser && props.user.id === props.currentUser.id && 
           <span>  <em>(That's you!)</em></span>}
           {props.host && <div className='btn btn-default disabled'>HOST</div>}
@@ -604,16 +648,23 @@ function Messages (props) {
       <Row>
         <Col>
           {users.map(user => (
-            <UserTile user={user} key={user.id} setSelectedUser={setSelectedUser} />              
+            <UserTile 
+              user={user} 
+              key={user.id} 
+              setSelectedUser={setSelectedUser} 
+            />              
           ))}
         </Col>
         <Col>
 
           {selectedUser &&  
-            <MessageContainer user={selectedUser}
-                currentUser={props.user}
-                messages={messages[selectedUser.id]}
-                reload={reload} setReload={setReload} /> }
+            <MessageContainer 
+              user={selectedUser}
+              currentUser={props.user}
+              messages={messages[selectedUser.id]}
+              reload={reload} setReload={setReload} 
+            /> 
+          }
           {!selectedUser && messages &&
             <p>Select a user on the left to read messages.</p> }
           {!selectedUser && !messages &&
@@ -738,7 +789,9 @@ function NotificationTile (props) {
       </Toast.Header>
       <Toast.Body onClick={markNotificationAsRead}>
         <p>{props.notification.data.message}</p>
-        <Link to={props.notification.data.url} onClick={markNotificationAsRead}>
+        <Link 
+          to={props.notification.data.url} 
+          onClick={markNotificationAsRead}>
           {props.notification.data.link}
         </Link>
       </Toast.Body>

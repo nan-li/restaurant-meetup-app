@@ -90,10 +90,9 @@ hr {
     height: auto;
 }
 
-#map-container {
-    position: sticky;
-    top: 0;
-}
+#map-div {
+    z-index: 9
+} 
 
 .navbar, .bg-green {
     background-color: #eef1e1;

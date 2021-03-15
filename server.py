@@ -434,10 +434,10 @@ def get_restaurant_meetups(restaurant_id):
     }
 
     for meetup in future:
-        if session['user_id'] == meetup.host_id:
+        if session['user_id'] == meetup.host_id and meetup.status == 'ACTIVE':
             result['isHosting'] = 'true'
             break
-        if meetup in attending_future:
+        if meetup in attending_future and meetup.status == 'ACTIVE':
             result['isAttending'] = 'true'
     
     return jsonify(result)
