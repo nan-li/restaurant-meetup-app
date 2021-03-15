@@ -68,6 +68,9 @@ hr {
     margin-right: 2rem;
 }
 
+p {
+    white-space: pre-wrap;
+}
 
 .btn-link:focus,.btn-link:active {
     outline: none !important;
