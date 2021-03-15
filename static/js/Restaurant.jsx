@@ -248,15 +248,23 @@ function FavoriteUnfavoriteRestaurantButton(props) {
   }
   
   const deleteUserRestaurantRelationship = () => {
+
     console.log("isHosting?", props.isHostingMeetupHere);
     console.log("isAttending?", props.isAttendingMeetupHere);
 
     // check if user is attending or hosting meetups here
     if (props.isHostingMeetupHere) {
-      alert('You are hosting a meetup here. Cannot unfavorite this restaurant');
+
+      props.setUnfavoritedAlert({
+        'message': 'You are hosting a meetup here. Cannot unfavorite this restaurant.',
+        'variant': 'danger'
+      });
     }
     else if (props.isAttendingMeetupHere) {
-      alert('You are attending a meetup here. Cannot unfavorite this restaurant');
+      props.setUnfavoritedAlert({
+        'message': 'You are attending a meetup here. Cannot unfavorite this restaurant.',
+        'variant': 'danger'
+      });
     } else {
       // Make request to backend
       fetch(`/api/users/${props.user.id}/restaurants/${props.restaurantID}`, {
@@ -267,8 +275,8 @@ function FavoriteUnfavoriteRestaurantButton(props) {
       })
       .then(res => res.json())
       .then((data) => {
-        console.log(data);
-        props.setAlert(data.message);
+        console.log('data here', data);
+        props.setAppAlert(data.message);
         history.push('/restaurants');
       })
     }
@@ -312,6 +320,9 @@ function RestaurantDetails(props) {
 
   const [isHostingMeetupHere, setIsHostingMeetupHere] = React.useState(false);
   const [isAttendingMeetupHere, setIsAttendingMeetupHere] = React.useState(false);
+
+  const [unfavoritedAlert, setUnfavoritedAlert] = React.useState(null);
+
 
   console.log(formData);
 
@@ -400,6 +411,19 @@ function RestaurantDetails(props) {
   
   return (
     <Container>
+      {unfavoritedAlert && 
+        <Alert variant={unfavoritedAlert.variant}>
+          <p>{unfavoritedAlert.message}</p>
+          <div className="d-flex justify-content-end">
+            <Button onClick={() => setUnfavoritedAlert(null)} 
+              variant={`outline-${unfavoritedAlert.variant}`}
+            >
+              Close
+            </Button>
+          </div>
+        </Alert>
+      }
+
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Create a New Meetup</Modal.Title>
@@ -456,7 +480,8 @@ function RestaurantDetails(props) {
           {favorited && 
             <Button onClick={handleShow} className='mr-1'>Create a Meetup</Button>}
           <FavoriteUnfavoriteRestaurantButton 
-            setAlert={props.setAlert}
+            setAppAlert={props.setAlert}
+            setUnfavoritedAlert={setUnfavoritedAlert}
             favorited={favorited} setFavorited={setFavorited}
             restaurant={restaurant}
             restaurantID={restaurantID} user={props.user} 
