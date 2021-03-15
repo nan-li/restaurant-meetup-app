@@ -530,7 +530,7 @@ function MeetupComments(props) {
 function CommentTile(props) {
   return (
     
-      <li className='mb-2 media border bg-none border-light rounded'>
+      <li className='mb-2 pb-1 pt-1 media border bg-none border-light rounded'>
         <Link className='align-self-center ml-3' to={`/user/${props.comment.writer.id}`}>
           <img  width={40} 
             src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.comment.writer.image_url} />

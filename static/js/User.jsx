@@ -307,16 +307,12 @@ function UserProfile(props) {
             <Modal.Title>Compose Your Message</Modal.Title>
           </Modal.Header>
 
-          <Modal.Body>
-            {messages && messages.map(message => (
-              <Container key={message.id}>
-                <p>From: {message.sender.fname} To: {message.recipient.fname} </p>
-                <p>Sent on: {message.timestamp}</p>
-                <p>{message.body}</p>
-                <hr />
-              </Container>
-              
-            ))}
+          <Modal.Body className='bg-light pl-4 pt-4 pb-4 pr-4'>
+            <ul className='list-unstyled'>
+              {messages && messages.map(message => (
+                <MessageTile key={message.id} message={message} />
+              ))}
+            </ul>
             <form onSubmit={handleSubmit}>
 
               <div className="form-group p-2">
@@ -701,18 +697,13 @@ function MessageContainer(props) {
   }
 
   return (
-    <Container>
-      {props.messages.map(message => (
-        <Container key={message.id}>
-          <p><strong>From: </strong>{message.sender.fname}</p>
-          <p><strong>To: </strong>{message.recipient.fname}</p>
-          <p><strong>Sent on: </strong>{message.timestamp}</p>
-          <p>{message.body}</p>
-          <hr />
-        </Container>
-      ))}
+    <Container className='bg-light pl-4 pt-4 pb-4 pr-4'>
+      <ul className='list-unstyled'>
+        {props.messages.map(message => (
+          <MessageTile key={message.id} message={message} />
+        ))}
+      </ul>
       <form onSubmit={handleSubmit}>
-
         <div className="form-group p-2">
           <label>Write a Message</label>
           <textarea className="form-control"  name="body" 
@@ -725,6 +716,26 @@ function MessageContainer(props) {
       </form>
     </Container>
   )
+}
+
+
+
+
+
+function MessageTile(props) {
+  return (
+    <li className='mb-2 pb-1 pt-1 media border bg-none border-light rounded'>
+      
+      <img  width={40} className='align-self-center ml-3'  
+        src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.message.sender.image_url} />
+  
+      <div className='media-body align-middle pt-1 pb-1'>
+        <h5>{props.message.sender.username}</h5>
+        <p><strong>Sent on: </strong>{props.message.timestamp}</p>
+        <p className='mb-0'>{props.message.body}</p>   
+      </div>
+    </li>      
+);
 }
 
 function Notifications (props) {
