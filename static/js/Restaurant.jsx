@@ -28,7 +28,7 @@ function Restaurants(props) {
                   </Col>
                 }
                 {displaySearchResults && 
-                  <Col>
+                  <Col id='map-column'>
                     <MapContainer 
                       mapDimensions={mapDimensions}
                       restaurants={searchResults}
@@ -146,7 +146,7 @@ function RestaurantSearch(props) {
     }
     return (
       <div>
-        <h2>Search</h2>
+        <h2 id='search-heading' className='heading'>Search</h2>
         <form onSubmit={handleSubmit}>
           <div className='input-group mb-3'>
             <div className='input-group-prepend'>
@@ -407,7 +407,7 @@ function RestaurantDetails(props) {
 
 
  
-  if (restaurant.length === 0) return <div>Loading...</div>
+  if (restaurant.length === 0) return <Spinner animation="border" variant="success" />;
   
   return (
     <Container>
@@ -542,7 +542,7 @@ function MyFavoriteRestaurants(props) {
   
   const mapDimensions = {
     height: 600,
-    width: 1000
+    width: 1375
   }
 
   const handleShowMap = () => {
@@ -555,15 +555,25 @@ function MyFavoriteRestaurants(props) {
   if (props.displayGrid) {
     return (
       <React.Fragment>
+        <div id='grid-favorites-heading' className='heading'>
+          <div className='d-flex'>
+            <h2 className='mr-3'>Favorites</h2>  
+            <Button className='mb-3' onClick={handleShowMap}>
+              {showMap? <span>Hide Map</span> : <span>Show Map</span>}
+            </Button>          
+          </div>          
+        </div>
+
+
+
+
         {favoriteRestaurants.length === 0 &&
           <Alert variant='warning'>
             <p>You have no favorite restaurants yet.</p>
             <p>Why not search for some new restaurants to visit?</p>
           </Alert>
         }
-          <Button className='mb-3' onClick={handleShowMap}>
-            {showMap? <span>Hide Map</span> : <span>Show Map</span>}
-          </Button>
+
 
         {showMap && favoriteRestaurants.length !== 0 &&
           <MapContainer 
@@ -590,7 +600,7 @@ function MyFavoriteRestaurants(props) {
   } else {
     return (
       <Container>
-        <h2>Favorites</h2>
+        <h2 id='favorites-heading' className='heading'>Favorites</h2>
         {favoriteRestaurants.length !== 0 ? 
           <div className="list-group">
             {favoriteRestaurants.map(rest => (       

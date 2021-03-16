@@ -1,7 +1,4 @@
-
-
 function MeetupTile(props) {
-
   return (
     <Card className='bg-light' style={{ width: '24rem' }}>
       <Link to={`/meetup/${props.meetup.id}`}>
@@ -15,7 +12,7 @@ function MeetupTile(props) {
         {!props.dontDisplayHost &&
           <Card.Text><strong>Hosted by: </strong>{props.meetup.host.id === props.user.id ? 
             "You!" : props.meetup.host.username}</Card.Text>
-          }
+        }
         {props.past &&
           <hr /> && 
           <Alert className='alert-past' variant='warning'>Past Event</Alert> }
@@ -27,6 +24,8 @@ function MeetupTile(props) {
   )
 }
 
+/* Click this button to join a meetup.
+If you are already joined, click this button to unjoin. */
 function JoinUnjoinMeetupButton(props) {
   const createUserMeetupRelationship = () => {
     // POST to server
@@ -66,7 +65,6 @@ function JoinUnjoinMeetupButton(props) {
 
   return (
     <React.Fragment>
-      
       {!props.attending && (props.meetup.attendees_count < props.meetup.capacity) &&  
         <Button variant='warning' className='mb-3' onClick={createUserMeetupRelationship}>
           Join Meetup</Button>}
@@ -89,7 +87,9 @@ function EditMeetupButton(props) {
   const [show, setShow] = React.useState(false);
   const [formData, setFormData] = React.useState(initialMeetupData);
   console.log('meetup form data', formData);
+
   const handleClose = () => setShow(false);
+
   const handleShow = () => {
     setFormData(initialMeetupData);
     setShow(true);
@@ -220,10 +220,11 @@ function MeetupDetails(props) {
       )
   }, [reload])
 
+
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (meetup.length === 0) {
-    return <div>Loading...</div>;
+    return <Spinner animation="border" variant="success" />;
   } else {
     return (
       <React.Fragment>
@@ -306,11 +307,11 @@ function MyHostedMeetups(props) {
         }
       )
   }, [])
-  if (hostedMeetups.length === 0) return <p>Loading...</p>;
+  if (hostedMeetups.length === 0) return <Spinner animation="border" variant="success" />;
 
   return (
     <Container>
-      <h2 className='mb-3'>Meetups I'm Hosting</h2>
+      <h2 className='heading'>Meetups I'm Hosting</h2>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
                                 setShowUpcoming(false);}}>Show Past</Button>
@@ -374,11 +375,11 @@ function MyAttendingMeetups(props) {
       )
   }, [])
 
-  if (meetups.length === 0) return <p>Loading...</p>;
+  if (meetups.length === 0) return <Spinner animation="border" variant="success" />;
 
   return (
     <Container>
-      <h2>Meetups I'm Attending</h2>
+      <h2 className='heading'>Meetups I'm Attending</h2>
       <ButtonGroup className='mb-3' aria-label="Show Meetups">
         <Button onClick={() => {setShowPast(true);
                                 setShowUpcoming(false);}}>Show Past</Button>
@@ -401,7 +402,7 @@ function MyAttendingMeetups(props) {
 
         {showUpcoming &&
         <div>
-          <h3 className='mb-3'>Upcoming Meetups</h3>
+          <h3>Upcoming Meetups</h3>
           {meetups.future.length != 0 ? 
             <div className="list-group">
               {meetups.future.map(meetup => (

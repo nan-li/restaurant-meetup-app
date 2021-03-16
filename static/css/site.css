@@ -15,6 +15,16 @@ h1, h2, h3, h4, h5, h6, strong, .card-title {
     font-family: 'Arvo', serif;    
 }
 
+.heading::after {
+    content: "";
+    display: block;
+    background-color: #eef1e1;
+    width: 24rem;
+    height: 6px;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
 #root {
     min-height: 100%;
 }
@@ -133,3 +143,24 @@ p {
 
 /* .bg-light{background-color:#fefff8!important}
 a.bg-light:focus,a.bg-light:hover,button.bg-light:focus,button.bg-light:hover{background-color:#cfd9db!important} */
+
+#grid-favorites-heading::after {
+    width: 86rem;
+    margin-top: 0;
+}
+
+#favorites-heading::after {
+    width: 20rem;
+}
+
+#search-heading::after {
+    width: 40rem;
+}
+
+#messages-heading::after {
+    width: 16rem;
+}
+
+#notifications-heading::after {
+    width: 22rem;
+}

@@ -21,13 +21,13 @@ function Homepage(props) {
         }
       )
   }, [])
-  if (hostedMeetups.length === 0 || meetups.length === 0) return <p>Loading...</p>;
+  if (hostedMeetups.length === 0 || meetups.length === 0) return <Spinner animation="border" variant="success" />;
 
   return (
     <Container>
       <Row>
         <Col>
-          <h3>Your Next Hosted Meetup</h3>
+          <h3 className='heading'>Your Next Hosted Meetup</h3>
           {hostedMeetups.future.length != 0 ? 
             <MeetupTile meetup={hostedMeetups.future[0]} dontDisplayHost={props.dontDisplayHost} 
               user={props.user} key={hostedMeetups.future[0].id} /> : 
@@ -37,7 +37,7 @@ function Homepage(props) {
               </Alert>}        
         </Col>
         <Col>
-          <h3>Next Attending Meetup</h3>
+          <h3 className='heading'>Your Next Attending Meetup</h3>
           {meetups.future.length != 0 ? 
             <MeetupTile meetup={meetups.future[0]} user={props.user} key={meetups.future[0].id} /> : 
               <Alert variant='warning'>
@@ -298,7 +298,7 @@ function UserProfile(props) {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (user.length === 0) {
-    return <div>Loading...</div>;
+    return <Spinner animation="border" variant="success" />;
   } else {
     return (
       <Container fluid>
@@ -558,7 +558,9 @@ function MyProfile(props) {
       </Modal>
       <Row className='mb-3'>
         <Col>
-          <h2>My Profile <span><Button onClick={handleShow}>Edit Profile</Button></span></h2>
+          <h2 className='heading'>
+            My Profile <span><Button onClick={handleShow}>Edit Profile</Button></span>
+          </h2>
         </Col>
       </Row>
       <Row>
@@ -640,7 +642,7 @@ function Messages (props) {
   console.log("messages is", messages);
     return (
     <Container>
-      <h2>Messages</h2>
+      <h2 id='messages-heading' className='heading'>Messages</h2>
       <Row>
         <Col>
           {users.map(user => (
@@ -757,13 +759,18 @@ function Notifications (props) {
     })
   }, [])
   console.log(notifications);
-  if (notifications.length === 0) return <p>You have no notifications</p>
   return (
     <Container>
-      {notifications.reverse().map(notification => (
-        <NotificationTile key={notification.id} 
-          notification={notification} />
-      ))}
+      <h2 id='notifications-heading' className='heading'>Notifications</h2>
+      {notifications.length === 0 ? 
+        <p className='text-center'>You have no notifications</p> : 
+        <React.Fragment>
+          {notifications.reverse().map(notification => (
+            <NotificationTile key={notification.id} 
+              notification={notification} />
+          ))}             
+        </React.Fragment>
+      }
     </Container>
   )
 }
