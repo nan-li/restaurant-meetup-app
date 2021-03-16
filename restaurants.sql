@@ -312,6 +312,12 @@ COPY public.comments (id, user_id, meetup_id, "timestamp", text) FROM stdin;
 1	8	2	2021-03-15 19:59:17.528134	Can't wait for this fancy dinner ❤️
 2	11	5	2021-03-15 20:26:52.100855	Hi everyone! Can't wait!
 3	11	5	2021-03-15 20:26:56.067372	So yummy!
+4	4	2	2021-03-16 05:45:53.389996	Will there be french fries and chicken nuggets here? Otherwise I dont want it!!!
+5	10	2	2021-03-16 05:49:04.722052	Navigating city living as a bear is hard! I can't wait to have a fancy dinner!
+6	9	5	2021-03-16 06:46:21.399208	So excited!
+7	11	2	2021-03-16 06:46:47.871555	I am a fancy pig!
+8	2	9	2021-03-16 07:00:11.78296	Yay a regular and not fancy dinner!
+9	4	9	2021-03-16 07:00:40.993939	I ONLY want FRENCH FRIES and CHICKEN NUGGETS!
 \.
 
 
@@ -418,6 +424,7 @@ COPY public.favorites (user_id, restaurant_id) FROM stdin;
 8	WavvLdfdP6g8aZTtbBQHTw
 11	WavvLdfdP6g8aZTtbBQHTw
 11	aJoqJUdYQ23Pe2jFUEJytw
+7	n6L5VIGunR51-D55C-eYeQ
 \.
 
 
@@ -428,11 +435,12 @@ COPY public.favorites (user_id, restaurant_id) FROM stdin;
 COPY public.meetups (id, name, date, capacity, attendees_count, description, image_url, status, restaurant_id, host_id) FROM stdin;
 3	Yummy Dessert	2022-02-05 14:00:00	10	0	Let's get ice cream ice cream ice cream.	/v1615838621/u5i7lbjwjqaut1ql7ioz.jpg	ACTIVE	wGl_DyNxSv8KUtYgiuLhmA	11
 4	Chill Dinner	2021-02-10 19:00:00	5	0	How about some weekday Thai Food?\nThere's outdoor dining here.	/v1615838719/jq6icfnziiq5rljwbf6n.jpg	ACTIVE	8kck3-K4zYKTJbJko0JlXQ	11
-2	Fancy Dinner	2022-01-08 17:00:00	5	0	Let's have a FaNcY dInNeR at Gary Danko...\nVery fancy one indeed!	/v1615839366/fancy_qg7fw1.jpg	ACTIVE	WavvLdfdP6g8aZTtbBQHTw	11
 6	Happy Hour	2021-01-06 17:00:00	5	0	This is a buzzy, casual eatery for Hawaiian, Indian & Chinese dishes in a brick-walled space with booths.	/v1615839750/fftug015wkcafrxmzkl6.jpg	ACTIVE	KkAVX3Wb7E3lP5F_f_8pXg	4
 7	Vegan Japanese	2021-03-12 18:30:00	6	0	Let's try vegan Japanese food and sushi.\nI've never had that before!	/v1615840055/salb82md8udwham5j1dt.jpg	ACTIVE	CYttYTEiQuhSfo3SEh79fA	11
 8	Afternoon Cakes!	2021-04-10 14:00:00	5	1	I usually need a cake break from work around 2pm. Let's get cake!	/v1615841049/iay3favk9o6mgmb3xhgn.jpg	ACTIVE	DyXoC_NhJW0Xx5j_OPQRHQ	10
-5	Brunch Time	2022-02-12 12:00:00	6	3	Brunch and Mimosas	/v1615839068/vqkf9wdlb8j6gruxaoyn.jpg	ACTIVE	n6L5VIGunR51-D55C-eYeQ	4
+2	Fancy Dinner	2022-01-08 17:00:00	5	0	Let's have a FaNcY dInNeR at Gary Danko...\nVery fancy one indeed!	/v1615839366/fancy_qg7fw1.jpg	ACTIVE	WavvLdfdP6g8aZTtbBQHTw	11
+5	Brunch Time	2022-02-12 12:00:00	6	6	Brunch and Mimosas	/v1615839068/vqkf9wdlb8j6gruxaoyn.jpg	ACTIVE	n6L5VIGunR51-D55C-eYeQ	4
+9	Regular Dinner	2021-03-30 18:00:00	5	2	Some regular dinner please.	/v1615918032/burger_ugx9xf.jpg	CANCELLED	WavvLdfdP6g8aZTtbBQHTw	10
 \.
 
 
@@ -498,6 +506,48 @@ COPY public.notifications (id, name, user_id, "timestamp", payload_json, status)
 41	meetup_changed	5	2021-03-16 03:59:52.66489	{"message": "Your meetup at Foreign Cinema has been changed.", "link": "Go to meetup.", "url": "/meetup/5"}	UNREAD
 42	meetup_changed	2	2021-03-16 03:59:52.683228	{"message": "Your meetup at Foreign Cinema has been changed.", "link": "Go to meetup.", "url": "/meetup/5"}	UNREAD
 39	new_meetup	11	2021-03-15 20:42:21.224523	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/8"}	READ
+43	meetup_cancelled	10	2021-03-16 05:44:06.898048	{"message": "Your meetup at Gary Danko has been cancelled.", "link": "Go to meetup.", "url": "/meetup/2"}	UNREAD
+44	meetup_cancelled	8	2021-03-16 05:44:06.927581	{"message": "Your meetup at Gary Danko has been cancelled.", "link": "Go to meetup.", "url": "/meetup/2"}	UNREAD
+45	meetup_cancelled	4	2021-03-16 05:44:06.947906	{"message": "Your meetup at Gary Danko has been cancelled.", "link": "Go to meetup.", "url": "/meetup/2"}	UNREAD
+46	new_meetup	2	2021-03-16 05:53:22.200141	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/9"}	UNREAD
+47	new_meetup	4	2021-03-16 05:53:22.217127	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/9"}	UNREAD
+48	new_meetup	8	2021-03-16 05:53:22.232996	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/9"}	UNREAD
+49	new_meetup	11	2021-03-16 05:53:22.250478	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/9"}	UNREAD
+50	new_meetup	2	2021-03-16 06:03:30.572633	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/10"}	UNREAD
+51	new_meetup	4	2021-03-16 06:03:30.593612	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/10"}	UNREAD
+52	new_meetup	8	2021-03-16 06:03:30.605365	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/10"}	UNREAD
+53	new_meetup	11	2021-03-16 06:03:30.619144	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/10"}	UNREAD
+54	new_meetup	2	2021-03-16 06:04:18.776275	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/11"}	UNREAD
+55	new_meetup	4	2021-03-16 06:04:18.790666	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/11"}	UNREAD
+56	new_meetup	8	2021-03-16 06:04:18.804545	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/11"}	UNREAD
+58	new_meetup	5	2021-03-16 06:04:43.222018	{"message": "There is a new event at Zazie.", "link": "Go to meetup.", "url": "/meetup/12"}	UNREAD
+60	new_meetup	11	2021-03-16 06:04:43.264089	{"message": "There is a new event at Zazie.", "link": "Go to meetup.", "url": "/meetup/12"}	UNREAD
+62	new_meetup	7	2021-03-16 06:08:04.449371	{"message": "There is a new event at Sotto Mare Oysteria & Seafood.", "link": "Go to meetup.", "url": "/meetup/14"}	UNREAD
+57	new_meetup	11	2021-03-16 06:04:18.817489	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/11"}	UNREAD
+59	new_meetup	8	2021-03-16 06:04:43.242523	{"message": "There is a new event at Zazie.", "link": "Go to meetup.", "url": "/meetup/12"}	UNREAD
+61	new_meetup	11	2021-03-16 06:05:18.893429	{"message": "There is a new event at Saigon Sandwich.", "link": "Go to meetup.", "url": "/meetup/13"}	UNREAD
+63	new_meetup	11	2021-03-16 06:08:04.463158	{"message": "There is a new event at Sotto Mare Oysteria & Seafood.", "link": "Go to meetup.", "url": "/meetup/14"}	UNREAD
+64	new_meetup	11	2021-03-16 06:09:24.313116	{"message": "There is a new event at Saigon Sandwich.", "link": "Go to meetup.", "url": "/meetup/15"}	UNREAD
+65	new_meetup	11	2021-03-16 06:10:14.35473	{"message": "There is a new event at Saigon Sandwich.", "link": "Go to meetup.", "url": "/meetup/16"}	UNREAD
+66	new_meetup	11	2021-03-16 06:11:22.891184	{"message": "There is a new event at Saigon Sandwich.", "link": "Go to meetup.", "url": "/meetup/17"}	UNREAD
+67	new_meetup	7	2021-03-16 06:11:46.200921	{"message": "There is a new event at Sotto Mare Oysteria & Seafood.", "link": "Go to meetup.", "url": "/meetup/18"}	UNREAD
+68	new_meetup	11	2021-03-16 06:11:46.216908	{"message": "There is a new event at Sotto Mare Oysteria & Seafood.", "link": "Go to meetup.", "url": "/meetup/18"}	UNREAD
+69	new_meetup	2	2021-03-16 06:12:14.977294	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/19"}	UNREAD
+70	new_meetup	4	2021-03-16 06:12:14.990363	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/19"}	UNREAD
+71	new_meetup	8	2021-03-16 06:12:15.002517	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/19"}	UNREAD
+72	new_meetup	11	2021-03-16 06:12:15.014333	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/19"}	UNREAD
+73	new_meetup	2	2021-03-16 06:13:23.901255	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/20"}	UNREAD
+74	new_meetup	4	2021-03-16 06:13:23.920902	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/20"}	UNREAD
+75	new_meetup	8	2021-03-16 06:13:23.934804	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/20"}	UNREAD
+76	new_meetup	11	2021-03-16 06:13:23.949115	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/20"}	UNREAD
+77	new_meetup	7	2021-03-16 06:13:49.109427	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/21"}	UNREAD
+78	new_meetup	11	2021-03-16 06:13:49.121232	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/21"}	UNREAD
+79	new_meetup	11	2021-03-16 06:19:57.544981	{"message": "There is a new event at Saigon Sandwich.", "link": "Go to meetup.", "url": "/meetup/22"}	UNREAD
+80	new_meetup	7	2021-03-16 06:20:17.631766	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/23"}	UNREAD
+81	new_meetup	11	2021-03-16 06:20:17.648131	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/23"}	UNREAD
+82	new_meetup	11	2021-03-16 06:26:17.252587	{"message": "There is a new event at Saigon Sandwich.", "link": "Go to meetup.", "url": "/meetup/24"}	UNREAD
+83	meetup_cancelled	2	2021-03-16 07:06:55.565932	{"message": "Your meetup at Gary Danko has been cancelled.", "link": "Go to meetup.", "url": "/meetup/9"}	UNREAD
+84	meetup_cancelled	4	2021-03-16 07:06:55.584807	{"message": "Your meetup at Gary Danko has been cancelled.", "link": "Go to meetup.", "url": "/meetup/9"}	UNREAD
 \.
 
 
@@ -572,6 +622,11 @@ COPY public.user_meetups (user_id, meetup_id) FROM stdin;
 2	5
 11	6
 11	8
+7	5
+3	5
+9	5
+2	9
+4	9
 \.
 
 
@@ -598,14 +653,14 @@ COPY public.users (id, username, fname, lname, email, password_hash, image_url, 
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vagrant
 --
 
-SELECT pg_catalog.setval('public.comments_id_seq', 3, true);
+SELECT pg_catalog.setval('public.comments_id_seq', 9, true);
 
 
 --
 -- Name: meetups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vagrant
 --
 
-SELECT pg_catalog.setval('public.meetups_id_seq', 8, true);
+SELECT pg_catalog.setval('public.meetups_id_seq', 24, true);
 
 
 --
@@ -619,7 +674,7 @@ SELECT pg_catalog.setval('public.messages_id_seq', 15, true);
 -- Name: notifications_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vagrant
 --
 
-SELECT pg_catalog.setval('public.notifications_id_seq', 42, true);
+SELECT pg_catalog.setval('public.notifications_id_seq', 84, true);
 
 
 --

@@ -1,6 +1,6 @@
 """Test queries"""
 
-from model import db, User, Meetup, Restaurant, Message, Notification, favorites, user_meetups
+from model import db, User, Meetup, Restaurant, Message, Notification, Comment, favorites, user_meetups
 import crud
 
 def show_all():

@@ -147,7 +147,7 @@ function RestaurantSearch(props) {
     return (
       <div>
         <h2 id='search-heading' className='heading'>Search</h2>
-        <form onSubmit={handleSubmit} autocomplete="off">
+        <form onSubmit={handleSubmit} autoComplete="off">
           <div className='input-group mb-3'>
             <div className='input-group-prepend'>
               <span className='input-group-text'>Find</span>
@@ -309,6 +309,7 @@ const initialMeetupData = Object.freeze({
 });
 
 function RestaurantDetails(props) {
+  console.log('trying to render rest details');
   const [favorited, setFavorited] = React.useState(false);
   const [fromYelp, setFromYelp] = React.useState(false);
   console.log("favorited?", favorited);
@@ -429,7 +430,7 @@ function RestaurantDetails(props) {
           <Modal.Title>Create a New Meetup</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleSubmit} autocomplete="off">
+          <form onSubmit={handleSubmit} autoComplete="off">
             <div className="form-group p-2">
               <label>Event Name</label>
               <input type="text" className="form-control" name="name" 
@@ -507,7 +508,7 @@ function RestaurantDetails(props) {
         <Col>
           {favorited && 
             <RestaurantMeetups user={props.user} restaurantID={restaurantID} 
-              show={show} setIsAttendingMeetupHere={setIsAttendingMeetupHere}
+              setIsAttendingMeetupHere={setIsAttendingMeetupHere}
               setIsHostingMeetupHere={setIsHostingMeetupHere} />}
         </Col>
       </Row>
@@ -622,6 +623,7 @@ function MyFavoriteRestaurants(props) {
 }
 
 function RestaurantMeetups (props) {
+  // console.log('rendering rest meetups');
   const [meetups, setMeetups] = React.useState(null);
   const [showPast, setShowPast] = React.useState(false);
   const [showUpcoming, setShowUpcoming] = React.useState(true);
@@ -641,7 +643,7 @@ function RestaurantMeetups (props) {
           }
         }
       })
-  }, [props.show])
+  }, [])
 
   if (!meetups) return null;
 

@@ -151,7 +151,7 @@ function EditMeetupButton(props) {
         </Modal.Header>
         <Modal.Body>
           <p>Fill in the details that you would like to update.</p>
-          <form onSubmit={editMeetup} autocomplete="off">
+          <form onSubmit={editMeetup} autoComplete="off">
             <div className="form-group p-2">
               <label>Event Name</label>
               <input type="text" className="form-control" name="name" 
@@ -196,7 +196,7 @@ function EditMeetupButton(props) {
 
 function MeetupDetails(props) {
   const [error, setError] = React.useState(null);
-  const [meetup, setMeetup] = React.useState([]);
+  const [meetup, setMeetup] = React.useState(null);
   const [attending, setAttending] = React.useState(false);
   const [hosting, setHosting] = React.useState(false);
   const [reload, setReload] = React.useState(false);
@@ -223,10 +223,11 @@ function MeetupDetails(props) {
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (meetup.length === 0) {
+  } else if (!meetup) {
     return <Spinner animation="border" variant="success" />;
   } else {
     return (
+      
       <React.Fragment>
         <Container>
           {(meetup.status == 'CANCELLED') && 
@@ -511,7 +512,7 @@ function MeetupComments(props) {
           ))}              
         </ul>        
 
-        <form onSubmit={handleSubmit} autocomplete="off">
+        <form onSubmit={handleSubmit} autoComplete="off">
           <fieldset disabled={props.disabled}>
             <div className="form-group p-2">
               <textarea className="form-control"  name="text" id="comment-area"
