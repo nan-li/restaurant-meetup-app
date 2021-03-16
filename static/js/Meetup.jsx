@@ -238,7 +238,7 @@ function MeetupDetails(props) {
           {(meetup.status == 'ACTIVE') && (meetup.attendees_count === meetup.capacity) && 
             <Alert variant='warning'>This event is full.</Alert>}
           <Row className='mb-2'>
-            <h1>{meetup.name} at {meetup.restaurant.name}</h1>
+            <h2 id='meetup-heading' className='heading'>{meetup.name} at {meetup.restaurant.name}</h2>
           </Row>
           <Row>
             <Col>

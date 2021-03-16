@@ -157,3 +157,7 @@ a.bg-light:focus,a.bg-light:hover,button.bg-light:focus,button.bg-light:hover{ba
 #notifications-heading::after {
     width: 22rem;
 }
+
+#meetup-heading::after {
+    width: 28rem;
+}
