@@ -20,10 +20,7 @@ function MapContainer(props) {
   const options = {
     center: center,
     zoom: 12,
-
   }
-
-
 
   return (
     <MapComponent options={options} map={map} setMap={setMap} favorites={props.favorites}
