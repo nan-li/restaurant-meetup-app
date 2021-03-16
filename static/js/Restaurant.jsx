@@ -10,17 +10,17 @@ function Restaurants(props) {
   const [favoriteRestaurants, setFavoriteRestaurants] = React.useState([]);
 
   const mapDimensions = {
-    height: 500,
-    width: 500
+    height: 700,
+    width: 600
   }
   return (
       <React.Fragment>
         <Switch>
           <Route exact path='/restaurants'>
-            <Container>
+            {/* <Container> */}
               <Row>
                 {!displaySearchResults && 
-                  <Col>
+                  <Col className='ml-5'>
                     <MyFavoriteRestaurants 
                       user={props.user} 
                       favoriteRestaurants={favoriteRestaurants}
@@ -28,7 +28,7 @@ function Restaurants(props) {
                   </Col>
                 }
                 {displaySearchResults && 
-                  <Col id='map-column'>
+                  <Col className='ml-5'>
                     <MapContainer 
                       mapDimensions={mapDimensions}
                       restaurants={searchResults}
@@ -36,7 +36,7 @@ function Restaurants(props) {
                     /> 
                   </Col>
                 }
-                <Col>
+                <Col className='mr-5'>
                   <RestaurantSearch 
                     setDisplaySearchResults={setDisplaySearchResults} 
                     setSearchResults={setSearchResults} 
@@ -50,7 +50,7 @@ function Restaurants(props) {
                   }
                 </Col>
               </Row>
-            </Container>
+            {/* </Container> */}
 
           </Route>
           <Route exact path='/restaurants/favorites'>
@@ -186,7 +186,7 @@ function RestaurantSearchResults(props) {
     
   return (
       <Container>
-        <h1>Search Results</h1>
+        <h1 className='mt-2'>Search Results</h1>
         <div className="list-group">
           {props.restaurants.map(rest => (        
               <RestaurantTile restaurant={rest} user={props.user} key={rest.id}/>     

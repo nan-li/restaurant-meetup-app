@@ -1,16 +1,11 @@
 body {
     color: #434d15;
-    /* background-color: #fafafa; */
-    /* background-image: url("https://www.transparenttextures.com/patterns/arches.png"); */
-    /* background-image: url(/static/img/background4.png);
-    background-repeat: no-repeat;
-    background-size: 100% auto; */
 }
 
 body {
     font-family: 'Open Sans', sans-serif;
-
 }
+
 h1, h2, h3, h4, h5, h6, strong, .card-title {
     font-family: 'Arvo', serif;    
 }
@@ -25,12 +20,10 @@ h1, h2, h3, h4, h5, h6, strong, .card-title {
     margin-top: 1rem;
 }
 
-#root {
-    min-height: 100%;
-}
 a {
     color: #91091e;
 }
+
 #header-img {
     margin-top: 100px;
 }
@@ -109,7 +102,7 @@ p {
 }
 
 #map-div {
-    z-index: 9
+    z-index: 9;
 } 
 
 .navbar, .bg-green {
