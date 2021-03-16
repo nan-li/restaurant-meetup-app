@@ -417,6 +417,7 @@ COPY public.favorites (user_id, restaurant_id) FROM stdin;
 10	WavvLdfdP6g8aZTtbBQHTw
 8	WavvLdfdP6g8aZTtbBQHTw
 11	WavvLdfdP6g8aZTtbBQHTw
+11	aJoqJUdYQ23Pe2jFUEJytw
 \.
 
 
@@ -440,7 +441,6 @@ COPY public.meetups (id, name, date, capacity, attendees_count, description, ima
 --
 
 COPY public.messages (id, sender_id, recipient_id, body, "timestamp") FROM stdin;
-1	11	4	Hi Ice Bear!	2021-03-15 20:27:22.080345
 2	4	11	Hi peppa pig, you are tall!	2021-03-15 20:27:40.784301
 3	4	8	Hello you live with me.	2021-03-15 20:27:58.55181
 4	4	10	Hi Grizz my brother.	2021-03-15 20:28:09.762903
@@ -455,6 +455,7 @@ COPY public.messages (id, sender_id, recipient_id, body, "timestamp") FROM stdin
 12	11	2	You are pretty cat, but also chubby cat too.	2021-03-15 20:31:36.951115
 14	11	5	I really like cute cats!	2021-03-15 20:35:26.836348
 15	11	4	Thank you, I am only 4 years old!	2021-03-15 20:35:46.052126
+1	11	4	Hi Dora Winifred Read!	2021-03-15 20:27:22.080345
 \.
 
 
@@ -491,12 +492,12 @@ COPY public.notifications (id, name, user_id, "timestamp", payload_json, status)
 34	new_message	2	2021-03-15 20:31:36.986766	{"message": "You have a new message from peppa.", "link": "Go to messages.", "url": "/messages"}	UNREAD
 36	new_message	5	2021-03-15 20:35:26.866811	{"message": "You have a new message from peppa.", "link": "Go to messages.", "url": "/messages"}	UNREAD
 38	new_meetup	7	2021-03-15 20:42:21.209714	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/8"}	UNREAD
-39	new_meetup	11	2021-03-15 20:42:21.224523	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/8"}	UNREAD
 37	new_message	4	2021-03-15 20:35:46.077563	{"message": "You have a new message from peppa.", "link": "Go to messages.", "url": "/messages"}	READ
 7	new_meetup	4	2021-03-15 19:57:46.857411	{"message": "There is a new event at Gary Danko.", "link": "Go to meetup.", "url": "/meetup/2"}	READ
 40	meetup_changed	11	2021-03-16 03:59:52.640145	{"message": "Your meetup at Foreign Cinema has been changed.", "link": "Go to meetup.", "url": "/meetup/5"}	UNREAD
 41	meetup_changed	5	2021-03-16 03:59:52.66489	{"message": "Your meetup at Foreign Cinema has been changed.", "link": "Go to meetup.", "url": "/meetup/5"}	UNREAD
 42	meetup_changed	2	2021-03-16 03:59:52.683228	{"message": "Your meetup at Foreign Cinema has been changed.", "link": "Go to meetup.", "url": "/meetup/5"}	UNREAD
+39	new_meetup	11	2021-03-15 20:42:21.224523	{"message": "There is a new event at Schubert's Bakery.", "link": "Go to meetup.", "url": "/meetup/8"}	READ
 \.
 
 
@@ -551,6 +552,9 @@ J7_-faNq_Ag9qTOlDn81Pw	Starbelly	Comfort Food	3583 16th St\nSan Francisco, CA 94
 wxzx3duu1c0CcomzEOvfOQ	The Front Porch	Southern	65 29th St\nSte A\nSan Francisco, CA 94110	-122.422034999999994	37.7438000000000002	https://s3-media1.fl.yelpcdn.com/bphoto/0fmMVyqSKOMIqtkQksUTUQ/o.jpg
 cL0q9S4bqwpbAN9ZKh-Zeg	Nara Restaurant & Sake Bar	Japanese	518 Haight St\nSan Francisco, CA 94117	-122.430675700307006	37.7721665317965005	https://s3-media1.fl.yelpcdn.com/bphoto/7zzlpJKaC9bndjuo2UIr6g/o.jpg
 GwX6aZd2-ojVZtZMMvkbbA	Sushi Urashima	Japanese	149 Noe St\nSan Francisco, CA 94114	-122.43308083094837	37.7668417453940748	https://s3-media1.fl.yelpcdn.com/bphoto/bhKuIDC4l4wRtpHtP2faew/o.jpg
+yp7SqJJuN6xedIWjz_MH1Q	Sushi Diner 2	Sushi Bars	10330 Friars Rd\nSte 114\nSan Diego, CA 92120	-117.100472999999994	32.7919109999999989	https://s3-media1.fl.yelpcdn.com/bphoto/1JBW6KsyxKmkao0LOibnmQ/o.jpg
+7Q3QIZz5UX-JSTSKKkRqDg	Waterbar	Seafood	399 The Embarcadero\nSan Francisco, CA 94105	-122.389039464858996	37.7904941686413025	https://s3-media2.fl.yelpcdn.com/bphoto/S6ghDSi2QSuewY-cIXH-yg/o.jpg
+aJoqJUdYQ23Pe2jFUEJytw	Shan Xi Magic Kitchen	Chinese	4344 Convoy St\nSan Diego, CA 92111	-117.155739999999994	32.8193800000000024	https://s3-media2.fl.yelpcdn.com/bphoto/wNpgXE1Fqe2eENg2IXzBRg/o.jpg
 \.
 
 

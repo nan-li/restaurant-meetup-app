@@ -82,6 +82,10 @@ function MapComponent(props) {
       userMarker = new google.maps.Marker({
         position: props.coordinates,
         title: 'You are here.',
+        icon: {
+          url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+          scaledSize: new google.maps.Size(50, 50)
+        },
         map: props.map
       })
     } else {
