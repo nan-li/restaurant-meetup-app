@@ -1,17 +1,15 @@
-# restaurant-meetup-app
+# 🥑 Meet + Eat: The *newest* Restaurant Meetup Platform
 
-This is my capstone project for Hackbright Academy. 
-It is an app created with Flask and React where users can enjoy a meal with new friends. 
-Users can favorite restaurants fetched from the Yelp Fusion API and create meetup events at restaurants to meet new people.
+Meet + Eat is a great way to meet new people while dining at your favorite restaurants (or maybe even discover new restaurants!). In our app, users can search for restaurants available in the Yelp API and add favorable ones to their own favorites list. A user can then create an event at a restaurant, and all others who have favorited that restaurant will be notified of this new event. Others can RSVP to attend the event and modify their RSVP as well.
 
-Current Features:
-- Users can sign up and log in
-- Users can update their profile and account information
-- Users can search for restaurants by keyword and location or by keyword and/or their current location
-- Users can add and remove restaurants from their favorites
-- Users can create, edit and cancel meetup events at favorited restaurants
-- Users can join and unjoin other users' events
-- Users can view other users' profiles
-- Users can message other users
-- Users receive a notification when a they receive a new message
-- Users receive a notification when a meetup is created at one of their favorite restaurants
+What a great way to meet new people! Users can view each other's profiles and send each other messages as well as interact in the comment thread for events.
+
+# Features
+Check back later!
+
+# Setup + Installation
+Check back later!
+
+# About the Founder|CEO|CMO|CFO|CTO
+Nan Li holds a BA in Computer Science from the University of California, Berkeley. After graduating, she chose a different path than most of her peers. She found her passion in helping children make sense of math and helping students who profess to be “not math people” see themselves as capable mathematicians. She went on to receive a MA in Math Education from Stanford University and teach high school students. When a friend asked her to take CS50x (Harvard’s popular online introductory computer science course) together, Nan remembered the fun of problem solving and found a renewed interest in code.
+
