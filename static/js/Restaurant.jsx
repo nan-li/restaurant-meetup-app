@@ -93,6 +93,7 @@ function RestaurantSearch(props) {
 
   const getLocation = () => {
     props.setDisplaySearchResults(true);
+    props.setSearchResults(null);
     document.querySelector('[name="location"]').placeholder = 'Current Location'; 
     navigator.geolocation.getCurrentPosition(searchByCurrentLocation);
   }
@@ -126,6 +127,7 @@ function RestaurantSearch(props) {
   function handleSubmit(evt) {
     evt.preventDefault();
     props.setDisplaySearchResults(true);
+    props.setSearchResults(null);
 
     let url = `/api/restaurants/search?term=${searchTerms.term}&location=${searchTerms.location}`;
     console.log("URL: ", url);

@@ -1,4 +1,4 @@
-const GOOGLE_MAPS_API_KEY = 'AIzaSyDezl1JRkPpbsQNV69hCrDNELZ_NhrFVSQ';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyB5XwP-G1Ul96xptxWFyFgOiGgdLEYFAtk';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);
@@ -122,6 +122,7 @@ function MapComponent(props) {
           
         </div>        
         `);
+
 
         const restaurantMarker = new google.maps.Marker({
           position: {lat: latitude,

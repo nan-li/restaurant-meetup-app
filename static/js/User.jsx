@@ -124,6 +124,7 @@ const initialSignupFormData = Object.freeze({
 function SignupForm(props) {
   const [formData, setFormData] = React.useState(initialSignupFormData);
   const [error, setError] = React.useState(null);
+  const [alert, setAlert] = React.useState(null);
   let history = useHistory();
 
   const handleChange = (evt) => {
@@ -145,9 +146,9 @@ function SignupForm(props) {
 
     // validate passwords match
     if (formData.password != formData.confirm) {
-      alert("Passwords don't match.");
+      setAlert("Passwords don't match.");
     } else if (formData.password.length < 8 || formData.password.length > 20) {
-      alert("Password must be 8-20 characters long.");
+      setAlert("Password must be 8-20 characters long.");
     } else {
       // Submit to backend
       fetch ('/api/users/signup', {
@@ -163,7 +164,7 @@ function SignupForm(props) {
             props.setAlert(data.message);
             history.push('/');
           } else {
-            alert(data.message);
+            setAlert(data.message);
           }
         },
         (error) => {
@@ -175,6 +176,16 @@ function SignupForm(props) {
   return (
     <div className="mt-5 mb-5 container border rounded col-md-9 p-5" id="signup-form">
       <h1>Sign Up</h1>
+        {alert &&
+          <Alert variant='danger'>
+            <p>{alert}</p>
+            <div className="d-flex justify-content-end">
+              <Button onClick={() => setAlert(null)} variant="outline-danger">
+                Close
+              </Button>
+            </div>
+          </Alert>
+        }      
 
       <Form onSubmit={handleSubmit} autoComplete="off">
         <div className="form-row">

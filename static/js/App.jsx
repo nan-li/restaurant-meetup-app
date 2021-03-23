@@ -112,13 +112,16 @@ function SiteNavbar(props) {
                 </NavDropdown.Item>
               </NavDropdown>
             <Link className="navbar-brand ml-3" to="/meetups">Meetups</Link>
-            <Link className="navbar-brand" to="/myprofile">My Profile</Link>
             <Link className="navbar-brand" to="/messages">Messages</Link>
             <Link className="navbar-brand" to="/notifications">Notifications</Link>
-            <Button onClick={() => {
+            <Link to="/myprofile">
+              <Button className='mr-3'>Account</Button>
+            </Link> 
+            <Link to='/'>
+            <Button variant='danger' onClick={() => {
               props.setUser(null);
-              localStorage.setItem('user', null);
-              history.push('/');}}>Logout</Button>
+              localStorage.setItem('user', null);}}>Logout</Button>            
+            </Link>           
           </Nav>          
         </Navbar.Collapse>
 
