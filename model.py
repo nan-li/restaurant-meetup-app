@@ -252,7 +252,7 @@ class Comment(db.Model):
         }
         return data
 
-def connect_to_db(flask_app, db_uri='postgresql:///restaurants'):
+def connect_to_db(flask_app, db_uri='postgresql:///restaurants', echo=False):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     flask_app.config['SQLALCHEMY_ECHO'] = echo
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
