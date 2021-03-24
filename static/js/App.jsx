@@ -7,7 +7,6 @@ const {Container, Button, ButtonGroup, Navbar, Form, NavDropdown,
 function App() {
   const [user, setUser] = React.useState(null);
   const [alert, setAlert] = React.useState(null);
-  console.log("User info:", user);
   
   // Find the logged in user
   React.useEffect(() => {

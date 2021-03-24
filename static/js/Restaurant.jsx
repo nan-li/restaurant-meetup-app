@@ -83,7 +83,6 @@ function RestaurantSearch(props) {
   const [searchTerms, setSearchTerms] = React.useState(initialSearchTerms);
   const [error, setError] = React.useState(null);
 
-  console.log("searchTerms at top of Component", searchTerms);
 
   const handleChange = (evt) => {
     setSearchTerms({
@@ -105,7 +104,6 @@ function RestaurantSearch(props) {
     });
 
     let url = (`/api/restaurants/search?term=${searchTerms.term}&latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`);
-    console.log("url", url);
     fetch(url)
     .then(res => res.json()) 
     .then(
@@ -115,7 +113,6 @@ function RestaurantSearch(props) {
         } else {
         props.setSearchResults(result.businesses);
         localStorage.setItem('searchResults', JSON.stringify(result.businesses));
-        console.log("*******", JSON.parse(localStorage.getItem('searchResults')));
         // props.setDisplaySearchResults(true);
         }
       },
@@ -130,17 +127,12 @@ function RestaurantSearch(props) {
     props.setSearchResults(null);
 
     let url = `/api/restaurants/search?term=${searchTerms.term}&location=${searchTerms.location}`;
-    console.log("URL: ", url);
     fetch(url)
       .then(res => res.json()) 
       .then(
         (result) => {
           props.setSearchResults(result.businesses);
           localStorage.setItem('searchResults', JSON.stringify(result.businesses));
-          // console.log("*******", JSON.parse(localStorage.getItem('searchResults')));
-
-          console.log("Returned from call");
-          // props.setDisplaySearchResults(true);
         },
         (error) => {
           setError(error);
@@ -154,18 +146,27 @@ function RestaurantSearch(props) {
             <div className='input-group-prepend'>
               <span className='input-group-text'>Find</span>
             </div>
-            <input type="text" className='form-control' name="term" 
+            <input 
+              type="text" 
+              className='form-control' 
+              name="term" 
               placeholder="sushi, salad, korean..."
-              required onChange={handleChange}/>
+              required 
+              onChange={handleChange}
+            />
           </div>
 
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <span className="input-group-text">Near*</span>
             </div>
-            <input type="text" className='form-control' name="location" 
+            <input 
+              type="text" 
+              className='form-control' 
+              name="location" 
               placeholder="San Francisco" 
-              onChange={handleChange} required
+              onChange={handleChange} 
+              required
             />
             <Button className="btn btn-secondary" onClick={getLocation}>
               <img
@@ -243,17 +244,12 @@ function FavoriteUnfavoriteRestaurantButton(props) {
     .then(res => res.json())
     .then(
       (data) => {
-        console.log(data);
         props.setFavorited(true);
       }
     );
   }
   
   const deleteUserRestaurantRelationship = () => {
-
-    console.log("isHosting?", props.isHostingMeetupHere);
-    console.log("isAttending?", props.isAttendingMeetupHere);
-
     // check if user is attending or hosting meetups here
     if (props.isHostingMeetupHere) {
 
@@ -277,7 +273,6 @@ function FavoriteUnfavoriteRestaurantButton(props) {
       })
       .then(res => res.json())
       .then((data) => {
-        console.log('data here', data);
         props.setAppAlert(data.message);
         history.push('/restaurants');
       })
@@ -311,10 +306,8 @@ const initialMeetupData = Object.freeze({
 });
 
 function RestaurantDetails(props) {
-  console.log('trying to render rest details');
   const [favorited, setFavorited] = React.useState(false);
   const [fromYelp, setFromYelp] = React.useState(false);
-  console.log("favorited?", favorited);
 
   const [restaurant, setRestaurant] = React.useState([]);
   const [show, setShow] = React.useState(false);
@@ -326,14 +319,9 @@ function RestaurantDetails(props) {
 
   const [unfavoritedAlert, setUnfavoritedAlert] = React.useState(null);
 
-
-  console.log(formData);
-
   let {restaurantID} = useParams();
   let history = useHistory();
   
-  console.log("restaurnt is", restaurant);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -391,7 +379,6 @@ function RestaurantDetails(props) {
         } else {
           // this was rendered from Yelp search results
           for (const res of JSON.parse(localStorage.getItem('searchResults'))) {
-            console.log('res', res);
             if (res.id === restaurantID) {
               setRestaurant(res);
               setFormData({
@@ -447,22 +434,33 @@ function RestaurantDetails(props) {
 
             <div className="form-group p-2">
               <label>Maximum Capacity</label>
-              <input type="number" className="form-control" name="capacity" 
-                onChange={handleChange} required />
+              <input 
+                type="number" 
+                className="form-control" 
+                name="capacity" 
+                onChange={handleChange} 
+                required 
+              />
             </div>
 
             <div className="form-group p-2">
               <label>Event Description</label>    
-              <textarea className="form-control"  name="description" 
+              <textarea 
+                className="form-control"  
+                name="description" 
                 placeholder="Let's get together and enjoy a meal together with new friends." 
-                onChange={handleChange} >
+                onChange={handleChange}>
               </textarea>
             </div>
 
             <div className="form-group p-2">
               <label>Upload an Event Picture</label>
-              <input type="file" className="form-control-file" name="image" 
-                onChange={handleChange} />
+              <input 
+                type="file" 
+                className="form-control-file" 
+                name="image" 
+                onChange={handleChange} 
+              />
             </div>
 
             <Button variant="primary" type="submit">Create Meetup</Button>
@@ -489,7 +487,8 @@ function RestaurantDetails(props) {
             restaurant={restaurant}
             restaurantID={restaurantID} user={props.user} 
             isHostingMeetupHere={isHostingMeetupHere} 
-            isAttendingMeetupHere={isAttendingMeetupHere} />
+            isAttendingMeetupHere={isAttendingMeetupHere} 
+          />
           <br />
           <br />
           <h1>{restaurant.name}</h1>
@@ -625,7 +624,6 @@ function MyFavoriteRestaurants(props) {
 }
 
 function RestaurantMeetups (props) {
-  // console.log('rendering rest meetups');
   const [meetups, setMeetups] = React.useState(null);
   const [showPast, setShowPast] = React.useState(false);
   const [showUpcoming, setShowUpcoming] = React.useState(true);
@@ -670,9 +668,10 @@ function RestaurantMeetups (props) {
                 <MeetupTile past={true} meetup={meetup} user={props.user} key={meetup.id} />
               ))}
             </div> : <Alert variant='warning'>No Meetups</Alert>}
-        </Container>}
+        </Container>
+      }
 
-        {showUpcoming &&
+      {showUpcoming &&
         <Container>
           <h3>Upcoming Meetups</h3>
           {meetups.future.length != 0 ? 
@@ -684,8 +683,10 @@ function RestaurantMeetups (props) {
             <Alert variant='warning'>
               <p>No upcoming meetups.</p>
               <p>Perhaps you'd like to host one here?</p>
-            </Alert>}
-        </Container>}
+            </Alert>
+          }
+        </Container>
+      }
     </Container>
   )
 }
@@ -710,7 +711,11 @@ function RestaurantFans (props) {
       <h1>Fans</h1>
       <div className="list-group">
         {fans.map(user => (
-          <UserTile currentUser={props.user} user={user} key={user.id} />
+          <UserTile 
+            currentUser={props.user} 
+            user={user} 
+            key={user.id}
+          />
         ))}
       </div>
     </Container>

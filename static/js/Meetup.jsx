@@ -39,7 +39,6 @@ function JoinUnjoinMeetupButton(props) {
       .then(
         (data) => {
           props.setAttending(true);
-          console.log(data);
           props.setAlert(data.message);
       }
     );
@@ -57,7 +56,6 @@ function JoinUnjoinMeetupButton(props) {
       .then(
         (data) => {
           props.setAttending(false);
-          console.log(data);
           props.setAlert(data.message);
       }
     );
@@ -86,7 +84,6 @@ function EditMeetupButton(props) {
   let history = useHistory();
   const [show, setShow] = React.useState(false);
   const [formData, setFormData] = React.useState(initialMeetupData);
-  console.log('meetup form data', formData);
 
   const handleClose = () => setShow(false);
 
@@ -200,9 +197,6 @@ function MeetupDetails(props) {
   const [attending, setAttending] = React.useState(false);
   const [hosting, setHosting] = React.useState(false);
   const [reload, setReload] = React.useState(false);
-  console.log("You're attending:", attending);
-  console.log("You're hosting:", hosting);
-  console.log('reload', reload);
 
   let {meetupID} = useParams();
   
@@ -421,7 +415,6 @@ function MyAttendingMeetups(props) {
 function MeetupAttendees(props) {
   const [attendees, setAttendees] = React.useState([]);
   const [error, setError] = React.useState(null);
-  //console.log("MeetupAttendees attendees: ", attendees);
   // get the users attending the Meetup
   React.useEffect(() => {
     fetch(`/api/meetups/${props.meetup_id}/attendees`)
@@ -466,7 +459,6 @@ const initialCommentData = Object.freeze({
 function MeetupComments(props) {
   const [comments, setComments] = React.useState([]);
   const [formData, setFormData] = React.useState(initialCommentData);
-  console.log('comments', comments);
 
   const handleChange = (evt) => {
     setFormData({
@@ -479,7 +471,6 @@ function MeetupComments(props) {
     .then(res => res.json())
     .then((result) => {
       setComments(result);
-      console.log('commnets', result);
     })
   }, [])
 
@@ -498,7 +489,6 @@ function MeetupComments(props) {
       setComments(prev => [...prev, result.comment]);
       setFormData(initialCommentData);
       document.getElementById('comment-area').value='';
-      console.log(result);
     })
   } 
 

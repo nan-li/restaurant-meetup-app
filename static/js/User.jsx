@@ -21,29 +21,41 @@ function Homepage(props) {
         }
       )
   }, [])
-  if (hostedMeetups.length === 0 || meetups.length === 0) return <Spinner animation="border" variant="success" />;
-
+  if (hostedMeetups.length === 0 || meetups.length === 0) {
+    return <Spinner animation="border" variant="success" />;
+  }
+  
   return (
     <Container>
       <Row>
         <Col>
           <h3 className='heading'>Your Next Hosted Meetup</h3>
           {hostedMeetups.future.length != 0 ? 
-            <MeetupTile meetup={hostedMeetups.future[0]} dontDisplayHost={props.dontDisplayHost} 
-              user={props.user} key={hostedMeetups.future[0].id} /> : 
-              <Alert variant='warning'>
-                <p>No upcoming meetups.</p>
-                <p>Perhaps you'd like to host a new meetup?</p>
-              </Alert>}        
+            <MeetupTile 
+              meetup={hostedMeetups.future[0]} 
+              dontDisplayHost={props.dontDisplayHost} 
+              user={props.user} 
+              key={hostedMeetups.future[0].id} 
+            /> : 
+            <Alert variant='warning'>
+              <p>No upcoming meetups.</p>
+              <p>Perhaps you'd like to host a new meetup?</p>
+            </Alert>
+          }        
         </Col>
         <Col>
           <h3 className='heading'>Your Next Attending Meetup</h3>
           {meetups.future.length != 0 ? 
-            <MeetupTile meetup={meetups.future[0]} user={props.user} key={meetups.future[0].id} /> : 
-              <Alert variant='warning'>
-                <p>No upcoming meetups.</p>
-                <p>Feel free to look around and find one to join.</p>
-              </Alert>}                
+            <MeetupTile 
+              meetup={meetups.future[0]} 
+              user={props.user} 
+              key={meetups.future[0].id} 
+            /> : 
+            <Alert variant='warning'>
+              <p>No upcoming meetups.</p>
+              <p>Feel free to look around and find one to join.</p>
+            </Alert>
+          }                
         </Col>
       </Row>
     </Container>
@@ -137,7 +149,6 @@ function SignupForm(props) {
   const handleSubmit = (evt) => {
     
     evt.preventDefault();
-    console.log("formData from <Signup>:", formData);
     
     // make a FormData()
     const data = new FormData();
@@ -248,7 +259,6 @@ const initialMessageData = Object.freeze({
 });
 
 function UserProfile(props) {
-  console.log("IN USER PROFILE")
   const [error, setError] = React.useState(null);
   const [user, setUser] = React.useState([]);
   const [messages, setMessages] = React.useState([]);
@@ -393,7 +403,6 @@ function MyProfile(props) {
   const [formData, setFormData] = React.useState(initialFormData);
   const [error, setError] = React.useState(null);
   const [alert, setAlert] = React.useState(null);
-  console.log(formData);
   
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -634,24 +643,18 @@ function Messages (props) {
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [reload, setReload] = React.useState(false);
 
-  console.log("users are", users);
-
   React.useEffect(() => {
-    console.log("in use effect");
     fetch(`/api/user/${props.user.id}/messages`)
     .then(res => res.json())
     .then((result) => {
       if (result.status != 'error') {
-        console.log("Users and Messages", result);
         setMessages(result.messages);
         setUsers(Object.values(result.users));
       }
     })
-    console.log("")
   }, [reload])
 
-  console.log("messages is", messages);
-    return (
+  return (
     <Container>
       <h2 id='messages-heading' className='heading'>Messages</h2>
       <Row>
@@ -685,8 +688,6 @@ function Messages (props) {
 }
 
 function MessageContainer(props) {
-  console.log('currentuser top', props.currentUser);
-
   const [formData, setFormData] = React.useState(initialMessageData);
 
   const handleChange = (evt) => {
@@ -740,7 +741,6 @@ function MessageContainer(props) {
 
 
 function MessageTile(props) {
-  console.log('currentuser', props.currentUser);
   return (
     <li className='d-flex flex-nowrap pl-3 pr-3 mb-2 pb-2 pt-2 media border bg-none border-light rounded'>
       
@@ -769,7 +769,6 @@ function Notifications (props) {
       }
     })
   }, [])
-  console.log(notifications);
   return (
     <Container>
       <h2 id='notifications-heading' className='heading'>Notifications</h2>
@@ -789,7 +788,6 @@ function Notifications (props) {
 function NotificationTile (props) {
   const [show, setShow] = React.useState(true);
   const [reload, setReload] = React.useState(false);
-  console.log(show);
 
   const deleteNotification = () => {
     setShow(false);

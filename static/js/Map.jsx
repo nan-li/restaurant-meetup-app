@@ -1,4 +1,4 @@
-const GOOGLE_MAPS_API_KEY = 'AIzaSyB5XwP-G1Ul96xptxWFyFgOiGgdLEYFAtk';
+const GOOGLE_MAPS_API_KEY = '';
 
 function MapContainer(props) {
   const [map, setMap] = React.useState(null);
@@ -23,9 +23,14 @@ function MapContainer(props) {
   }
 
   return (
-    <MapComponent options={options} map={map} setMap={setMap} favorites={props.favorites}
-      restaurants={props.restaurants} mapDimensions={props.mapDimensions}
-      coordinates={props.coordinates} />
+    <MapComponent 
+      options={options} 
+      map={map} setMap={setMap} 
+      favorites={props.favorites}
+      restaurants={props.restaurants} 
+      mapDimensions={props.mapDimensions}
+      coordinates={props.coordinates} 
+    />
   );
 }
 
@@ -35,20 +40,17 @@ function MapContainer(props) {
 //     history.push(`/restaurant/VPXezwmTETrwitrzj9BZPA`);
 // }
 
-/* From Andrew */
 function MapComponent(props) {
   console.log('rendering the map')
   const options = props.options;
   const locs = props.restaurants;
   const ref = React.useRef();
   const markers = [];
-  let history = useHistory();
 
   console.log('1 locs: ', locs);
 
   React.useEffect(() => {
     const createMap = () => props.setMap(new window.google.maps.Map(ref.current, options));
-    console.log('search results', locs);
 
     if (!window.google) { // Create an html element with a script tag in the DOM
       const script = document.createElement('script');
@@ -66,7 +68,7 @@ function MapComponent(props) {
         markers[i].setMap(null);
       }
     }
-  }, [locs]); //options.center.lat Need the value of the lat of options because it does not change
+  }, [locs]); 
   
   let bounds;
   let userMarker;
@@ -94,7 +96,6 @@ function MapComponent(props) {
 
     
     for (const loc of locs) {
-      console.log("const in map is", loc);
 
       const latitude = (props.favorites) ? loc.lat : loc.coordinates.latitude;
       const longitude = (props.favorites) ? loc.long : loc.coordinates.longitude;
