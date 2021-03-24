@@ -100,7 +100,7 @@ def register_user():
     
     return jsonify({
                 'status': 'success',
-                'message': 'Welcome! Account successfully created.',
+                'message': 'Welcome! Account successfully created. Feel free to look around. \nTo check out our most popular user, go to http://meeteatapp.com/peppa',
                 'user': user.to_dict('include_email')
     })
 

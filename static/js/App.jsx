@@ -48,7 +48,9 @@ function App() {
               </Route>
 
               <Redirect from={`/user/${user.id}`} to='/myprofile' />
-              
+
+              <Redirect from={`/peppa`} to='/user/11' />
+
               <Route exact path="/user/:userID">
                 <UserProfile setUser={setUser} user={user}/>
               </Route>
