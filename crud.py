@@ -106,8 +106,6 @@ def update_notification_by_id(id, method):
     if method == 'DELETE':
         db.session.delete(n)
     elif method == 'READ':
-        print("\n" * 3)
-        print("IN HERE")
         n.status = 'READ'
     db.session.commit()
     

@@ -389,22 +389,9 @@ def get_search_results():
 
     params = request.args.to_dict()
    
-    # {'location': 'San Francisco', 'term': 'sushi'}
-
     params['limit'] = 50
-    print('\n' * 5)
-    print(params)
-    print(request.args.to_dict())
-    # request.args.to_dict()
     req = requests.get(url, params=params, headers=headers)
-    print("*" * 100)
-    print('The status code from YELP is', req.status_code)
-    print(req.json())
-    if 'error' in req.json():
-        print("THERES AN ERROR")
     return req.json()
-
-
 
 
 @app.route('/api/restaurants/<restaurant_id>/meetups')
