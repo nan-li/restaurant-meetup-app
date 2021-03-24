@@ -105,7 +105,7 @@ function LoginForm(props) {
   return (
     <div className="container border rounded mt-5 col-md-6 p-5" id="login-form">
       <h1>Log In</h1>
-        <form onSubmit={handleSubmit} autoComplete="off">
+        <form onSubmit={handleSubmit}>
 
           <div className="form-group p-2">
             <input type="text" className="form-control" name="username" 
@@ -198,7 +198,7 @@ function SignupForm(props) {
           </Alert>
         }      
 
-      <Form onSubmit={handleSubmit} autoComplete="off">
+      <Form onSubmit={handleSubmit}>
         <div className="form-row">
           <Form.Group className='form-group' as={Col} controlId="fname">
             <Form.Label>First Name</Form.Label>
@@ -334,7 +334,7 @@ function UserProfile(props) {
                 <MessageTile key={message.id} message={message} currentUser={props.user}/>
               ))}
             </ul>
-            <form onSubmit={handleSubmit} autoComplete="off">
+            <form onSubmit={handleSubmit}>
 
               <div className="form-group p-2">
                 <label>Write a Message</label>
@@ -467,7 +467,7 @@ function MyProfile(props) {
         </Modal.Header>
         <Modal.Body>
           <p>Fill in the fields that you would like to update.</p>
-          <form onSubmit={handleSubmit} autoComplete="off">
+          <form onSubmit={handleSubmit}>
 
             <div className="form-row">
               <div className="form-group col-md-6">
@@ -723,7 +723,7 @@ function MessageContainer(props) {
           />
         ))}
       </ul>
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <form onSubmit={handleSubmit}>
         <div className="form-group p-2">
           <label>Write a Message</label>
           <textarea className="form-control"  name="body" 

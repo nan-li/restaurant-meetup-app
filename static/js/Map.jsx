@@ -41,13 +41,11 @@ function MapContainer(props) {
 // }
 
 function MapComponent(props) {
-  console.log('rendering the map')
+  // console.log('rendering the map')
   const options = props.options;
   const locs = props.restaurants;
   const ref = React.useRef();
   const markers = [];
-
-  console.log('1 locs: ', locs);
 
   React.useEffect(() => {
     const createMap = () => props.setMap(new window.google.maps.Map(ref.current, options));
@@ -57,14 +55,12 @@ function MapComponent(props) {
       script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}`;
       document.head.append(script);
       script.addEventListener('load', createMap);
-      console.log('and now there is a map 1');
+      // console.log('and now there is a map 1');
       return () => script.removeEventListener('load', createMap);
     } else { // Initialize the map if a script element with google url IS found
       createMap();
-      console.log('and now there is a map 2');
       // remove any old markers from the last query
       for ( let i = 0;  i < markers.length; i++) {
-        console.log('###cleaning the old markers');
         markers[i].setMap(null);
       }
     }
@@ -152,20 +148,17 @@ function MapComponent(props) {
     } // end for loop
   
     if (!props.coordinates) {
-      console.log("HERERERER")
       props.map.fitBounds(bounds);
       props.map.panToBounds(bounds);
     }
-    console.log(markers);
   }
 
   if (props.map && locs) {
-    console.log('and the map exists');
+    // console.log('and the map exists');
     addMarkers();
-
-  } else { console.log('but there is no map')}
+  }
   return (
-    <div id="map-div" className='position-fixed'
+    <div id="map-div"
       style={{ height: props.mapDimensions.height, 
         borderRadius: `0.5em`, 
         width: props.mapDimensions.width}}

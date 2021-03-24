@@ -148,7 +148,7 @@ function EditMeetupButton(props) {
         </Modal.Header>
         <Modal.Body>
           <p>Fill in the details that you would like to update.</p>
-          <form onSubmit={editMeetup} autoComplete="off">
+          <form onSubmit={editMeetup}>
             <div className="form-group p-2">
               <label>Event Name</label>
               <input type="text" className="form-control" name="name" 
@@ -502,7 +502,7 @@ function MeetupComments(props) {
           ))}              
         </ul>        
 
-        <form onSubmit={handleSubmit} autoComplete="off">
+        <form onSubmit={handleSubmit}>
           <fieldset disabled={props.disabled}>
             <div className="form-group p-2">
               <textarea className="form-control"  name="text" id="comment-area"

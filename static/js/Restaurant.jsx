@@ -141,7 +141,7 @@ function RestaurantSearch(props) {
     return (
       <div>
         <h2 id='search-heading' className='heading'>Search</h2>
-        <form onSubmit={handleSubmit} autoComplete="off">
+        <form onSubmit={handleSubmit}>
           <div className='input-group mb-3'>
             <div className='input-group-prepend'>
               <span className='input-group-text'>Find</span>
@@ -419,7 +419,7 @@ function RestaurantDetails(props) {
           <Modal.Title>Create a New Meetup</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleSubmit} autoComplete="off">
+          <form onSubmit={handleSubmit}>
             <div className="form-group p-2">
               <label>Event Name</label>
               <input type="text" className="form-control" name="name" 
