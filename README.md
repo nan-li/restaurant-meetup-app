@@ -1,5 +1,7 @@
 # 🥑 Meet + Eat: The *newest* Restaurant Meetup Platform
 
+https://meeteatapp.com/
+
 Hear from our Founder, CEO, CMO, CFO, and CTO here: https://youtu.be/k0v1DTz3biY
 
 Meet + Eat is a great way to meet new people while dining at your favorite restaurants (or maybe even discover new restaurants!). In our app, users can search for restaurants available in the Yelp API and add favorable ones to their own favorites list. A user can then create an event at a restaurant, and all others who have favorited that restaurant will be notified of this new event. Others can RSVP to attend the event and modify their RSVP as well.
