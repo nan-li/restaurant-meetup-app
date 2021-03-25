@@ -776,8 +776,10 @@ function Notifications (props) {
         <p className='text-center'>You have no notifications</p> : 
         <React.Fragment>
           {notifications.reverse().map(notification => (
-            <NotificationTile key={notification.id} 
-              notification={notification} />
+            <NotificationTile 
+              key={notification.id} 
+              notification={notification} 
+            />
           ))}             
         </React.Fragment>
       }
@@ -790,13 +792,13 @@ function NotificationTile (props) {
   const [reload, setReload] = React.useState(false);
 
   const deleteNotification = () => {
-    setShow(false);
     fetch(`/api/notification/${props.notification.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       }
     })
+    setShow(false);
   }
 
   const markNotificationAsRead = () => {
@@ -821,9 +823,7 @@ function NotificationTile (props) {
       </Toast.Header>
       <Toast.Body onClick={markNotificationAsRead}>
         <p>{props.notification.data.message}</p>
-        <Link 
-          to={props.notification.data.url} 
-          onClick={markNotificationAsRead}>
+        <Link to={props.notification.data.url}>
           {props.notification.data.link}
         </Link>
       </Toast.Body>

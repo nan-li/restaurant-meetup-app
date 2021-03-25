@@ -98,6 +98,14 @@ def register_user():
 
     session['user_id'] = user.id
     
+    # create an initial welcome message for user from peppa
+    crud.create_signup_message(user)
+
+    notification_data = {'message': f'You have a new message from peppa.',
+            'link': 'Go to messages.',
+            'url': '/messages'}
+    notification = crud.create_notification('new_message', user.id, json.dumps(notification_data))
+
     return jsonify({
                 'status': 'success',
                 'message': 'Welcome! Account successfully created. Feel free to look around. \nTo check out our most popular user, go to http://meeteatapp.com/peppa',
@@ -582,5 +590,5 @@ def post_comment(meetup_id):
 
 if __name__ == '__main__':
     connect_to_db(app)
-    app.run()
+    app.run(host='0.0.0.0', debug=True)
 

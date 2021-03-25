@@ -60,6 +60,14 @@ def create_message(sender, recipient, body):
 
     return m
 
+def create_signup_message(new_user):
+    """Create an intial welcome message to user from peppa."""
+
+    peppa = get_user_by_id(11)
+    body = f"Hi {new_user.fname}, welcome! I'm peppa, the Myspace Tom of Meet + Eat."
+    create_message(peppa, new_user, body)
+
+
 def create_comment(writer, meetup, text):
     """Create and return a comment by a user for a meetup."""
     c = Comment(writer=writer, meetup=meetup, text=text)
