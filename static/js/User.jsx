@@ -358,7 +358,7 @@ function UserProfile(props) {
         <Row className='mb-5'>
           <Col sm={4}>      
             <img alt='A profile photo of this user.' width={400}
-              src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/' + user.image_url} />
+              src={'https://res.cloudinary.com/dfzb7jmnb/image/upload/' + user.image_url} />
           </Col>
           <Col sm={1}>            
             <Button variant='link' onClick={handleShow}>
@@ -585,7 +585,7 @@ function MyProfile(props) {
       </Row>
       <Row>
         <Col>      
-          <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url}
+          <img src={'https://res.cloudinary.com/dfzb7jmnb/image/upload' + props.user.image_url}
             alt='Your profile picture.' width={400} />
         </Col>
         <Col>
@@ -609,7 +609,7 @@ function UserTile(props) {
         <Card.Img 
           variant="top" 
           alt='Profile photo.' 
-          src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + props.user.image_url} 
+          src={'https://res.cloudinary.com/dfzb7jmnb/image/upload/h_400,w_600,b_auto,c_pad' + props.user.image_url} 
         />
       </Link>
       <Card.Body>
@@ -745,7 +745,7 @@ function MessageTile(props) {
     <li className='d-flex flex-nowrap pl-3 pr-3 mb-2 pb-2 pt-2 media border bg-none border-light rounded'>
       
       <img  width={40} className={`align-self-center ${props.message.sender.id === props.currentUser.id ? 'order-2' : 'order-1'}`}  
-        src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.message.sender.image_url} />
+        src={'https://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.message.sender.image_url} />
   
       <div className={`media-body align-middle ${props.message.sender.id === props.currentUser.id ? 'order-1' : 'order-2'}`}>
         <h5>{props.message.sender.username}</h5>

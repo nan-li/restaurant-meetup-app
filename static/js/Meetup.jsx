@@ -2,7 +2,7 @@ function MeetupTile(props) {
   return (
     <Card className='bg-light' style={{ width: '24rem' }}>
       <Link to={`/meetup/${props.meetup.id}`}>
-        <Card.Img variant="top" src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/h_300,w_600,c_fill,g_auto' + props.meetup.image_url} />
+        <Card.Img variant="top" src={'https://res.cloudinary.com/dfzb7jmnb/image/upload/h_300,w_600,c_fill,g_auto' + props.meetup.image_url} />
       </Link>
       <Card.Body>
         <Card.Title>{props.meetup.name} at {props.meetup.restaurant.name}</Card.Title>
@@ -237,7 +237,7 @@ function MeetupDetails(props) {
           </Row>
           <Row>
             <Col>
-              <img src={'http://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
+              <img src={'https://res.cloudinary.com/dfzb7jmnb/image/upload' + meetup.image_url}
                 width={400}/>
             </Col>
             <Col>            
@@ -526,7 +526,7 @@ function CommentTile(props) {
       <li className='mb-2 pb-1 pt-1 media border bg-none border-light rounded'>
         <Link className='align-self-center ml-3' to={`/user/${props.comment.writer.id}`}>
           <img  width={40} 
-            src={'http://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.comment.writer.image_url} />
+            src={'https://res.cloudinary.com/dfzb7jmnb/image/upload/w_100,h_100,c_thumb,r_max,g_auto' + props.comment.writer.image_url} />
         </Link>
         <div className='media-body align-middle pt-1 pb-1'>
           <h5>{props.comment.writer.username}</h5>
