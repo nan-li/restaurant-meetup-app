@@ -8,7 +8,7 @@
     <title>Meet + Eat</title>
 
     <!-- Open Graph Protocol -->
-    <meta property='og:title' content='Meet + Eat'/>
+    <meta property='og:title' content='Meet and Eat'/>
     <meta property='og:image' content='//res.cloudinary.com/dfzb7jmnb/image/upload/v1616696571/og_image_zfp616.png'/>
     <meta property='og:description' content='The newest restaurant meetup platform'/>
     <meta property='og:url' content='//meeteatapp.com'/>
@@ -31,6 +31,17 @@
     <!-- React Bootstrap -->
     <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js"
         crossorigin></script>
+        
+    <!-- OneSignal -->
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+        window.OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+        OneSignal.init({
+            appId: "702c67c4-d96c-427e-ab59-fe332807d87c",
+        });
+        });
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
